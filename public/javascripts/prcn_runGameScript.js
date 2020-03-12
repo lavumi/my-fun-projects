@@ -43,7 +43,6 @@ function sliceCyspAnimation(buf) {
         data: buf.slice((count + 1) * 32)};
 }
 
-
 function init() {
     canvas = document.getElementById("canvas");
     var config = { alpha: false };
@@ -58,12 +57,12 @@ function init() {
     document.addEventListener('keydown', function(event) {
         if(keyMap[event.code] === true ) return;
 
-        // if(event.code === 'ArrowRight' ){
-        //     runChar( false);
-        // }
-        // else if (event.code === 'ArrowLeft'){
-        //     runChar( true);
-        // }
+        if(event.code === 'ArrowRight' ){
+            runChar( false);
+        }
+        else if (event.code === 'ArrowLeft'){
+            runChar( true);
+        }
         // else if (event.code === 'KeyA'){
         //     attackChar();
         // }
@@ -137,6 +136,7 @@ function init() {
 }
 
 
+//spineData
 var animationQueue = [];
 var characterID = 109631;
 var classID = 2;
@@ -175,6 +175,8 @@ var currentCharaAnimData = {
     data: {}
 };
 var currentClass = '1';
+
+//end spineData
 function load(unit_id, class_id) {
     if (loading) return;
     loading = true;
@@ -354,7 +356,6 @@ function loadTexture() {
         });
     })
 }
-
 function calculateBounds(skeleton) {
     skeleton.setToSetupPose();
     skeleton.updateWorldTransform();
@@ -364,6 +365,119 @@ function calculateBounds(skeleton) {
     offset.y = 0
     return { offset: offset, size: size };
 }
+
+function setAnimName( animName ){
+    var returnName;
+    if (animName.substr(0, 6) == '000000') returnName =animName;
+    else if (animName.substr(0, 1) != '1') returnName = getClass(currentClassAnimData.type) + '_' + animName;
+    else returnName = animName;
+    return returnName
+}
+
+
+function calculateBounds(skeleton) {
+    skeleton.setToSetupPose();
+    skeleton.updateWorldTransform();
+    var offset = new spine.Vector2();
+    var size = new spine.Vector2();
+    skeleton.getBounds(offset, size, []);
+    offset.y = 0;
+    return { offset: offset, size: size };
+}
+
+function render() {
+    var now = Date.now() / 1000;
+    var delta = now - lastFrameTime;
+    lastFrameTime = now;
+    delta *= speedFactor;
+
+    // Update the MVP matrix to adjust for canvas size changes
+    resize();
+
+
+    gl.clearColor(bgColor[0], bgColor[1], bgColor[2], 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // Apply the animation state based on the delta time.
+    var state = window.skeleton.state;
+    var skeleton = window.skeleton.skeleton;
+    skeleton.x = -800;
+    var bounds = window.skeleton.bounds;
+    var premultipliedAlpha = window.skeleton.premultipliedAlpha;
+    state.update(delta);
+    state.apply(skeleton);
+    moveMentSkeleton( skeleton, movement);
+    skeleton.updateWorldTransform();
+
+    // Bind the shader and set the texture and model-view-projection matrix.
+    shader.bind();
+    shader.setUniformi(spine.webgl.Shader.SAMPLER, 0);
+    shader.setUniform4x4f(spine.webgl.Shader.MVP_MATRIX, mvp.values);
+
+    // Start the batch and tell the SkeletonRenderer to render the active skeleton.
+    batcher.begin(shader);
+    skeletonRenderer.premultipliedAlpha = premultipliedAlpha;
+    skeletonRenderer.draw(batcher, skeleton);
+    batcher.end();
+    
+    shader.unbind();
+
+
+
+
+    
+
+
+    if  ( false ) {
+        debugShader.bind();
+        debugShader.setUniform4x4f(spine.webgl.Shader.MVP_MATRIX, mvp.values);
+        debugRenderer.premultipliedAlpha = premultipliedAlpha;
+        shapes.begin(debugShader);
+        debugRenderer.draw(shapes, skeleton);
+        shapes.end();
+        debugShader.unbind();
+    }
+
+    requestAnimationFrame(render);
+}
+
+var movement = 0;
+
+function moveMentSkeleton( targetSkeleton, moveX){
+    if(moveX < 0){
+        targetSkeleton.flipX = true;
+    }
+    else if(moveX > 0){
+        targetSkeleton.flipX = false;
+    }
+}
+
+
+
+function resize() {
+    var w = canvas.clientWidth * devicePixelRatio;
+    var h = canvas.clientHeight * devicePixelRatio;
+    var bounds = window.skeleton.bounds;
+    if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+    }
+
+    // magic
+    var centerX = bounds.offset.x + bounds.size.x / 2;
+    var centerY = bounds.offset.y + bounds.size.y / 2;
+    var scaleX = bounds.size.x / canvas.width;
+    var scaleY = bounds.size.y / canvas.height;
+    var scale = Math.max(scaleX, scaleY) * 1.2;
+    if (scale < 1) scale = 1;
+    var width = canvas.width * scale;
+    var height = canvas.height * scale;
+
+    mvp.ortho2d(centerX - width / 2, centerY - height / 2, width, height);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+}
+
+//endregion
 
 
 function runChar(isLeft ){
@@ -488,7 +602,6 @@ function runAnimation( animArray ){
     var firstActionObj =  animArray.shift();
     var firstAction = firstActionObj.animName;
 
-   // if (firstAction.substr(0, 1) !== '1') firstAction = getClass(currentClassAnimData.type) + '_' + firstAction;
     firstAction = setAnimName(firstAction);
 
     var AnimEntry = window.skeleton.state.setAnimation(0, firstAction, firstActionObj.isLoop);
@@ -498,113 +611,4 @@ function runAnimation( animArray ){
         animationQueue.push( i.animName);
     })
 
-}
-
-
-function setAnimName( animName ){
-    var returnName;
-    if (animName.substr(0, 6) == '000000') returnName =animName;
-    else if (animName.substr(0, 1) != '1') returnName = getClass(currentClassAnimData.type) + '_' + animName;
-    else returnName = animName;
-    return returnName
-}
-
-
-function calculateBounds(skeleton) {
-    skeleton.setToSetupPose();
-    skeleton.updateWorldTransform();
-    var offset = new spine.Vector2();
-    var size = new spine.Vector2();
-    skeleton.getBounds(offset, size, []);
-    offset.y = 0;
-    return { offset: offset, size: size };
-}
-
-function render() {
-    var now = Date.now() / 1000;
-    var delta = now - lastFrameTime;
-    lastFrameTime = now;
-    delta *= speedFactor;
-
-    // Update the MVP matrix to adjust for canvas size changes
-    resize();
-
-
-    gl.clearColor(bgColor[0], bgColor[1], bgColor[2], 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    // Apply the animation state based on the delta time.
-    var state = window.skeleton.state;
-    var skeleton = window.skeleton.skeleton;
-    var bounds = window.skeleton.bounds;
-    var premultipliedAlpha = window.skeleton.premultipliedAlpha;
-    state.update(delta);
-    state.apply(skeleton);
-    moveMentSkeleton( skeleton, movement);
-    skeleton.updateWorldTransform();
-
-    // Bind the shader and set the texture and model-view-projection matrix.
-    shader.bind();
-    shader.setUniformi(spine.webgl.Shader.SAMPLER, 0);
-    shader.setUniform4x4f(spine.webgl.Shader.MVP_MATRIX, mvp.values);
-
-    // Start the batch and tell the SkeletonRenderer to render the active skeleton.
-    batcher.begin(shader);
-
-    skeletonRenderer.premultipliedAlpha = premultipliedAlpha;
-    skeletonRenderer.draw(batcher, skeleton);
-    batcher.end();
-
-    shader.unbind();
-
-    //console.log(bounds);
-    if  ( false ) {
-        debugShader.bind();
-        debugShader.setUniform4x4f(spine.webgl.Shader.MVP_MATRIX, mvp.values);
-        debugRenderer.premultipliedAlpha = premultipliedAlpha;
-        shapes.begin(debugShader);
-        debugRenderer.draw(shapes, skeleton);
-        shapes.end();
-        debugShader.unbind();
-    }
-
-    requestAnimationFrame(render);
-}
-
-var movement = 0;
-
-function moveMentSkeleton( targetSkeleton, moveX){
-    targetSkeleton.x += moveX;
-    if(moveX < 0){
-
-        targetSkeleton.flipX = true;
-    }
-    else if(moveX > 0){
-        targetSkeleton.flipX = false;
-    }
-}
-
-
-
-function resize() {
-    var w = canvas.clientWidth * devicePixelRatio;
-    var h = canvas.clientHeight * devicePixelRatio;
-    var bounds = window.skeleton.bounds;
-    if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
-    }
-
-    // magic
-    var centerX = bounds.offset.x + bounds.size.x / 2;
-    var centerY = bounds.offset.y + bounds.size.y / 2;
-    var scaleX = bounds.size.x / canvas.width;
-    var scaleY = bounds.size.y / canvas.height;
-    var scale = Math.max(scaleX, scaleY) * 1.2;
-    if (scale < 1) scale = 1;
-    var width = canvas.width * scale;
-    var height = canvas.height * scale;
-
-    mvp.ortho2d(centerX - width / 2, centerY - height / 2, width, height);
-    gl.viewport(0, 0, canvas.width, canvas.height);
 }
