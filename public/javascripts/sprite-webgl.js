@@ -115,9 +115,10 @@ var ShaderUtil = {
 var TextureUtil = {
 
     textureList : [
-        'prcn_data/cha.png',
         'prcn_data/109631.png',
-        'prcn_data/ground.jpg'
+        'prcn_data/ground.png',
+        'prcn_data/tree.png',
+        'prcn_data/bg.jpg'
     ],
 
     _glTexture : {},
@@ -141,38 +142,10 @@ var TextureUtil = {
         var self = this;
 
 
-        var loadcallback = function( success, blob ){
+        // var loadcallback = function( success, blob ){
 
-            var texture = gl.createTexture();
-            self._glTexture[ self.textureList[ initCount ]] = texture;
-            var image = new Image();
-
-            image.onload = function() {
-                console.log(image);
-                gl.bindTexture(gl.TEXTURE_2D, texture);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-                gl.generateMipmap(gl.TEXTURE_2D);
-                initCount++;
-                if( initCount < self.textureList.length )
-                    loadData( self.textureList[initCount] ,loadcallback,'blob', errCallback);
-                else {
-                    console.log(self._glTexture);
-                    cb();
-                }
-            };
-            image.src = URL.createObjectURL(blob);
-        };
-
-        var errCallback =  function(e){console.log(e);};
-
-
-        loadData( self.textureList[initCount], loadcallback, 'blob',errCallback);
-
-        // var  initTextures = function( index ) {
         //     var texture = gl.createTexture();
-
+        //     self._glTexture[ self.textureList[ initCount ]] = texture;
         //     var image = new Image();
 
         //     image.onload = function() {
@@ -182,25 +155,57 @@ var TextureUtil = {
         //         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         //         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
         //         gl.generateMipmap(gl.TEXTURE_2D);
-        //         gl.bindTexture(gl.TEXTURE_2D, null );
-        //         self._glTexture[ self.textureList[ initCount ]] = texture;
         //         initCount++;
         //         if( initCount < self.textureList.length )
-        //             initTextures( initCount );
+        //             loadData( self.textureList[initCount] ,loadcallback,'blob', errCallback);
         //         else {
         //             console.log(self._glTexture);
         //             cb();
         //         }
         //     };
-        //     image.onerror = function(e){
-        //         console.log(e);
-        //     }
-        //     image.src = self.textureList[initCount];
-
-
+        //     image.src = URL.createObjectURL(blob);
         // };
 
-        // initTextures( initCount );
+        // var errCallback =  function(e){console.log(e);};
+
+
+        // loadData( self.textureList[initCount], loadcallback, 'blob',errCallback);
+
+        var  initTextures = function( index ) {
+            var texture = gl.createTexture();
+
+            var image = new Image();
+
+            image.onload = function() {
+                console.log(image);
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+                gl.generateMipmap(gl.TEXTURE_2D);
+                gl.bindTexture(gl.TEXTURE_2D, null );
+                self._glTexture[ self.textureList[ initCount ]] = {
+                    texture : texture,
+                    width   : this.width,
+                    height  : this.height,
+                };
+                initCount++;
+                if( initCount < self.textureList.length )
+                    initTextures( initCount );
+                else {
+                    console.log(self._glTexture);
+                    cb();
+                }
+            };
+            image.onerror = function(e){
+                console.log(e);
+            }
+            image.src = self.textureList[initCount];
+
+
+        };
+
+        initTextures( initCount );
     },
 
     getTexture : function( textureName ){
@@ -222,8 +227,12 @@ var SpriteShader = (function(){
     };
 
 
+    var textureSize = {
+        width : 0,
+        height : 0
+    };
 
-
+    var scaleFactor = 2;
 
     
     var makeBuffer = function(){
@@ -321,34 +330,39 @@ var SpriteShader = (function(){
                 shaderData.attribLocations['uv']);
         }
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indices);
-    };
-
-    function _setUniformi( name, uniform ){
-
-    };
-
-    function _setUniform4x4f( name, uniform ){
-
+        gl.enable(gl.BLEND);
+        gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA  );
     };
 
     function _setTexture(  textureName ){
 
         var texture = TextureUtil.getTexture(textureName);
-       // console.log("_setTexture", texture);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        
+        textureSize.width = texture.width;
+        textureSize.height = texture.height;
 
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture.texture);
         gl.uniform1i(shaderData.uniformLocations['texture'], 0);
     };
 
-    function _setLocation( uniform ){
+    function _setLocation( x, y ){
+        var width = textureSize.width / canvas.width * scaleFactor * -1;
+        var height = textureSize.height / canvas.height * scaleFactor * -1;
+
+        var position = {
+            x : - width - 1 + x / canvas.width * 2,
+            y : - height - 1 + y / canvas.height * 2,
+        };
+
+
         gl.uniformMatrix4fv(
             shaderData.uniformLocations['uWorldMatrix'],
             false,
-            [2,0,0,0,
-            0,2,0,0,
-            0,0,0,0,
-            -1,-1,0,1]);
+            [width,0,0,0,
+            0,height,0,0,
+            0,0,1,0,
+            position.x ,position.y,0,1]);
     };
 
     function _unbind(){
@@ -356,12 +370,13 @@ var SpriteShader = (function(){
     };
 
     function _draw(){
+
         gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
     };
 
     return {
         bind : _bind,
-        setUniformi : _setUniformi,
+      //  setUniformi : _setUniformi,
         setLocation : _setLocation,
         unbind : _unbind,
         setTexture : _setTexture,
