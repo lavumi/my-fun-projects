@@ -192,8 +192,8 @@ var movement = 0;
 
 
 function resize() {
-    var w = canvas.clientWidth * devicePixelRatio;
-    var h = canvas.clientHeight * devicePixelRatio;
+    var w = 1920;//canvas.clientWidth * devicePixelRatio;
+    var h = 1080;//canvas.clientHeight * devicePixelRatio;
     var bounds = window.skeleton.bounds;
     if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
