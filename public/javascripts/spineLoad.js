@@ -249,15 +249,7 @@ function setAnimName( animName ){
     else returnName = animName;
     return returnName
 }
-function calculateBounds(skeleton) {
-    skeleton.setToSetupPose();
-    skeleton.updateWorldTransform();
-    var offset = new spine.Vector2();
-    var size = new spine.Vector2();
-    skeleton.getBounds(offset, size, []);
-    offset.y = 0;
-    return { offset: offset, size: size };
-}
+
 function spineRender( delta, showDebug ){
 
 
@@ -288,7 +280,7 @@ function spineRender( delta, showDebug ){
     shader.unbind();
 
 
-
+    //console.log(bounds);
     if  ( showDebug ) {
         debugShader.bind();
         debugShader.setUniform4x4f(spine.webgl.Shader.MVP_MATRIX, mvp.values);

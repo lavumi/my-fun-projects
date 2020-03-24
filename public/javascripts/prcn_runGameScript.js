@@ -151,7 +151,7 @@ function render() {
 
     SpriteShader.setTexture("bg.jpg");
 
-    bgPos -= delta * 50;
+    bgPos -= delta * 100;
     if( bgPos <= -1024 )
     bgPos = 0;
 
@@ -160,7 +160,7 @@ function render() {
         SpriteShader.draw();
     }
 
-    groundPos -= delta * 200;
+    groundPos -= delta * 400;
     if( groundPos <= -512 )
         groundPos = 0;
 
@@ -177,10 +177,19 @@ function render() {
         SpriteShader.draw();
     }
 
+   // console.log( window.skeleton.skeleton); 
+
+    SpriteShader.setTexture("obstacle.png");
+    for( var i = 0; i < 6 ; i++ ){
+        SpriteShader.setLocation(i * 512 + groundPos,adjustHeight + 40);
+       // console.log( i * 512 + groundPos,adjustHeight + 40 ) ;
+        SpriteShader.draw();
+    }
+
+    
 
 
-
-    spineRender(delta, false);
+    spineRender(delta , true);
 
     requestAnimationFrame(render);
 }
@@ -225,7 +234,7 @@ function runChar(isLeft ){
     var run = {
         animName : 'run',
         isLoop : true,
-        timeScale : 1
+        timeScale : 2
     };
 
     runAnimation([run]);
@@ -297,7 +306,7 @@ function jumpChar (){
     var damage = {
         animName : '000000_run_highJump',
         isLoop : false,
-        timeScale : 1
+        timeScale : 0.5
     };
     runAnimation([damage, idle]);
 }
@@ -336,14 +345,19 @@ function useSkill(index){
 
 function runAnimation( animArray ){
 
+    if( animationQueue.length !== 0)
+        return;
+
     var firstActionObj =  animArray.shift();
     var firstAction = firstActionObj.animName;
 
     firstAction = setAnimName(firstAction);
 
+
+
     var AnimEntry = window.skeleton.state.setAnimation(0, firstAction, firstActionObj.isLoop);
     AnimEntry.timeScale = firstActionObj.timeScale;
-    animationQueue.length = 0;
+
     animArray.forEach( function(i){
         animationQueue.push( i.animName);
     })

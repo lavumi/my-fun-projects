@@ -118,7 +118,8 @@ var TextureUtil = {
         'prcn_data/109631.png',
         'prcn_data/ground.png',
         'prcn_data/tree.png',
-        'prcn_data/bg.jpg'
+        'prcn_data/bg.jpg',
+        'prcn_data/obstacle.png'
     ],
 
     _glTexture : {},
