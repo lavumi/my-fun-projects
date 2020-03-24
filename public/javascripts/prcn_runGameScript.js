@@ -189,7 +189,7 @@ function render() {
     
 
 
-    spineRender(delta , true);
+    spineRender(delta , false);
 
     requestAnimationFrame(render);
 }
