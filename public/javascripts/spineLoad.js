@@ -188,6 +188,7 @@ function loadTexture() {
                     /*start: function (track) {
                         console.log("Animation on track " + track.trackIndex + " started");
                     },
+
                     interrupt: function (track) {
                         console.log("Animation on track " + track.trackIndex + " interrupted");
                     },
@@ -198,15 +199,17 @@ function loadTexture() {
                         console.log("Animation on track " + track.trackIndex + " disposed");
                     },*/
                     complete: function tick(track) {
-                        //console.log("Animation on track " + track.trackIndex + " completed");
                         //console.log('complete' + animationQueue.length );
                         if (animationQueue.length) {
                             var nextAnim = animationQueue.shift();
-                            console.log( 'complete ' + nextAnim );
+                           // console.log( 'start ' + nextAnim );
                             if (nextAnim == 'stop') return;
                             if (nextAnim == 'hold') return setTimeout(tick, 1e3);
+
+                            distBGSpeed = 100;
+                            closeBGSpeed = 400;
                             nextAnim = setAnimName(nextAnim);
-                            console.log(nextAnim);
+                            //console.log(nextAnim);
                             animationState.setAnimation(0, nextAnim, !animationQueue.length);
                         }
                     },

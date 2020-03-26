@@ -16,7 +16,7 @@ var bgColor = [1.0, 1, 1, 1];
 var keyPressed = false;
 
 
-
+var obstaclePos = [];
 var spriteShader;
 
 function getClass(i){
@@ -24,7 +24,7 @@ function getClass(i){
 }
 
 function loadData(url, cb, loadType, progress) {
-    console.log(url);
+   // console.log(url);
     var xhr = new XMLHttpRequest;
     xhr.open('GET', url, true);
     if (loadType) xhr.responseType = loadType;
@@ -126,13 +126,45 @@ function init() {
     TextureUtil.loadTexture( function(){
         loadSpine(characterID, classID);
     })
+
+
+    console.log( obstaclePos);
+    for( var i = 0; i < 6 ; i++)
+        obstaclePos.push( i * 512 + Math.random() * 50 - 25 );
 }
+
+
+
+// var initObstacle = function(){
+//     var obstaclePos = [];
+//     for( var i = 0; i < 6 ; i++)
+//         obstaclePos.push(i * 512 );
+
+//     var _update = function(delta){
+//         for( var i = 0; i < 6 ; i++){
+//             obstaclePos[i]  -= delta * 400;
+//             if( obstaclePos[i] <= -512 )
+//                 obstaclePos[i] = 0;
+//         }
+//     }
+
+//     var _checkCollision = function(){
+
+//     }
+// }
+
+
+
+
 
 
 
 var groundPos = 0;
 var bgPos = 0;
 var adjustHeight;
+
+var distBGSpeed = 100;
+var closeBGSpeed = 400;
 function render() {
 
     var now = Date.now() / 1000;
@@ -151,7 +183,7 @@ function render() {
 
     SpriteShader.setTexture("bg.jpg");
 
-    bgPos -= delta * 100;
+    bgPos -= delta * distBGSpeed;
     if( bgPos <= -1024 )
     bgPos = 0;
 
@@ -160,7 +192,7 @@ function render() {
         SpriteShader.draw();
     }
 
-    groundPos -= delta * 400;
+    groundPos -= delta * closeBGSpeed;
     if( groundPos <= -512 )
         groundPos = 0;
 
@@ -179,17 +211,29 @@ function render() {
 
    // console.log( window.skeleton.skeleton); 
 
+
+
+    SpriteShader.bind();
     SpriteShader.setTexture("obstacle.png");
     for( var i = 0; i < 6 ; i++ ){
-        SpriteShader.setLocation(i * 512 + groundPos,adjustHeight + 40);
-       // console.log( i * 512 + groundPos,adjustHeight + 40 ) ;
+        obstaclePos[i] -= delta * closeBGSpeed;
+        if( obstaclePos[i] < -100 ){
+            obstaclePos[i] = Math.floor(512 * 6 + Math.random() * 500 - 250);
+       }
+        SpriteShader.setLocation(obstaclePos[i], adjustHeight + 40);
+        if( obstaclePos[i] > 100 && obstaclePos[i]  < 270 ){
+            if( damageedChar() )
+                obstaclePos[i] = Math.floor(2000 + Math.random() * 100 - 50);
+        }
+
         SpriteShader.draw();
     }
 
     
-
+    
 
     spineRender(delta , false);
+  //  console.log( window.skeleton.skeleton);
 
     requestAnimationFrame(render);
 }
@@ -285,7 +329,7 @@ function attack2Char (){
 function damageedChar (){
     movement = 0;
     var idle = {
-        animName : 'idle',
+        animName : 'run',
         isLoop : true,
         timeScale : 1
     };
@@ -294,7 +338,14 @@ function damageedChar (){
         isLoop : false,
         timeScale : 1
     };
-    runAnimation([damage, idle]);
+    if (runAnimation([damage, idle])){
+        distBGSpeed = closeBGSpeed = 0;
+        return true;
+    }
+    else {
+        return false;
+    }
+
 }
 
 function jumpChar (){
@@ -346,7 +397,7 @@ function useSkill(index){
 function runAnimation( animArray ){
 
     if( animationQueue.length !== 0)
-        return;
+        return false ;
 
     var firstActionObj =  animArray.shift();
     var firstAction = firstActionObj.animName;
@@ -361,5 +412,6 @@ function runAnimation( animArray ){
     animArray.forEach( function(i){
         animationQueue.push( i.animName);
     })
+    return true;
 
 }
