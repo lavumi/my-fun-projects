@@ -128,11 +128,21 @@ function init() {
     })
 
 
-    console.log( obstaclePos);
     for( var i = 0; i < 6 ; i++)
         obstaclePos.push( i * 512 + Math.random() * 50 - 25 );
 }
 
+var resetObstacle = function( i ){
+    var nextPos = 0;
+
+    for( var k = 0; k < obstaclePos.length ; k++ ){
+        if( nextPos < obstaclePos[k])
+            nextPos = obstaclePos[k];
+    }
+
+    obstaclePos[i] =  nextPos + ( 100 + Math.random() * 500 );
+
+}
 
 
 // var initObstacle = function(){
@@ -218,12 +228,14 @@ function render() {
     for( var i = 0; i < 6 ; i++ ){
         obstaclePos[i] -= delta * closeBGSpeed;
         if( obstaclePos[i] < -100 ){
-            obstaclePos[i] = Math.floor(512 * 6 + Math.random() * 500 - 250);
+            resetObstacle(i);
        }
         SpriteShader.setLocation(obstaclePos[i], adjustHeight + 40);
         if( obstaclePos[i] > 100 && obstaclePos[i]  < 270 ){
-            if( damageedChar() )
-                obstaclePos[i] = Math.floor(2000 + Math.random() * 100 - 50);
+            if( damageedChar() ){
+                resetObstacle(i);
+            }
+               
         }
 
         SpriteShader.draw();
