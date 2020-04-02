@@ -129,7 +129,7 @@ function init() {
 
 
     for( var i = 0; i < 6 ; i++)
-        obstaclePos.push( i * 512 + Math.random() * 50 - 25 );
+        obstaclePos.push( i * 512 + 1024 + Math.random() * 50 - 25 );
 }
 
 var resetObstacle = function( i ){
