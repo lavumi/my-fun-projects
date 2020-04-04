@@ -257,16 +257,14 @@ function spineRender( delta, showDebug ){
 
 
     
+    window.skeleton.skeleton.x = -1420;
     // Apply the animation state based on the delta time.
     var state = window.skeleton.state;
     var skeleton = window.skeleton.skeleton;
-    skeleton.x = -canvas.width + 500;
-    skeleton.y = 0;//-canvas.height + 100;
-    var bounds = window.skeleton.bounds;
     var premultipliedAlpha = window.skeleton.premultipliedAlpha;
     state.update(delta);
     state.apply(skeleton);
-    moveMentSkeleton( skeleton, movement);
+    movementSkeleton( skeleton, movement);
     skeleton.updateWorldTransform();
 
     // Bind the shader and set the texture and model-view-projection matrix.
@@ -282,8 +280,6 @@ function spineRender( delta, showDebug ){
     
     shader.unbind();
 
-
-    //console.log(bounds);
     if  ( showDebug ) {
         debugShader.bind();
         debugShader.setUniform4x4f(spine.webgl.Shader.MVP_MATRIX, mvp.values);
@@ -295,7 +291,7 @@ function spineRender( delta, showDebug ){
     }
 }
 
-function moveMentSkeleton( targetSkeleton, moveX){
+function movementSkeleton( targetSkeleton, moveX){
     if(moveX < 0){
         targetSkeleton.flipX = true;
     }

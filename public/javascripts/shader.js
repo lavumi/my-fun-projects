@@ -18,10 +18,11 @@ var shaders = {
         vtxShaderSrc: 
             "attribute vec4 aVertexPosition;"+
             "attribute vec2 uv;"+
+            "uniform mat4 uVPMatrix;" + 
             "uniform mat4 uWorldMatrix;"+
             "varying mediump vec2 TexCoords;"+
             "void main() {"+
-            "    gl_Position = uWorldMatrix *  aVertexPosition;"+
+            "    gl_Position = uVPMatrix * uWorldMatrix *  aVertexPosition;"+
             "   TexCoords = uv;"+
             "}",
         fragShaderSrc: 
@@ -32,7 +33,7 @@ var shaders = {
             "   gl_FragColor = sampled;"+
             "}",
         attrInfo : ['aVertexPosition', 'uv'],
-        uniInfo : ['uWorldMatrix', 'texture' ]
+        uniInfo : ['uVPMatrix','uWorldMatrix', 'texture' ]
     },
     fontShader: {
         vtxShaderSrc: 

@@ -11,7 +11,9 @@ var shapes;
 window.skeleton = {};
 var activeSkeleton = "";
 var speedFactor = 1;
-var bgColor = [1.0, 1, 1, 1];
+var bgColor = [0, 0.5, 1, 1];
+var ScreenSize = [1920, 1080];
+
 
 var keyPressed = false;
 
@@ -62,12 +64,12 @@ function init() {
     document.addEventListener('keydown', function(event) {
         if(keyMap[event.code] === true ) return;
 
-        if(event.code === 'ArrowRight' ){
-            runChar( false);
-        }
-        else if (event.code === 'ArrowLeft'){
-            runChar( true);
-        }
+        // if(event.code === 'ArrowRight' ){
+        //     runChar( false);
+        // }
+        // else if (event.code === 'ArrowLeft'){
+        //     runChar( true);
+        // }
         // else if (event.code === 'KeyA'){
         //     attackChar();
         // }
@@ -129,7 +131,7 @@ function init() {
 
 
     for( var i = 0; i < 6 ; i++)
-        obstaclePos.push( i * 512 + 1024 + Math.random() * 50 - 25 );
+        obstaclePos.push( i * 512 + Math.random() * 50 - 25  - ScreenSize[0] / 2);
 }
 
 var resetObstacle = function( i ){
@@ -145,32 +147,14 @@ var resetObstacle = function( i ){
 }
 
 
-// var initObstacle = function(){
-//     var obstaclePos = [];
-//     for( var i = 0; i < 6 ; i++)
-//         obstaclePos.push(i * 512 );
-
-//     var _update = function(delta){
-//         for( var i = 0; i < 6 ; i++){
-//             obstaclePos[i]  -= delta * 400;
-//             if( obstaclePos[i] <= -512 )
-//                 obstaclePos[i] = 0;
-//         }
-//     }
-
-//     var _checkCollision = function(){
-
-//     }
-// }
 
 
 
 
 
 
-
-var groundPos = 0;
-var bgPos = 0;
+var groundPos = - ScreenSize[0] / 2 ;
+var bgPos = - ScreenSize[0] / 2;
 var adjustHeight;
 
 var distBGSpeed = 100;
@@ -183,28 +167,28 @@ function render() {
     delta *= speedFactor;
     // Update the MVP matrix to adjust for canvas size changes
     resize();
-    adjustHeight = canvas.height / 2 - 100;
+    adjustHeight = -60;
 
     gl.clearColor(bgColor[0], bgColor[1], bgColor[2], 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
 
-    SpriteShader.bind();
-
-    SpriteShader.setTexture("bg.jpg");
 
     bgPos -= delta * distBGSpeed;
-    if( bgPos <= -1024 )
-    bgPos = 0;
+    if( bgPos < - ScreenSize[0] / 2 -1024)
+        bgPos += 1024;
 
+    SpriteShader.bind();
+
+    SpriteShader.setTexture("bg.png");
     for( var i = 0; i < 4 ; i++ ){
-        SpriteShader.setLocation(i * 1024 + bgPos, -512 + adjustHeight);
+        SpriteShader.setLocation(i * 1024 + bgPos, adjustHeight - 512);
         SpriteShader.draw();
     }
 
     groundPos -= delta * closeBGSpeed;
-    if( groundPos <= -512 )
-        groundPos = 0;
+    if( groundPos < - ScreenSize[0] / 2 - 512)
+        groundPos += 512;
 
 
     SpriteShader.setTexture("ground.png");
@@ -219,19 +203,15 @@ function render() {
         SpriteShader.draw();
     }
 
-   // console.log( window.skeleton.skeleton); 
-
-
-
     SpriteShader.bind();
     SpriteShader.setTexture("obstacle.png");
-    for( var i = 0; i < 6 ; i++ ){
+    for( var i = 0; i < obstaclePos.length ; i++ ){
         obstaclePos[i] -= delta * closeBGSpeed;
-        if( obstaclePos[i] < -100 ){
+        if( obstaclePos[i] < - ScreenSize[0] / 2 ){
             resetObstacle(i);
        }
-        SpriteShader.setLocation(obstaclePos[i], adjustHeight + 40);
-        if( obstaclePos[i] > 100 && obstaclePos[i]  < 270 ){
+        SpriteShader.setLocation(obstaclePos[i], adjustHeight + 30);
+        if( obstaclePos[i] > 100 - ScreenSize[0] / 2 && obstaclePos[i]  < 270 - ScreenSize[0] / 2 ){
             if( damageedChar() ){
                 resetObstacle(i);
             }
@@ -257,26 +237,38 @@ var movement = 0;
 
 
 function resize() {
-    var w = 1920;//canvas.clientWidth * devicePixelRatio;
-    var h = 1080;//canvas.clientHeight * devicePixelRatio;
-    var bounds = window.skeleton.bounds;
+
+    var w = ScreenSize[0];//;
+    var h = ScreenSize[1];//canvas.clientHeight * devicePixelRatio;
+
+    var scaleX = window.innerWidth * devicePixelRatio / w ;
+    var scaleY = window.innerHeight * devicePixelRatio/ h ;
+    var scale = Math.min(scaleX, scaleY) ;
+    if( scale > 1 )
+        scale = 1;
+
+   // console.log( scaleX, scaleY);
+
+    w = Math.floor(w * scale / 10) * 10 ;
+    h = Math.floor(h * scale / 10) * 10;
+
     if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
+        canvas.width = w ;
+        canvas.height = h ;
     }
 
-    // magic
-    var centerX = 0;//bounds.offset.x + bounds.size.x / 2;
-    var centerY = 0;//bounds.offset.y + bounds.size.y / 2;
-    var scaleX = 1;//bounds.size.x / canvas.width;
-    var scaleY = 1;//bounds.size.y / canvas.height;
-    var scale = 2;//Math.max(scaleX, scaleY) * 1.2;
-    if (scale < 1) scale = 1;
-    var width = canvas.width * scale;
-    var height = canvas.height * scale;
 
+    // magic
+    var centerX = 0;
+    var centerY = 0;
+
+
+    var width = canvas.width / scale * 2 ;
+    var height = canvas.height / scale * 2;
     mvp.ortho2d(centerX - width / 2, centerY - height / 2, width, height);
+
     gl.viewport(0, 0, canvas.width, canvas.height);
+   // console.log( canvas.width, canvas.height );
 }
 
 //endregion

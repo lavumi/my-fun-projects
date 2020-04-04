@@ -4,7 +4,7 @@ var TextureUtil = {
         'prcn_data/109631.png',
         'prcn_data/ground.png',
         'prcn_data/tree.png',
-        'prcn_data/bg.jpg',
+        'prcn_data/bg.png',
         'prcn_data/obstacle.png'
     ],
 
@@ -118,9 +118,6 @@ var SpriteShader = (function(){
         width : 0,
         height : 0
     };
-
-    var scaleFactor = 2;
-
     
     var makeBuffer = function(){
 
@@ -145,10 +142,10 @@ var SpriteShader = (function(){
 
 
         const uv = [
-           0,0,
-            0,1,
             1,1,
-            1,0
+            1,0,
+            0,0,
+            0,1
         ];
 
         const indices = [
@@ -216,6 +213,16 @@ var SpriteShader = (function(){
             gl.enableVertexAttribArray(
                 shaderData.attribLocations['uv']);
         }
+
+        gl.uniformMatrix4fv(
+            shaderData.uniformLocations['uVPMatrix'],
+            false,
+            [2 ,     0,     0,      0,
+            0,      2 ,     0,      0,
+            0,      0,     1,      0,
+            0 ,     0,     0,      1]);
+
+
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indices);
         gl.enable(gl.BLEND);
         gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA  );
@@ -234,22 +241,24 @@ var SpriteShader = (function(){
     };
 
     function _setLocation( x, y ){
-        var width = textureSize.width / canvas.width * scaleFactor * -1;
-        var height = textureSize.height / canvas.height * scaleFactor * -1;
+        var width = textureSize.width / ScreenSize[0]  ;
+        var height = textureSize.height / ScreenSize[1]  ;
 
         var position = {
-            x : - width - 1 + x / canvas.width * 2,
-            y : - height - 1 + y / canvas.height * 2,
+            x : x / ScreenSize[0],
+            y : y / ScreenSize[1],
         };
+        
 
+     //   console.log( width, height);
 
         gl.uniformMatrix4fv(
             shaderData.uniformLocations['uWorldMatrix'],
             false,
-            [width,0,0,0,
-            0,height,0,0,
+            [ width,0,0,0,
+            0, height,0,0,
             0,0,1,0,
-            position.x ,position.y,0,1]);
+            position.x, position.y, 0,      1]);
     };
 
     function _unbind(){
@@ -261,6 +270,10 @@ var SpriteShader = (function(){
         gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
     };
 
+    function _getTextureSize(){
+        return textureSize;
+    };
+
     return {
         bind : _bind,
       //  setUniformi : _setUniformi,
@@ -268,6 +281,8 @@ var SpriteShader = (function(){
         unbind : _unbind,
         setTexture : _setTexture,
         draw : _draw,
+
+        getTextureSize : _getTextureSize
     }
 })();
 
