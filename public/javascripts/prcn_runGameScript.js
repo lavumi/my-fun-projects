@@ -231,20 +231,8 @@ function render() {
         SpriteShader.draw();
     }
 
-
-
-    FontSystem.bind();
-    FontSystem.setFont();
-
-    FontSystem.setString( "Life : @@@");
-    FontSystem.setLocation( -950, 470);
-
     
     FontSystem.draw(); 
-
-    // FontSystem.setString( "Score : " + score );
-    // FontSystem.setLocation( 500 , 470);
-    // FontSystem.draw();
 
     spineRender(delta , false);
     requestAnimationFrame(render);
