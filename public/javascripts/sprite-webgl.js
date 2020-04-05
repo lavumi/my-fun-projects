@@ -28,43 +28,13 @@ var TextureUtil = {
         var initCount = 0;
         var self = this;
 
-
-        // var loadcallback = function( success, blob ){
-
-        //     var texture = gl.createTexture();
-        //     self._glTexture[ self.textureList[ initCount ]] = texture;
-        //     var image = new Image();
-
-        //     image.onload = function() {
-        //         console.log(image);
-        //         gl.bindTexture(gl.TEXTURE_2D, texture);
-        //         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-        //         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        //         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-        //         gl.generateMipmap(gl.TEXTURE_2D);
-        //         initCount++;
-        //         if( initCount < self.textureList.length )
-        //             loadData( self.textureList[initCount] ,loadcallback,'blob', errCallback);
-        //         else {
-        //             console.log(self._glTexture);
-        //             cb();
-        //         }
-        //     };
-        //     image.src = URL.createObjectURL(blob);
-        // };
-
-        // var errCallback =  function(e){console.log(e);};
-
-
-        // loadData( self.textureList[initCount], loadcallback, 'blob',errCallback);
-
         var  initTextures = function( index ) {
             var texture = gl.createTexture();
 
             var image = new Image();
 
             image.onload = function() {
-                console.log(image);
+              //  console.log(image);
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -80,7 +50,7 @@ var TextureUtil = {
                 if( initCount < self.textureList.length )
                     initTextures( initCount );
                 else {
-                    console.log(self._glTexture);
+                   // console.log(self._glTexture);
                     cb();
                 }
             };
@@ -88,8 +58,6 @@ var TextureUtil = {
                 console.log(e);
             }
             image.src = self.textureList[initCount];
-
-
         };
 
         initTextures( initCount );
@@ -179,7 +147,7 @@ var SpriteShader = (function(){
     };
 
     //쉐이더 생성
-    shaderData = ShaderUtil.initShaders().textureShader;
+    shaderData = ShaderUtil.initShaders('textureShader').textureShader;
     makeBuffer();
     //버퍼 생성
 
@@ -276,7 +244,6 @@ var SpriteShader = (function(){
 
     return {
         bind : _bind,
-      //  setUniformi : _setUniformi,
         setLocation : _setLocation,
         unbind : _unbind,
         setTexture : _setTexture,

@@ -22,7 +22,7 @@ var shaders = {
             "uniform mat4 uWorldMatrix;"+
             "varying mediump vec2 TexCoords;"+
             "void main() {"+
-            "    gl_Position = uVPMatrix * uWorldMatrix *  aVertexPosition;"+
+            "   gl_Position = uVPMatrix * uWorldMatrix *  aVertexPosition;"+
             "   TexCoords = uv;"+
             "}",
         fragShaderSrc: 
@@ -37,43 +37,32 @@ var shaders = {
     },
     fontShader: {
         vtxShaderSrc: 
-            "attribute vec2 aPos; " +
-            "attribute vec2 aUV;" +
-
-            "uniform vec3 uiWorld;" +
-            "uniform mat4 projection;" +
-            "varying mediump vec2 TexCoords;" +
-
+            "attribute vec4 aVertexPosition;"+
+            "attribute vec2 uv;"+
+            "uniform mat4 uVPMatrix;" + 
+            "uniform mat4 uWorldMatrix;"+
+            "varying mediump vec2 TexCoords;"+
             "void main()" +
             "{" +
-            "    vec2 uiPos = vec2(" +
-            "     aPos.x * uiWorld.z + uiWorld.x," +
-            "     aPos.y * uiWorld.z + uiWorld.y" +
-            "    );" +
-
-            "    vec4 position = projection * vec4(uiPos, 0.0, 1.0);" +
-            "    position.zw = vec2(0.0,1.0);" +
-            "    gl_Position = position;" +
-            "    TexCoords = aUV;" +
+            "   gl_Position = uVPMatrix * uWorldMatrix *  aVertexPosition;"+
+            "   TexCoords = uv;"+
             "} " ,
         fragShaderSrc: 
             "uniform sampler2D texture;" +
             "varying mediump vec2 TexCoords;" +
-
             "void main() {" +
             "    mediump vec4 sampled = texture2D(texture, TexCoords);" +
-            "    mediump float color = sampled.b;" +
-            "    gl_FragColor = vec4(0, 0, 0, sampled.a);//vec4( TexCoords.x, TexCoords.y, 0,1);" +
+            "    gl_FragColor = sampled;"+
             "}" ,
-        attrInfo : ['aPos', 'aUV'],
-        uniInfo : ['uiWorld', 'projection', 'text', 'textColor']
+            attrInfo : ['aVertexPosition', 'uv'],
+            uniInfo : ['uVPMatrix','uWorldMatrix', 'texture' ]
     },
 };
 
 //쉐이더 컴파일
 var ShaderUtil = {
-
-    initShaders: function(){
+    shaderInfo : {},
+    initShaders: function( shaderName ){
         var buildShader = function(gl, type, source) {
             var shader = gl.createShader(type);
             gl.shaderSource(shader, source);
@@ -88,7 +77,6 @@ var ShaderUtil = {
         var createShader =  function( shaderObj,  cb){
             var shaderProgram = gl.createProgram();
             var vertexShader, fragShader;
-
 
             vertexShader = buildShader( gl,gl.VERTEX_SHADER, shaderObj.vtxShaderSrc );
             gl.attachShader(shaderProgram, vertexShader);
@@ -131,11 +119,12 @@ var ShaderUtil = {
             cb( singleShaderInfo );
         };
 
-        var shaderInfo = {};
 
-        createShader(shaders["textureShader"],  function( result ){
-            shaderInfo[ "textureShader" ] = result;
+
+        var self = this;
+        createShader( shaders[shaderName],  function( result ){
+            self.shaderInfo[ shaderName ] = result;
         });
-        return shaderInfo;
+        return self.shaderInfo;
     },
 };

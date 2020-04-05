@@ -132,6 +132,10 @@ function init() {
 
     for( var i = 0; i < 6 ; i++)
         obstaclePos.push( i * 512 + Math.random() * 50 - 25  - ScreenSize[0] / 2);
+
+
+        FontSystem.loadFont();
+  //  xml2json();
 }
 
 var resetObstacle = function( i ){
@@ -150,7 +154,7 @@ var resetObstacle = function( i ){
 
 
 
-
+var score = 0;
 
 
 var groundPos = - ScreenSize[0] / 2 ;
@@ -159,13 +163,17 @@ var adjustHeight;
 
 var distBGSpeed = 100;
 var closeBGSpeed = 400;
+
+
 function render() {
 
     var now = Date.now() / 1000;
     var delta = now - lastFrameTime;
     lastFrameTime = now;
     delta *= speedFactor;
-    // Update the MVP matrix to adjust for canvas size changes
+
+
+
     resize();
     adjustHeight = -60;
 
@@ -209,24 +217,36 @@ function render() {
         obstaclePos[i] -= delta * closeBGSpeed;
         if( obstaclePos[i] < - ScreenSize[0] / 2 ){
             resetObstacle(i);
-       }
+
+            score += 1;
+
+        }
         SpriteShader.setLocation(obstaclePos[i], adjustHeight + 30);
         if( obstaclePos[i] > 100 - ScreenSize[0] / 2 && obstaclePos[i]  < 270 - ScreenSize[0] / 2 ){
             if( damageedChar() ){
                 resetObstacle(i);
-            }
-               
+            }   
         }
 
         SpriteShader.draw();
     }
 
+
+
+    FontSystem.bind();
+    FontSystem.setFont();
+
+    FontSystem.setString( "Life : @@@");
+    FontSystem.setLocation( -950, 470);
+
     
-    
+    FontSystem.draw(); 
+
+    // FontSystem.setString( "Score : " + score );
+    // FontSystem.setLocation( 500 , 470);
+    // FontSystem.draw();
 
     spineRender(delta , false);
-  //  console.log( window.skeleton.skeleton);
-
     requestAnimationFrame(render);
 }
 

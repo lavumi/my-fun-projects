@@ -182,7 +182,7 @@ function loadTexture() {
 
                 animationStateData = new spine.AnimationStateData(skeleton.data);
                 var animationState = new spine.AnimationState(animationStateData);
-                console.log( animationStateData );
+              //  console.log( animationStateData );
                 animationState.setAnimation(0, getClass(currentClass) + '_run', true);
                 animationState.addListener({
                     /*start: function (track) {
