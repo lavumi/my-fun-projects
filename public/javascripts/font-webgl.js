@@ -139,7 +139,7 @@ var FontSystem = (function () {
 
         var fontStartPos = [0, 0];
 
-        vertexCount = 0;
+        var vertexCount = LabelData[ labelName].renderData.vertexCount = 0;
         for (var i = 0; i < string.length; i++) {
 
             if (string[i] === " ") {
@@ -210,7 +210,7 @@ var FontSystem = (function () {
             vertexCount += 6;
 
         }
-
+        LabelData[ labelName].renderData.vertexCount = vertexCount;
 
 
         const positionBuffer = gl.createBuffer();
@@ -305,9 +305,10 @@ var FontSystem = (function () {
             _makeBuffer(key);
             _bind(key);
             _setLocation(key);
+            gl.drawElements(gl.TRIANGLES, LabelData[ key].renderData.vertexCount, gl.UNSIGNED_SHORT, 0);
         });
 
-        gl.drawElements(gl.TRIANGLES, vertexCount, gl.UNSIGNED_SHORT, 0);
+
     };
 
     return {
