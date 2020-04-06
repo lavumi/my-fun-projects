@@ -190,7 +190,7 @@ function render() {
 
     SpriteShader.setTexture("bg.png");
     for( var i = 0; i < 4 ; i++ ){
-        SpriteShader.setLocation(i * 1024 + bgPos, adjustHeight - 512);
+        SpriteShader.setAttr(i * 1024 + bgPos, adjustHeight - 512);
         SpriteShader.draw();
     }
 
@@ -199,15 +199,15 @@ function render() {
         groundPos += 512;
 
 
-    SpriteShader.setTexture("ground.png");
+    SpriteShader.setTexture("ground2.png");
     for( var i = 0; i < 6 ; i++ ){
-        SpriteShader.setLocation(i * 512 + groundPos, adjustHeight);
+        SpriteShader.setAttr(i * 512 + groundPos, adjustHeight, 0.5);
         SpriteShader.draw();
     }
 
     SpriteShader.setTexture("tree.png");
     for( var i = 0; i < 6 ; i++ ){
-        SpriteShader.setLocation(i * 512 + groundPos,adjustHeight);
+        SpriteShader.setAttr(i * 512 + groundPos,adjustHeight);
         SpriteShader.draw();
     }
 
@@ -221,7 +221,7 @@ function render() {
             score += 1;
 
         }
-        SpriteShader.setLocation(obstaclePos[i], adjustHeight + 30);
+        SpriteShader.setAttr(obstaclePos[i], adjustHeight + 30);
         if( obstaclePos[i] > 100 - ScreenSize[0] / 2 && obstaclePos[i]  < 270 - ScreenSize[0] / 2 ){
             if( damageedChar() ){
                 resetObstacle(i);

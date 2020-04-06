@@ -2,7 +2,7 @@ var TextureUtil = {
 
     textureList : [
         'prcn_data/109631.png',
-        'prcn_data/ground.png',
+        'prcn_data/ground2.png',
         'prcn_data/tree.png',
         'prcn_data/bg.png',
         'prcn_data/obstacle.png'
@@ -208,12 +208,21 @@ var SpriteShader = (function(){
         gl.uniform1i(shaderData.uniformLocations['texture'], 0);
     };
 
-    function _setLocation( x, y ){
-        var width = textureSize.width / ScreenSize[0]  ;
-        var height = textureSize.height / ScreenSize[1]  ;
+    function _setAttr( x, y , scaleX, scaleY){
+
+        if( scaleX === undefined ){
+            scaleX = scaleY = 1;
+        }
+        else if ( scaleY === undefined ){
+            scaleY = scaleX;
+        }
+
+
+        var width = textureSize.width / ScreenSize[0] * scaleX  ;
+        var height = textureSize.height / ScreenSize[1] * scaleY ;
 
         var position = {
-            x : x / ScreenSize[0],
+            x : x / ScreenSize[0] ,
             y : y / ScreenSize[1],
         };
         
@@ -244,7 +253,7 @@ var SpriteShader = (function(){
 
     return {
         bind : _bind,
-        setLocation : _setLocation,
+        setAttr : _setAttr,
         unbind : _unbind,
         setTexture : _setTexture,
         draw : _draw,
