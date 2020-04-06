@@ -39,6 +39,7 @@ var shaders = {
         vtxShaderSrc: 
             "attribute vec4 aVertexPosition;"+
             "attribute vec2 uv;"+
+
             "uniform mat4 uVPMatrix;" + 
             "uniform mat4 uWorldMatrix;"+
             "varying mediump vec2 TexCoords;"+
@@ -48,14 +49,16 @@ var shaders = {
             "   TexCoords = uv;"+
             "} " ,
         fragShaderSrc: 
+            "precision mediump float;" +
+            "uniform vec4 color;"+
             "uniform sampler2D texture;" +
             "varying mediump vec2 TexCoords;" +
             "void main() {" +
             "    mediump vec4 sampled = texture2D(texture, TexCoords);" +
-            "    gl_FragColor = sampled;"+
+            "    gl_FragColor = vec4(0, 0, 0, sampled.a);"+
             "}" ,
-            attrInfo : ['aVertexPosition', 'uv'],
-            uniInfo : ['uVPMatrix','uWorldMatrix', 'texture' ]
+        attrInfo : ['aVertexPosition', 'uv'],
+        uniInfo : ['uVPMatrix','uWorldMatrix', 'texture', 'color']
     },
 };
 
