@@ -208,34 +208,26 @@ var SpriteShader = (function(){
         gl.uniform1i(shaderData.uniformLocations['texture'], 0);
     };
 
-    function _setAttr( x, y , scaleX, scaleY){
+    function _setAttr( position , scale){
 
-        if( scaleX === undefined ){
-            scaleX = scaleY = 1;
-        }
-        else if ( scaleY === undefined ){
-            scaleY = scaleX;
+        if( scale=== undefined ){
+            scale = scale = 1;
         }
 
 
-        var width = textureSize.width / ScreenSize[0] * scaleX  ;
-        var height = textureSize.height / ScreenSize[1] * scaleY ;
-
-        var position = {
-            x : x / ScreenSize[0] ,
-            y : y / ScreenSize[1],
-        };
-        
+        var width = textureSize.width / ScreenSize[0] * scale  ;
+        var height = textureSize.height / ScreenSize[1] * scale ;
 
      //   console.log( width, height);
 
+     //console.log( position[0]);
         gl.uniformMatrix4fv(
             shaderData.uniformLocations['uWorldMatrix'],
             false,
             [ width,0,0,0,
             0, height,0,0,
             0,0,1,0,
-            position.x, position.y, 0,      1]);
+            position[0] / ScreenSize[0], position[1] / ScreenSize[1], 0,      1]);
     };
 
     function _unbind(){

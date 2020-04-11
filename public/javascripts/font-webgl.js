@@ -107,14 +107,11 @@ var FontSystem = (function () {
         image.src = 'font/' + atlas + ".png";
     }
 
-
     function _loadShader() {
         shaderData = ShaderUtil.initShaders('fontShader').fontShader;
     };
 
     function _setFont(fontName) {
-        // var texture = TextureUtil.getTexture(fontName);
-
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, fontAtlas);
         gl.uniform1i(shaderData.uniformLocations['texture'], 0);
@@ -307,18 +304,44 @@ var FontSystem = (function () {
             _setLocation(key);
             gl.drawElements(gl.TRIANGLES, LabelData[ key].renderData.vertexCount, gl.UNSIGNED_SHORT, 0);
         });
-
-
     };
+
+
+    function _setString( labelName, string){
+        if( !!LabelData[ labelName ] === true )
+            LabelData[ labelName ].text = string;
+        else{
+            LabelData[ labelName ] = {
+                text: string,
+                location : [0, 0],
+                renderData: {
+                    buffer: {
+                        position: null,
+                        uv: null,
+                        indices: null,
+                    },
+                    vertexCount: 0,
+                    dirty : false
+                }
+            }
+        }
+    }
+
+
+    function _setPosition( labelName , position ){
+        if( !!LabelData[ labelName ] === true )
+            LabelData[ labelName ].location = position;
+        else{
+            console.log( 'No Label : ' + labelName);
+        }
+    }
 
     return {
         loadFont: loadFont,
+        
 
-
-
-        //setString: _setString,
-        //bind: _bind,
-        //setLocation: _setLocation,
+        setString: _setString,
+        setPosition : _setPosition,
         draw: _draw,
     }
 })();
