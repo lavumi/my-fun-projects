@@ -9,22 +9,22 @@ router.get('/', function(req, res, next) {
 module.exports = router;
 
 
-// var mysql = require('mysql');
+var mysql = require('mysql');
 
-// var connection = mysql.createConnection({
-//     host  : 'localhost',
-//     user : 'lavumi',
-//     password : 'cagesong',
-//     database : 'ac_amibo'
-// })
+var connection = mysql.createConnection({
+    host  : 'localhost',
+    user : 'lavumi',
+    password : 'cagesong',
+    database : 'ac_amibo'
+})
 
-// connection.connect();
+connection.connect();
 
-// connection.query('SELECT * FROM card', function(err, result, fileds){
-//     if(err)
-//         console.log(err);
-//     else
-//         console.log( result , fileds );
-// })
+connection.query('SELECT * FROM card', function(err, result, fileds){
+    if(err)
+        console.log(err);
+    else
+        console.log( result , fileds );
+})
 
-// connection.end();
+connection.end();
