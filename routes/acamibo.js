@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var mysql = require('mysql');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -8,8 +9,9 @@ router.get('/', function(req, res, next) {
 
 module.exports = router;
 
+console.log("testtest");
 
-var mysql = require('mysql');
+
 
 var connection = mysql.createConnection({
     host  : 'localhost',
@@ -18,13 +20,20 @@ var connection = mysql.createConnection({
     database : 'ac_amibo'
 })
 
-connection.connect();
 
-connection.query('SELECT * FROM card', function(err, result, fileds){
-    if(err)
-        console.log(err);
-    else
-        console.log( result , fileds );
-})
+router.get('/get', function(req,res,next){
+    connection.query('SELECT * FROM card', function(err, result, fileds){
+        if(err)
+            console.log(err);
+        else{
+            res.render('create', {
+                results: result
+            });
+        }
+    });
+});
+// connection.connect();
 
-connection.end();
+
+
+// connection.end();
