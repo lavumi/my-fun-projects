@@ -7,5 +7,12 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+
+
+
+    <% results.forEach( function(val){ %>
+      <li><%=val.cardIdx %> <%= val.eng_name %></li>
+      <img src = 'amibo/<%= val.cardIdx>=100?(val.cardIdx-val.cardIdx%100)/100:0%><%= val.cardIdx>=10?(val.cardIdx%100-val.cardIdx%100%10)/10:0%><%= val.cardIdx%10%> <%=val.eng_name%>.png' />
+    <% }) %>
   </body>
 </html>

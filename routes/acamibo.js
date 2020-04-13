@@ -3,30 +3,32 @@ var router = express.Router();
 var mysql = require('mysql');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('acamibo', { title: 'Lavumi Animal Crossing Amibo' });
-});
+// router.get('/', function(req, res, next) {
+//   res.render('acamibo', { title: 'Lavumi Animal Crossing Amibo' });
+// });
 
 module.exports = router;
 
-console.log("testtest");
+//console.log("testtest");
 
 
 
 var connection = mysql.createConnection({
-    host  : 'localhost',
-    user : 'lavumi',
-    password : 'cagesong',
-    database : 'ac_amibo'
+    host  : 'lavumi.iptime.org',
+    user : 'development',
+    password : '1q2w3e',
+    database : 'ac_amibo_dev',
+    port : '13306'
 })
 
 
-router.get('/get', function(req,res,next){
+router.get('/', function(req,res,next){
     connection.query('SELECT * FROM card', function(err, result, fileds){
         if(err)
             console.log(err);
         else{
-            res.render('create', {
+            res.render('acamibo', {
+                title : 'Lavumi Animal Crossing Amibo' ,
                 results: result
             });
         }
