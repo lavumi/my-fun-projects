@@ -1,18 +1,109 @@
-<!DOCTYPE html>
+
+
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/cardstyle.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <div id="cards">
 
-
-
-    <% results.forEach( function(val){ %>
-      <li><%=val.cardIdx %> <%= val.eng_name %></li>
-      <img src = 'amibo/<%= val.cardIdx>=100?(val.cardIdx-val.cardIdx%100)/100:0%><%= val.cardIdx>=10?(val.cardIdx%100-val.cardIdx%100%10)/10:0%><%= val.cardIdx%10%> <%=val.eng_name%>.png' />
-    <% }) %>
+      <figure class="card card--psychic">
+        <div class="card__image-container">
+          <img src="amibo/264 MARSHAL.png" class="card__image">
+        </div>
+    
+        <figcaption class="card__caption">
+          <h1 class="card__name">쭈니</h1>
+          <h3 class="card__type">
+           264
+          </h3>
+    
+          <table class="card__stats">
+            <tbody>
+              <tr>
+                <th>종족</th>
+                <td>다람쥐</td>
+              </tr>
+              <tr>
+                <th>성별</th>
+                <td>남</td>
+              </tr>
+    
+              <tr>
+                <th>성격</th>
+                <td>느끼함</td>
+              </tr>
+            </tbody>
+          </table>
+    
+          <div class="card__abilities">
+            <h4 class="card__ability">
+              <span class="card__label">생일</span>
+              9월 29일
+            </h4>
+            <h4 class="card__ability">
+              <span class="card__label">별자리</span>
+              천칭자리
+            </h4>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+    
+    <script id="card-template" type="text/x-handlebars-template">
+      <figure class="card card--{{type}}">
+      <div class="card__image-container">
+        <img src="{{imageAddress}}" alt="{{name}}" class="card__image">   
+      </div>
+      
+      <figcaption class="card__caption">
+        <h1 class="card__name">{{name}}</h1>
+    
+        <h3 class="card__type">e
+          {{type}}
+        </h3>
+    
+        <table class="card__stats">
+          <tr>
+            <th>HP</th>
+            <td>{{hp}}</td>
+          </tr>
+          <tr>
+            <th>Attack</th>
+            <td>{{attack}}</td>
+          </tr>
+          
+          <tr>
+            <th>Defense</th>
+            <td>{{defense}}</td>
+          </tr>
+    
+          <tr>
+            <th>Special Attack</th>
+            <td>{{spAttack}}</td>
+          </tr>
+          <tr>
+            <th>Special Defense</th>
+            <td>{{spDefense}}</td>
+          </tr>
+          <tr>
+            <th>Speed</th>  
+            <td>{{speed}}</td>
+          </tr>
+        </table>
+        
+        <div class="card__abilities">
+          <h4 class="card__ability">
+            <span class="card__label">Ability</span>
+            {{ability1}}
+          </h4>
+          <h4 class="card__ability">
+            <span class="card__label">Hidden Ability</span>
+            {{ability2}}
+          </h4>
+        </div>
+      </figcaption>
+    </figure>
+    </script>
   </body>
 </html>
