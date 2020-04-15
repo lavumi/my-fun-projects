@@ -7,11 +7,6 @@ var mysql = require('mysql');
 //   res.render('acamibo', { title: 'Lavumi Animal Crossing Amibo' });
 // });
 
-module.exports = router;
-
-//console.log("testtest");
-
-
 
 var connection = mysql.createConnection({
     host  : 'lavumi.iptime.org',
@@ -22,8 +17,8 @@ var connection = mysql.createConnection({
 })
 
 
-router.get('/', function(req,res,next){
-    connection.query('SELECT * FROM card', function(err, result, fileds){
+router.get('/', function(req,res){
+    connection.query('SELECT * FROM villager where personality=3', function(err, result, fileds){
         if(err)
             console.log(err);
         else{
@@ -34,8 +29,16 @@ router.get('/', function(req,res,next){
         }
     });
 });
+
+
+router.get('/test', function (req, res) {
+    res.send('test');
+  });
 // connection.connect();
 
 
 
 // connection.end();
+
+
+module.exports = router;

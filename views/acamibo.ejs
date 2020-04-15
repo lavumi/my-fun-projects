@@ -1,55 +1,75 @@
-
-
 <html>
   <head>
     <link rel='stylesheet' href='/stylesheets/cardstyle.css' />
   </head>
   <body>
-    <div id="cards">
 
+    <div id="cards">
+      <% results.forEach( function(val){ %>
       <figure class="card card--psychic">
         <div class="card__image-container">
-          <img src="amibo/264 MARSHAL.png" class="card__image">
+          <% if( val.cardIdx < 999 ){ %>
+            <img src = 'amibo/<%= val.cardIdx>=100?(val.cardIdx-val.cardIdx%100)/100:0%><%= val.cardIdx>=10?(val.cardIdx%100-val.cardIdx%100%10)/10:0%><%= val.cardIdx%10%> <%=val.eng_name%>.png' class="card__image"/>
+          <% } else { %>
+            <img src = 'amibo/999 EMPTY.png' class="card__image"/>
+          <% } %>
         </div>
     
         <figcaption class="card__caption">
-          <h1 class="card__name">쭈니</h1>
+          <h1 class="card__name_eng"><%= val.eng_name %></h1>
+          <h1 class="card__name"><%=val.kor_name %></h1>
+          <h1 class="card__name_eng"><%= val.jap_name %></h1>
           <h3 class="card__type">
-           264
+            <% if( val.cardIdx < 999 ){ %>
+              <%=val.cardIdx %>
+            <% } else { %>
+            <% } %>
+
           </h3>
-    
           <table class="card__stats">
             <tbody>
               <tr>
                 <th>종족</th>
-                <td>다람쥐</td>
+                <td><%=val.species %></td>
               </tr>
               <tr>
                 <th>성별</th>
-                <td>남</td>
+                <td><%=val.gender == 0 ? '남' : '여' %></td>
               </tr>
     
               <tr>
                 <th>성격</th>
-                <td>느끼함</td>
+                <% if(val.personality == 0){ %>
+                  <td>먹보</td>
+                <% } else if ( val.personality == 1){ %>
+                  <td>운동광</td>
+                <% } else if ( val.personality == 2){ %>
+                  <td>무뚝뚝</td>
+                <% } else if ( val.personality == 3){ %>
+                  <td>느끼함</td>
+                <% } else if ( val.personality == 4){ %>
+                  <td>친절함</td>
+                <% } else if ( val.personality == 5){ %>
+                  <td>아이돌</td>
+                <% } else if ( val.personality == 6){ %>
+                  <td>성숙함</td>
+                <% } else if ( val.personality == 7){ %>
+                  <td>단순활발</td>
+                <% } %>
               </tr>
             </tbody>
+
+            <tr>
+              <th>생일</th>
+              <td><%= new Date(val.birth).getMonth() %>월 <%= new Date(val.birth).getDate() %>일</td>
+            </tr>
           </table>
-    
-          <div class="card__abilities">
-            <h4 class="card__ability">
-              <span class="card__label">생일</span>
-              9월 29일
-            </h4>
-            <h4 class="card__ability">
-              <span class="card__label">별자리</span>
-              천칭자리
-            </h4>
-          </div>
+  
         </figcaption>
       </figure>
+      <% }) %>
     </div>
-    
+
     <script id="card-template" type="text/x-handlebars-template">
       <figure class="card card--{{type}}">
       <div class="card__image-container">
@@ -104,6 +124,8 @@
         </div>
       </figcaption>
     </figure>
-    </script>
+    
+  </script>
+
   </body>
 </html>
