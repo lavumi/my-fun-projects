@@ -18,7 +18,10 @@ var connection = mysql.createConnection({
 
 
 router.get('/', function(req,res){
-    connection.query('SELECT * FROM villager where personality=3', function(err, result, fileds){
+    connection.query('SELECT * FROM villager'  
+     + ' where personality=3'
+     + ' order by birth'
+    , function(err, result, fileds){
         if(err)
             console.log(err);
         else{
