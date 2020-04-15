@@ -35,7 +35,7 @@
       <% } %> 
         <div class="card__image-container">
           <% if( val.cardIdx < 999 ){ %>
-            <img src = 'amibo/<%= val.cardIdx>=100?(val.cardIdx-val.cardIdx%100)/100:0%><%= val.cardIdx>=10?(val.cardIdx%100-val.cardIdx%100%10)/10:0%><%= val.cardIdx%10%> <%=val.eng_name%>.png' class="card__image"/>
+            <img src = 'amibo/<%= val.cardIdx>=100?(val.cardIdx-val.cardIdx%100)/100:0%><%= val.cardIdx>=10?(val.cardIdx%100-val.cardIdx%100%10)/10:0%><%= val.cardIdx%10%> <%=val.eng_name.toUpperCase()%>.png' class="card__image"/>
           <% } else { %>
             <img src = 'amibo/999 EMPTY.png' class="card__image"/>
           <% } %>
