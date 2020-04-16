@@ -1,13 +1,13 @@
 <html>
   <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel='stylesheet' href='/stylesheets/cardstyle.css' />
   </head>
   <body>
     <header>
-      <form action="/ac" method="post">
-      <!-- <input list="species" name="species" value =""> -->
-        <select id = "species">
-          <option value ="">-</option>
+      <form id ='tableForm' action="/ac" method="post">
+        <select class="custom-select sources"  data-style='btn-info' name = "species" placeholder="종족" >
+          <option selected="selected" value ="-1">-</option>
           <option value ="개">개</option>
           <option value ="개구리">개구리</option>
           <option value ="개미핥기">개미핥기</option>
@@ -43,26 +43,24 @@
           <option value ="햄스터">햄스터</option>
           <option value ="호랑이">호랑이</option>
         </select>
-      <!-- <input list="gender" name="gender" value =""> -->
-        <select id = "gender">
-          <option value = "-1">-</option>
+        <select class='custom-select sources' data-style='btn-info'  name = "gender" placeholder="성별" >
+          <option selected="selected" value = "-1">-</option>
           <option value = "0">남</option>
           <option value = "1">여</option>
         </select>
-      <!-- <input list="personality" name="personality" value =""> -->
-        <select id = "personality">
-          <option value = ""></option>
-          <option value = "먹보"></option>
-          <option value = "운동광"></option>
-          <option value = "무뚝뚝"></option>
-          <option value = "느끼함"></option>
-          <option value = "친절함"></option>
-          <option value = "아이돌"></option>
-          <option value = "성숙함"></option>
-          <option value = "단순활발"></option>
+        <select class='custom-select sources' data-style='btn-info'  name = "personality" placeholder="성격">
+          <option value = "-1">-</option>
+          <option value = "0">먹보</option>
+          <option value = "1">운동광</option>
+          <option value = "2">무뚝뚝</option>
+          <option value = "3">느끼함</option>
+          <option value = "4">친절함</option>
+          <option value = "5">아이돌</option>
+          <option value = "6">성숙함</option>
+          <option value = "7">단순활발</option>
         </select> 
-      <!-- <input type="submit" value="Submit">  -->
-      </form>
+        <input class ='custom-btn' type="submit" />
+      </form> 
     </header>
 
     <div id="cards">
@@ -213,6 +211,43 @@
       </figcaption>
     </figure>
     
+  </script>
+  <script>
+    $(".custom-select").each(function() {
+  var classes = $(this).attr("class"),
+      id      = $(this).attr("id"),
+      name    = $(this).attr("name");
+  var template =  '<div class="' + classes + '">';
+      template += '<span class="custom-select-trigger">' + $(this).attr("placeholder") + '</span>';
+      template += '<div class="custom-options">';
+      $(this).find("option").each(function() {
+        template += '<span class="custom-option ' + $(this).attr("class") + '" data-value="' + $(this).attr("value") + '">' + $(this).html() + '</span>';
+      });
+  template += '</div></div>';
+  
+  $(this).wrap('<div class="custom-select-wrapper"></div>');
+  $(this).hide();
+  $(this).after(template);
+});
+$(".custom-option:first-of-type").hover(function() {
+  $(this).parents(".custom-options").addClass("option-hover");
+}, function() {
+  $(this).parents(".custom-options").removeClass("option-hover");
+});
+$(".custom-select-trigger").on("click", function() {
+  $('html').one('click',function() {
+    $(".custom-select").removeClass("opened");
+  });
+  $(this).parents(".custom-select").toggleClass("opened");
+  event.stopPropagation();
+});
+$(".custom-option").on("click", function() {
+  $(this).parents(".custom-select-wrapper").find("select").val($(this).data("value"));
+  $(this).parents(".custom-options").find(".custom-option").removeClass("selection");
+  $(this).addClass("selection");
+  $(this).parents(".custom-select").removeClass("opened");
+  $(this).parents(".custom-select").find(".custom-select-trigger").text($(this).text());
+});
   </script>
 
   </body>

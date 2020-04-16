@@ -47,23 +47,23 @@ router.get('/test', function (req, res) {
 var selectquery = function (species, gender, personality, res) {
 
     var querystring = 'SELECT * FROM villager';
-    if (species != '-' || gender >= 0 || personality >= 0) {
+    if (species != -1 || gender >= 0 || personality >= 0) {
         querystring += ' where';
     }
     var prefix = false;
-    if (species != '-' && species != '') {
+    if (species != -1) {
         querystring += ' species=\'' + species + '\'';
         prefix = true;
     }
 
-    if (gender >= 0) {
+    if (gender != -1 ) {
         if (prefix === true)
             querystring += ' and';
         querystring += ' gender=' + gender;
         prefix = true;
     }
 
-    if (personality >= 0) {
+    if (personality != -1 ) {
         if (prefix === true)
             querystring += ' and';
         querystring += ' personality=' + personality;
@@ -89,46 +89,6 @@ var selectquery = function (species, gender, personality, res) {
 router.post('/', function (req, res) {
     console.log(req.body);
 
-    var species = req.body.species;
-    var gender;
-    if (req.body.gender === "-" || req.body.gender === "") {
-        gender = -1;
-    }
-    else if (req.body.gender === "남") {
-        gender = 0;
-    }
-    else if (req.body.gender === "여") {
-        gender = 1;
-    }
-
-    var personality;
-    if (req.body.personality === "-" || req.body.personality === "") {
-        personality = -1;
-    }
-    else if (req.body.personality === "먹보") {
-        personality = 0;
-    }
-    else if (req.body.personality === "운동광") {
-        personality = 1;
-    }
-    else if (req.body.personality === "무뚝뚝") {
-        personality = 2;
-    }
-    else if (req.body.personality === "느끼함") {
-        personality = 3;
-    }
-    else if (req.body.personality === "친절함") {
-        personality = 4;
-    }
-    else if (req.body.personality === "아이돌") {
-        personality = 5;
-    }
-    else if (req.body.personality === "성숙함") {
-        personality = 6;
-    }
-    else if (req.body.personality === "단순활발") {
-        personality = 7;
-    }
-    selectquery(species, gender,personality, res);
+    selectquery(req.body.species, req.body.gender, req.body.personality, res);
 });
 module.exports = router;
