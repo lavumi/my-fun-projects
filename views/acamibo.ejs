@@ -4,6 +4,10 @@
   </head>
   <body>
 
+    <header>
+      <p>header here</p>
+    </header>
+
     <div id="cards">
       <% results.forEach( function(val){ %>
       <% if( new Date(val.birth).getTime() / 1000 <  -2207433600 ){ %>
@@ -12,7 +16,7 @@
       <figure class="card card--brown">
       <% } else if( new Date(val.birth).getTime() / 1000 <  -2202249600 ){ %>
       <figure class="card card--pink">
-      <% } else if( new Date(val.birth).getTime() / 1000 <  -2199657600 ){ %>
+      <% } else if( new Date(val.birth).getTime() / 1000 <=  -2199657600 ){ %>
       <figure class="card card--red">
       <% } else if( new Date(val.birth).getTime() / 1000 <  -2196979200 ){ %>
       <figure class="card card--green">
