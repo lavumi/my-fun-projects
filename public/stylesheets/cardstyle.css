@@ -154,13 +154,17 @@ body {
 
 
 header {
-  border : 1px solid #999;
-  background-color: #999;
+  border : 1px solid #000;
+  background-color: #ffffff;
   width : 100%;
   top : 0;
-  height : 50px;
+  left : 0;
+  height : 40px;
   position: fixed;
-  z-index: 6;
+  z-index: 9;
+  align-content: center;
+  border-radius: 0 0 4px 4px;
+
 }
 
 
