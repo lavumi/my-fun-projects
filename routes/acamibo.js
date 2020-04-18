@@ -36,14 +36,6 @@ router.get('/', function (req, res) {
     //     });
 });
 
-
-router.get('/test', function (req, res) {
-    res.send('test');
-});
-
-// connection.connect();
-// connection.end();
-
 var selectquery = function (species, gender, personality, res) {
 
     var querystring = 'SELECT * FROM villager';
@@ -71,8 +63,6 @@ var selectquery = function (species, gender, personality, res) {
 
 
     querystring += ';';
-
-    console.log(querystring);
 
     connection.query(querystring, function(err, result, fileds){
         if(err)
