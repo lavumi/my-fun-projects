@@ -9,7 +9,14 @@ var usersRouter = require('./routes/users');
 var pcrunRouter = require('./routes/pcrun');
 var amiboRouter = require('./routes/acamibo');
 
+
+
+
+
+
+
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
