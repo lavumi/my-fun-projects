@@ -2,7 +2,8 @@ var canvas;
 var gl;
 var ScreenSize = [1920, 1080];
 
-function GameMain() {
+var socket = io();
+function GameMain() { 
 
 
     //#region 렌더링 변수
@@ -78,6 +79,23 @@ function GameMain() {
         FontSystem.setString("score", "Score : " + score);
         FontSystem.setPosition("score", [0, 470]);
 
+
+        FontSystem.setString("Rank0", "AAA : 105" );
+        FontSystem.setString("Rank1", "AAA : 104" );
+        FontSystem.setString("Rank2", "AAA : 103" );
+        FontSystem.setString("Rank3", "AAA : 102" );
+        FontSystem.setString("Rank4", "AAA : 101" );
+        FontSystem.setPosition("Rank0", [-950, -230]);
+        FontSystem.setPosition("Rank1", [-950, -290]);
+        FontSystem.setPosition("Rank2", [-950, -350]);
+        FontSystem.setPosition("Rank3", [-950, -410]);
+        FontSystem.setPosition("Rank4", [-950, -470]);
+
+
+    }
+
+    function sendScore(score){
+        socket.emit("set_score", {name : 'AAA', score : score});
     }
 
     function initInput() {
@@ -91,9 +109,9 @@ function GameMain() {
             // else if (event.code === 'ArrowLeft'){
             //     runChar( true);
             // }
-            // else if (event.code === 'KeyA'){
-            //     attackChar();
-            // }
+            if (event.code === 'KeyA'){
+                sendScore(score);
+            }
             // else if (event.code === 'KeyS'){
             //     attack2Char();
             // }
@@ -279,8 +297,29 @@ function GameMain() {
         gl.viewport(0, 0, canvas.width, canvas.height);
     }
 
+    function updateRank( data ){
+
+        for( var i = 0 ; i < 5 ; i ++ ){
+            if( i >= data.length)
+                break;
+            FontSystem.setString("Rank" + i, data[i].name + " " + data[i].score );
+
+        }
+    }
+
     return {
-        init : init
+        init : init,
+        updateRank : updateRank
     }
     //endregion
 }
+
+
+
+var main = new GameMain();
+main.init();
+
+
+socket.on("update_rank", function(data){
+    main.updateRank(data);
+});
