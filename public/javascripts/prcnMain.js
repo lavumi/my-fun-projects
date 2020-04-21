@@ -3,7 +3,7 @@ var gl;
 var ScreenSize = [1920, 1080];
 
 var socket = io();
-function GameMain() { 
+function GameMain() {
 
 
     //#region 렌더링 변수
@@ -80,11 +80,11 @@ function GameMain() {
         FontSystem.setPosition("score", [0, 470]);
 
 
-        FontSystem.setString("Rank0", "AAA : 105" );
-        FontSystem.setString("Rank1", "AAA : 104" );
-        FontSystem.setString("Rank2", "AAA : 103" );
-        FontSystem.setString("Rank3", "AAA : 102" );
-        FontSystem.setString("Rank4", "AAA : 101" );
+        FontSystem.setString("Rank0", "AAA : 105");
+        FontSystem.setString("Rank1", "AAA : 104");
+        FontSystem.setString("Rank2", "AAA : 103");
+        FontSystem.setString("Rank3", "AAA : 102");
+        FontSystem.setString("Rank4", "AAA : 101");
         FontSystem.setPosition("Rank0", [-950, -230]);
         FontSystem.setPosition("Rank1", [-950, -290]);
         FontSystem.setPosition("Rank2", [-950, -350]);
@@ -94,8 +94,8 @@ function GameMain() {
 
     }
 
-    function sendScore(score){
-        socket.emit("set_score", {name : 'AAA', score : score});
+    function sendScore(score) {
+         socket.emit("set_score", {name : 'AAA', score : score});
     }
 
     function initInput() {
@@ -109,7 +109,7 @@ function GameMain() {
             // else if (event.code === 'ArrowLeft'){
             //     runChar( true);
             // }
-            if (event.code === 'KeyA'){
+            if (event.code === 'KeyA') {
                 sendScore(score);
             }
             // else if (event.code === 'KeyS'){
@@ -170,19 +170,32 @@ function GameMain() {
     }
 
 
+    var prevTime = 0;
+    function printDeltaTime(){
+        if ((Date.now() - prevTime) > 33) {
+            var currentdate = new Date();
+            var datetime = "Last Sync: "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+            console.log(" 1 " + (Date.now() - prevTime) + " ++++ " + datetime);
+
+        }
+        prevTime = Date.now();
+    };
 
 
 
     function update() {
 
+        printDeltaTime();
+
 
         var now = Date.now() / 1000;
         var delta = now - lastFrameTime;
-        lastFrameTime = now;
-        delta *= speedFactor;
-
-        movememtDelta = delta * spineManager.getSpeed();
-
+         lastFrameTime = now;
+         delta *= speedFactor;
+         movememtDelta = delta * spineManager.getSpeed();
         for (var i = 0; i < farBgPos.length; i++) {
 
             farBgPos[i][0] -= movememtDelta * distBGSpeed;
@@ -215,11 +228,11 @@ function GameMain() {
 
             }
         }
-
-
         FontSystem.setString("score", "Score : " + score);
+
         render(delta);
         requestAnimationFrame(update);
+
     }
 
     function render(delta) {
@@ -266,7 +279,10 @@ function GameMain() {
     }
 
 
-
+    socket.on("update_rank", function(data){
+        //console.log('update_rank received', data);
+        updateRank(data);
+    });
 
 
 
@@ -297,7 +313,7 @@ function GameMain() {
         gl.viewport(0, 0, canvas.width, canvas.height);
     }
 
-    function updateRank( data ){
+    function updateRank(data) {
 
         for( var i = 0 ; i < 5 ; i ++ ){
             if( i >= data.length)
@@ -308,8 +324,7 @@ function GameMain() {
     }
 
     return {
-        init : init,
-        updateRank : updateRank
+        init: init
     }
     //endregion
 }
@@ -320,6 +335,3 @@ var main = new GameMain();
 main.init();
 
 
-socket.on("update_rank", function(data){
-    main.updateRank(data);
-});

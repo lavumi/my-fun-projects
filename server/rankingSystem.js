@@ -50,13 +50,10 @@ function _getRank(){
 
 module.exports = function(io){
     io.on('connection', function(socket){
-        socket.on('testing', function(exclude){
-          io.emit('testing', exclude);
-        });
-      
-        console.log( "socketIO connected ");
+
+       // io.emit('update_rank', _getRank());
+
         socket.on("set_score", function(data){
-            console.log(data.name, data.score);
             _queueUpdte( data.name, data.score);
             _runQueue();
             io.emit('update_rank', _getRank());

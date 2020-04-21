@@ -1,4 +1,4 @@
-var FontSystem = (function () {
+{    var FontSystem = (function () {
 
     LabelData = {
         sampleText: {
@@ -11,7 +11,7 @@ var FontSystem = (function () {
                     indices: null,
                 },
                 vertexCount: 0,
-                dirty : false
+                dirty : true
             }
         },
 
@@ -25,7 +25,7 @@ var FontSystem = (function () {
                     indices: null,
                 },
                 vertexCount: 0,
-                dirty : false
+                dirty : true
             }
         }
     }
@@ -96,7 +96,7 @@ var FontSystem = (function () {
             gl.bindTexture(gl.TEXTURE_2D, null);
             fontAtlas = texture;
             _loadShader();
-           // _makeBuffer('sampleText');
+        // _makeBuffer('sampleText');
             loadfinished = true;
         };
 
@@ -125,6 +125,9 @@ var FontSystem = (function () {
 
     ////#region 개별 데이터 세팅
     function _makeBuffer( labelName ) {
+        var dirty = LabelData[ labelName ].renderData.dirty;
+        if ( dirty === false )
+            return;
 
         var buffer = LabelData[ labelName].renderData.buffer;
 
@@ -134,6 +137,7 @@ var FontSystem = (function () {
 
         var string = LabelData[ labelName].text;
 
+        //console.log( string + " make buffer!!");
         var fontStartPos = [0, 0];
 
         var vertexCount = LabelData[ labelName].renderData.vertexCount = 0;
@@ -210,6 +214,10 @@ var FontSystem = (function () {
         LabelData[ labelName].renderData.vertexCount = vertexCount;
 
 
+        gl.deleteBuffer( buffer.position );
+        gl.deleteBuffer( buffer.uv );
+        gl.deleteBuffer( buffer.indices );
+
         const positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
@@ -226,6 +234,8 @@ var FontSystem = (function () {
         buffer.position = positionBuffer;
         buffer.uv = uvBuffer;
         buffer.indices = indexBuffer;
+
+        LabelData[ labelName ].renderData.dirty = false;
     };
 
     function _bind( labelName ) {
@@ -308,8 +318,12 @@ var FontSystem = (function () {
 
 
     function _setString( labelName, string){
-        if( !!LabelData[ labelName ] === true )
-            LabelData[ labelName ].text = string;
+        if( !!LabelData[ labelName ] === true ){
+            if( LabelData[ labelName ].text !== string){
+                LabelData[ labelName ].text = string;
+                LabelData[ labelName ].renderData.dirty = true;
+            }
+        }
         else{
             LabelData[ labelName ] = {
                 text: string,
@@ -321,7 +335,7 @@ var FontSystem = (function () {
                         indices: null,
                     },
                     vertexCount: 0,
-                    dirty : false
+                    dirty : true
                 }
             }
         }
@@ -344,6 +358,7 @@ var FontSystem = (function () {
         setPosition : _setPosition,
         draw: _draw,
     }
-})();
+    })();
 
 
+}
