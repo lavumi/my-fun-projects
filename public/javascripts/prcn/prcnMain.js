@@ -178,6 +178,7 @@ function GameMain() {
                 + currentdate.getHours() + ":"
                 + currentdate.getMinutes() + ":"
                 + currentdate.getSeconds();
+                
             console.log(" 1 " + (Date.now() - prevTime) + " ++++ " + datetime);
 
         }
@@ -189,20 +190,16 @@ function GameMain() {
     function update() {
 
         printDeltaTime();
-
-
         var now = Date.now() / 1000;
         var delta = now - lastFrameTime;
          lastFrameTime = now;
          delta *= speedFactor;
          movememtDelta = delta * spineManager.getSpeed();
         for (var i = 0; i < farBgPos.length; i++) {
-
             farBgPos[i][0] -= movememtDelta * distBGSpeed;
             if (farBgPos[i][0] < - ScreenSize[0] / 2 - 1024)
                 farBgPos[i][0] += 512 * farBgPos.length;
         }
-
 
         for (var i = 0; i < nearBgPos.length; i++) {
             nearBgPos[i][0] -= movememtDelta * closeBGSpeed;
@@ -233,6 +230,10 @@ function GameMain() {
         render(delta);
         requestAnimationFrame(update);
 
+    }
+
+    function countDown(){
+        
     }
 
     function render(delta) {
