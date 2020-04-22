@@ -70,7 +70,7 @@ function GameMain() {
 
 
         for (var i = 0; i < 6; i++) {
-            obstaclePos.push([i * 512 + Math.random() * 50 - 25, -30]);
+            obstaclePos.push([i * 512 + Math.random() * 50 - 25 + 1024, -30]);
             farBgPos.push([i * 1024 - 2048, -60 - 512]);
             nearBgPos.push([i * 512 - 1024, -60]);
             treePos.push([i * 512 - 1024, -60]);
@@ -188,13 +188,30 @@ function GameMain() {
     };
 
     function startGame(){
-        spineManager.setIdle();
-        countDown();
+        spineManager.setDearIdle();
+        //countDown();
         requestAnimationFrame(update);
     }
 
 
-    var gameStart = false;
+    function updateLobby(){
+        printDeltaTime();
+        var now = Date.now() / 1000;
+        var delta = now - lastFrameTime;
+         lastFrameTime = now;
+         delta *= speedFactor;
+
+
+        gl.clearColor(bgColor[0], bgColor[1], bgColor[2], 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        resize();
+         spineManager.render(delta, false);
+         requestAnimationFrame(updateLobby);
+    }
+
+    var gameStart = true;
+    var gameEntry = true;
     function update() {
 
         printDeltaTime();
@@ -202,7 +219,6 @@ function GameMain() {
         var delta = now - lastFrameTime;
          lastFrameTime = now;
          delta *= speedFactor;
-        // gameStart = countDown(delta);
          movememtDelta = delta * spineManager.getSpeed() * gameStart;
         for (var i = 0; i < farBgPos.length; i++) {
             farBgPos[i][0] -= movememtDelta * distBGSpeed;
@@ -235,6 +251,21 @@ function GameMain() {
             }
         }
         FontSystem.setString("score", "Score : " + score);
+
+
+        if( gameEntry === true ){
+            var pos = spineManager.getPosition();
+            pos -= movememtDelta * 2 * 400 ;
+            if( pos <= -1420){
+                pos = -1420;
+                gameEntry = false;
+                gameStart = false;
+                countDown();
+
+            }
+            spineManager.setPosition( pos );
+        }
+
 
         render(delta);
         requestAnimationFrame(update);
@@ -305,7 +336,6 @@ function GameMain() {
             SpriteShader.draw();
         }
 
-        // SpriteShader.bind();
         SpriteShader.setTexture("obstacle.png");
         for (var i = 0; i < obstaclePos.length; i++) {
             SpriteShader.setAttr(obstaclePos[i]);
@@ -313,7 +343,7 @@ function GameMain() {
         }
 
 
-        FontSystem.draw();
+       FontSystem.draw();
 
 
 

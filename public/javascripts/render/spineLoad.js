@@ -218,13 +218,12 @@ var SpineManager = function () {
 
                     animationStateData = new spine.AnimationStateData(skeleton.data);
                     var animationState = new spine.AnimationState(animationStateData);
-                    //  console.log( animationStateData );
+                     console.log( animationStateData );
                     //animationState.setAnimation(0, getClass(currentClass) + '_idle', true);
                     animationState.addListener({
-                        start: function (track) {
+                        /*start: function (track) {
                             console.log("Animation on track " + track.trackIndex + " started");
                         },
-                        /*
                         interrupt: function (track) {
                             console.log("Animation on track " + track.trackIndex + " interrupted");
                         },
@@ -240,9 +239,6 @@ var SpineManager = function () {
                                 // console.log( 'start ' + nextAnim );
                                 if (nextAnim == 'stop') return;
                                 if (nextAnim == 'hold') return setTimeout(tick, 1e3);
-
-                                distBGSpeed = 100;
-                                closeBGSpeed = 400;
                                 nextAnim = setAnimName(nextAnim);
                                 if( nextAnim === '02_run'){
                                     movement = 1;
@@ -292,11 +288,11 @@ var SpineManager = function () {
         return returnName
     }
 
+    var charPos = 0;
+
+
     function spineRender(delta, showDebug) {
-
-
-
-        window.skeleton.skeleton.x = -1420;
+        window.skeleton.skeleton.x = charPos;
         // Apply the animation state based on the delta time.
         var state = window.skeleton.state;
         var skeleton = window.skeleton.skeleton;
@@ -357,6 +353,11 @@ var SpineManager = function () {
 
     function setIdle(){
         window.skeleton.state.setAnimation(0, getClass(currentClass) + '_idle', true);
+    }
+
+    function setDearIdle(){
+        window.skeleton.state.setAnimation(0, '000000_dear_idol', true);
+        movement = 0.5;
     }
 
     function runChar(isLeft ){
@@ -429,7 +430,6 @@ var SpineManager = function () {
             timeScale : 1
         };
         if (runAnimation([damage, idle])){
-            distBGSpeed = closeBGSpeed = 0;
             movement = 0;
             return true;
         }
@@ -512,12 +512,22 @@ var SpineManager = function () {
         return movement;
     }
 
+    function setPosition( pos ){
+        charPos = pos;
+    }
+
+    function getPosition(){
+        return charPos;
+    }
     return {
         init : initSpineGL,
         load : loadSpine,
         resize : resize,
         render    : spineRender,
+        setPosition : setPosition,
+        getPosition : getPosition,
 
+        setDearIdle : setDearIdle,
         setIdle : setIdle,
         run : runChar,
         jump : jumpChar,
