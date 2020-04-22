@@ -62,7 +62,8 @@ function GameMain() {
 
         TextureUtil.loadTexture(function () {
             spineManager.load(characterID, classID, function () {
-                requestAnimationFrame(update);
+                startGame();
+
             });
         })
 
@@ -91,7 +92,8 @@ function GameMain() {
         FontSystem.setPosition("Rank3", [-950, -410]);
         FontSystem.setPosition("Rank4", [-950, -470]);
 
-
+        FontSystem.setString("CountDown","3");
+        FontSystem.setPosition("CountDown", [-100,30]);
     }
 
     function sendScore(score) {
@@ -185,8 +187,14 @@ function GameMain() {
         prevTime = Date.now();
     };
 
+    function startGame(){
+        spineManager.setIdle();
+        countDown();
+        requestAnimationFrame(update);
+    }
 
 
+    var gameStart = false;
     function update() {
 
         printDeltaTime();
@@ -194,7 +202,8 @@ function GameMain() {
         var delta = now - lastFrameTime;
          lastFrameTime = now;
          delta *= speedFactor;
-         movememtDelta = delta * spineManager.getSpeed();
+        // gameStart = countDown(delta);
+         movememtDelta = delta * spineManager.getSpeed() * gameStart;
         for (var i = 0; i < farBgPos.length; i++) {
             farBgPos[i][0] -= movememtDelta * distBGSpeed;
             if (farBgPos[i][0] < - ScreenSize[0] / 2 - 1024)
@@ -233,7 +242,40 @@ function GameMain() {
     }
 
     function countDown(){
-        
+
+        // startCount -= delta;
+        // if( startCount < -2){
+        //     FontSystem.setString("CountDown", "");
+        //     return 1;
+        // }
+        // else if( startCount < -1 ){
+        //     FontSystem.setString("CountDown", "Start");
+        //     spineManager.run();
+        //     return 1;
+        // }
+        // var countText = Math.ceil( startCount);
+        // FontSystem.setString("CountDown", countText.toString());
+
+
+        setTimeout( function(){
+            FontSystem.setString("CountDown", "");
+        }, 4000);
+
+        setTimeout( function(){
+            FontSystem.setString("CountDown", "Start");
+            spineManager.run();
+            gameStart = true;
+        }, 3000);
+
+        setTimeout( function(){
+            FontSystem.setString("CountDown", "1");
+        }, 2000);
+
+        setTimeout( function(){
+            FontSystem.setString("CountDown", "2");
+        }, 1000);
+
+        FontSystem.setString("CountDown", "3");
     }
 
     function render(delta) {

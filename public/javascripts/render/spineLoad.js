@@ -219,12 +219,12 @@ var SpineManager = function () {
                     animationStateData = new spine.AnimationStateData(skeleton.data);
                     var animationState = new spine.AnimationState(animationStateData);
                     //  console.log( animationStateData );
-                    animationState.setAnimation(0, getClass(currentClass) + '_run', true);
+                    //animationState.setAnimation(0, getClass(currentClass) + '_idle', true);
                     animationState.addListener({
-                        /*start: function (track) {
+                        start: function (track) {
                             console.log("Animation on track " + track.trackIndex + " started");
                         },
-    
+                        /*
                         interrupt: function (track) {
                             console.log("Animation on track " + track.trackIndex + " interrupted");
                         },
@@ -355,18 +355,23 @@ var SpineManager = function () {
     //에니메이션 실행 부분
 
 
+    function setIdle(){
+        window.skeleton.state.setAnimation(0, getClass(currentClass) + '_idle', true);
+    }
+
     function runChar(isLeft ){
-        if(isLeft === false)
-            movement = 4;
+        if(isLeft === true)
+            movement = -1;
         else
-            movement = -4;
+            movement = 1;
+
         var run = {
             animName : 'run',
             isLoop : true,
-            timeScale : 2
+            timeScale : 1
         };
-    
-        runAnimation([run]);
+        window.skeleton.state.setAnimation(0, getClass(currentClass) + '_run', true);
+       // runAnimation([run]);
     }
     function stopChar(){
         movement = 0;
@@ -392,7 +397,7 @@ var SpineManager = function () {
             isLoop : false,
             timeScale : 1
         };
-    
+
         runAnimation([attack_skipQuest, idle]);
     }
     
@@ -513,10 +518,11 @@ var SpineManager = function () {
         resize : resize,
         render    : spineRender,
 
-
+        setIdle : setIdle,
+        run : runChar,
         jump : jumpChar,
         damage : damageedChar,
-
+        attackChar : attackChar,
         getSpeed : getSpeed
     }
 }
