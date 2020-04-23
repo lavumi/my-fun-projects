@@ -137,6 +137,7 @@ function GameMain() {
 
 
             if (event.code === 'Space') {
+                event.preventDefault();
                 spineManager.jump();
             }
 
@@ -191,6 +192,8 @@ function GameMain() {
         spineManager.setDearIdle();
         //countDown();
         requestAnimationFrame(update);
+        FontSystem.setVisible("score", false);
+        FontSystem.setVisible("CountDown", false);
     }
 
 
@@ -273,29 +276,15 @@ function GameMain() {
     }
 
     function countDown(){
-
-        // startCount -= delta;
-        // if( startCount < -2){
-        //     FontSystem.setString("CountDown", "");
-        //     return 1;
-        // }
-        // else if( startCount < -1 ){
-        //     FontSystem.setString("CountDown", "Start");
-        //     spineManager.run();
-        //     return 1;
-        // }
-        // var countText = Math.ceil( startCount);
-        // FontSystem.setString("CountDown", countText.toString());
-
-
         setTimeout( function(){
-            FontSystem.setString("CountDown", "");
+            FontSystem.setVisible("CountDown", false );
         }, 4000);
 
         setTimeout( function(){
             FontSystem.setString("CountDown", "Start");
             spineManager.run();
             gameStart = true;
+            FontSystem.setVisible("score", true);
         }, 3000);
 
         setTimeout( function(){
@@ -305,8 +294,9 @@ function GameMain() {
         setTimeout( function(){
             FontSystem.setString("CountDown", "2");
         }, 1000);
-
+        FontSystem.setVisible("CountDown", true);
         FontSystem.setString("CountDown", "3");
+        spineManager.setIdle();
     }
 
     function render(delta) {

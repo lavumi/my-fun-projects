@@ -11,7 +11,8 @@
                     indices: null,
                 },
                 vertexCount: 0,
-                dirty : true
+                dirty : true,
+                visible : false
             }
         },
 
@@ -25,7 +26,8 @@
                     indices: null,
                 },
                 vertexCount: 0,
-                dirty : true
+                dirty : true,
+                visible : true,
             }
         }
     }
@@ -309,10 +311,12 @@
         gl.useProgram(shaderData.program);
         _setFont();
         Object.keys(LabelData).map(function(key){
-            _makeBuffer(key);
-            _bind(key);
-            _setLocation(key);
-            gl.drawElements(gl.TRIANGLES, LabelData[ key].renderData.vertexCount, gl.UNSIGNED_SHORT, 0);
+           if(LabelData[key].renderData.visible === true){
+                _makeBuffer(key);
+                _bind(key);
+                _setLocation(key);
+                gl.drawElements(gl.TRIANGLES, LabelData[ key].renderData.vertexCount, gl.UNSIGNED_SHORT, 0);
+           }
         });
     };
 
@@ -335,9 +339,16 @@
                         indices: null,
                     },
                     vertexCount: 0,
-                    dirty : true
+                    dirty : true,
+                    visible : true
                 }
             }
+        }
+    }
+
+    function _setVisible( labelName, visible ){
+        if( !!LabelData[ labelName ] === true ){
+            LabelData[ labelName ].renderData.visible = visible;
         }
     }
 
@@ -353,7 +364,7 @@
     return {
         loadFont: loadFont,
         
-
+        setVisible : _setVisible,
         setString: _setString,
         setPosition : _setPosition,
         draw: _draw,
