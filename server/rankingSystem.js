@@ -1,40 +1,42 @@
-console.log('rankingSystem loaded');
+var fs = require('fs');
 
+var file = 'ranking';
+
+var backupDelay = 1000 * 60 * 60;
 var rankingDataFormat = {
-    name : null,
-    score : null,
+    name: null,
+    score: null,
 };
 
-var _rankingData = [];
-
+var _rankingData = JSON.parse(fs.readFileSync(file, 'utf8'));
 var _updateQueue = [];
 
-function _updateRanking( _name, _score ){
-    _rankingData.push({name : _name, score : _score});
-    _rankingData.sort(    function(a,b){
+function _updateRanking(_name, _score) {
+    _rankingData.push({ name: _name, score: _score });
+    _rankingData.sort(function (a, b) {
         return b.score - a.score;
     });
-    if( _rankingData.length > 6)
+    if (_rankingData.length > 6)
         _rankingData.pop();
 };
 
-function _queueUpdte(name, score){
-    if( typeof score !=='number' )
+function _queueUpdte(name, score) {
+    if (typeof score !== 'number')
         return;
-    var cutName = name.substr(0,3);
+    var cutName = name.substr(0, 3);
 
-    _updateQueue.push( _updateRanking.bind(this, cutName, score));
+    _updateQueue.push(_updateRanking.bind(this, cutName, score));
 }
 
-function _runQueue(){
-    if( _updateQueue.length > 0 ){
+function _runQueue() {
+    if (_updateQueue.length > 0) {
         var nextQueue = _updateQueue.shift();
         nextQueue();
     }
-    else{
+    else {
         return;
     }
-    if( _updateQueue.length > 0 ){
+    if (_updateQueue.length > 0) {
         _runQueue();
     }
     else {
@@ -42,27 +44,39 @@ function _runQueue(){
     }
 }
 
-function _getRank(){
-    return JSON.parse( JSON.stringify(_rankingData ));
+function _getRank() {
+    return JSON.parse(JSON.stringify(_rankingData));
 }
 
+function _backup() {
+   fs.writeFileSync('ranking', JSON.stringify(_rankingData), 'utf8');
+   console.log( "RankingData Backup : " + JSON.stringify(_rankingData) );
+   setTimeout( _backup, backupDelay);
+}
+
+function _load() {
+
+}
+
+setTimeout( _backup, backupDelay);
 
 
-module.exports = function(io){
-    io.on('connection', function(socket){
 
-       // io.emit('update_rank', _getRank());
+module.exports = function (io) {
+    io.on('connection', function (socket) {
 
-        socket.on("set_score", function(data){
-            _queueUpdte( data.name, data.score);
+        socket.emit('update_rank', _getRank());
+
+        socket.on("set_score", function (data) {
+            _queueUpdte(data.name, data.score);
             _runQueue();
             io.emit('update_rank', _getRank());
         });
-      
-        socket.on('disconnect', function(){
-          console.log('user disconnected');
+
+        socket.on('disconnect', function () {
+            console.log('user disconnected');
         });
-      })
+    })
 }
 
 exports.setScore = _queueUpdte;

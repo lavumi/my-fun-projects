@@ -2,10 +2,10 @@ var canvas;
 var gl;
 var ScreenSize = [1920, 1080];
 
-var socket = io();
+
 function GameMain() {
 
-
+    var socket = io();
     //#region 렌더링 변수
     var lastFrameTime = Date.now() / 1000;
 
@@ -31,11 +31,6 @@ function GameMain() {
     var treePos = [];
 
     var score = 0;
-
-
-    var groundPos = - ScreenSize[0] / 2;
-    var bgPos = - ScreenSize[0] / 2;
-    var adjustHeight = -60;
 
     var distBGSpeed = 100;
     var closeBGSpeed = 400;
@@ -92,12 +87,12 @@ function GameMain() {
         FontSystem.setPosition("Rank3", [-950, -410]);
         FontSystem.setPosition("Rank4", [-950, -470]);
 
-        FontSystem.setString("CountDown","3");
-        FontSystem.setPosition("CountDown", [-100,30]);
+        FontSystem.setString("CountDown", "3");
+        FontSystem.setPosition("CountDown", [-100, 30]);
     }
 
     function sendScore(score) {
-         socket.emit("set_score", {name : 'AAA', score : score});
+        socket.emit("set_score", { name: 'AAA', score: score });
     }
 
     function initInput() {
@@ -174,21 +169,21 @@ function GameMain() {
 
 
     var prevTime = 0;
-    function printDeltaTime(){
+    function printDeltaTime() {
         if ((Date.now() - prevTime) > 33) {
             var currentdate = new Date();
             var datetime = "Last Sync: "
                 + currentdate.getHours() + ":"
                 + currentdate.getMinutes() + ":"
                 + currentdate.getSeconds();
-                
+
             console.log(" 1 " + (Date.now() - prevTime) + " ++++ " + datetime);
 
         }
         prevTime = Date.now();
     };
 
-    function startGame(){
+    function startGame() {
         spineManager.setDearIdle();
         //countDown();
         requestAnimationFrame(update);
@@ -196,33 +191,34 @@ function GameMain() {
         FontSystem.setVisible("CountDown", false);
     }
 
-
-    function updateLobby(){
-        printDeltaTime();
-        var now = Date.now() / 1000;
-        var delta = now - lastFrameTime;
-         lastFrameTime = now;
-         delta *= speedFactor;
-
-
-        gl.clearColor(bgColor[0], bgColor[1], bgColor[2], 1);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-
-        resize();
-         spineManager.render(delta, false);
-         requestAnimationFrame(updateLobby);
-    }
-
     var gameStart = true;
     var gameEntry = true;
     function update() {
 
-        printDeltaTime();
+        // printDeltaTime();
         var now = Date.now() / 1000;
         var delta = now - lastFrameTime;
-         lastFrameTime = now;
-         delta *= speedFactor;
-         movememtDelta = delta * spineManager.getSpeed() * gameStart;
+        lastFrameTime = now;
+        delta *= speedFactor;
+        movememtDelta = delta * spineManager.getSpeed() * gameStart;
+
+
+
+        if (gameEntry === true) {
+            var pos = spineManager.getPosition();
+            pos -= movememtDelta * 2 * 400;
+            if (pos <= -1420) {
+                pos = -1420;
+                gameEntry = false;
+                gameStart = false;
+                countDown();
+
+            }
+            spineManager.setPosition(pos);
+        }
+
+
+
         for (var i = 0; i < farBgPos.length; i++) {
             farBgPos[i][0] -= movememtDelta * distBGSpeed;
             if (farBgPos[i][0] < - ScreenSize[0] / 2 - 1024)
@@ -256,18 +252,7 @@ function GameMain() {
         FontSystem.setString("score", "Score : " + score);
 
 
-        if( gameEntry === true ){
-            var pos = spineManager.getPosition();
-            pos -= movememtDelta * 2 * 400 ;
-            if( pos <= -1420){
-                pos = -1420;
-                gameEntry = false;
-                gameStart = false;
-                countDown();
 
-            }
-            spineManager.setPosition( pos );
-        }
 
 
         render(delta);
@@ -275,23 +260,23 @@ function GameMain() {
 
     }
 
-    function countDown(){
-        setTimeout( function(){
-            FontSystem.setVisible("CountDown", false );
+    function countDown() {
+        setTimeout(function () {
+            FontSystem.setVisible("CountDown", false);
         }, 4000);
 
-        setTimeout( function(){
+        setTimeout(function () {
             FontSystem.setString("CountDown", "Start");
             spineManager.run();
             gameStart = true;
             FontSystem.setVisible("score", true);
         }, 3000);
 
-        setTimeout( function(){
+        setTimeout(function () {
             FontSystem.setString("CountDown", "1");
         }, 2000);
 
-        setTimeout( function(){
+        setTimeout(function () {
             FontSystem.setString("CountDown", "2");
         }, 1000);
         FontSystem.setVisible("CountDown", true);
@@ -333,7 +318,7 @@ function GameMain() {
         }
 
 
-       FontSystem.draw();
+        FontSystem.draw();
 
 
 
@@ -342,7 +327,7 @@ function GameMain() {
     }
 
 
-    socket.on("update_rank", function(data){
+    socket.on("update_rank", function (data) {
         //console.log('update_rank received', data);
         updateRank(data);
     });
@@ -378,10 +363,10 @@ function GameMain() {
 
     function updateRank(data) {
 
-        for( var i = 0 ; i < 5 ; i ++ ){
-            if( i >= data.length)
+        for (var i = 0; i < 5; i++) {
+            if (i >= data.length)
                 break;
-            FontSystem.setString("Rank" + i, data[i].name + " " + data[i].score );
+            FontSystem.setString("Rank" + i, data[i].name + " " + data[i].score);
 
         }
     }
