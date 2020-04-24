@@ -198,6 +198,7 @@ function GameMain() {
         requestAnimationFrame(update);
 
         spineManager.setPosition(0);
+        score = 0;
         HP = 3;
         gameStart = false;
         gameEntry = true;
