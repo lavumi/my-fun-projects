@@ -1,7 +1,7 @@
 {    var FontSystem = (function () {
 
     LabelData = {
-        sampleText: {
+        HP: {
             text: "This is SampleText",
             location : [-950, 470],
             renderData: {

@@ -465,6 +465,7 @@ var SpineManager = function () {
             isLoop : false,
             timeScale : 1
         };
+        animationQueue.length = 0;
         runAnimation([die, stop]);
     }
     
@@ -533,6 +534,8 @@ var SpineManager = function () {
         jump : jumpChar,
         damage : damageedChar,
         attackChar : attackChar,
-        getSpeed : getSpeed
+        getSpeed : getSpeed,
+
+        die : dieChar
     }
 }

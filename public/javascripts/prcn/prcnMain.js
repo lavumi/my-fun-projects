@@ -31,10 +31,15 @@ function GameMain() {
     var treePos = [];
 
     var score = 0;
+    var HP = 3;
 
     var distBGSpeed = 100;
     var closeBGSpeed = 400;
 
+
+    var gameStart = false;
+    var gameEntry = true;
+    var gameOver = false;
 
     //#endregion
 
@@ -57,30 +62,25 @@ function GameMain() {
 
         TextureUtil.loadTexture(function () {
             spineManager.load(characterID, classID, function () {
-                startGame();
+                initGame();
 
             });
         })
 
 
 
-        for (var i = 0; i < 6; i++) {
-            obstaclePos.push([i * 512 + Math.random() * 50 - 25 + 1024, -30]);
-            farBgPos.push([i * 1024 - 2048, -60 - 512]);
-            nearBgPos.push([i * 512 - 1024, -60]);
-            treePos.push([i * 512 - 1024, -60]);
-        }
+
 
 
         FontSystem.setString("score", "Score : " + score);
         FontSystem.setPosition("score", [0, 470]);
 
 
-        FontSystem.setString("Rank0", "AAA : 105");
-        FontSystem.setString("Rank1", "AAA : 104");
-        FontSystem.setString("Rank2", "AAA : 103");
-        FontSystem.setString("Rank3", "AAA : 102");
-        FontSystem.setString("Rank4", "AAA : 101");
+        FontSystem.setString("Rank0", "");
+        FontSystem.setString("Rank1", "");
+        FontSystem.setString("Rank2", "");
+        FontSystem.setString("Rank3", "");
+        FontSystem.setString("Rank4", "");
         FontSystem.setPosition("Rank0", [-950, -230]);
         FontSystem.setPosition("Rank1", [-950, -290]);
         FontSystem.setPosition("Rank2", [-950, -350]);
@@ -89,6 +89,10 @@ function GameMain() {
 
         FontSystem.setString("CountDown", "3");
         FontSystem.setPosition("CountDown", [-100, 30]);
+
+
+        FontSystem.setString("Restart", "Press Any Key To Start");
+        FontSystem.setPosition("Restart", [-300, -150]);
     }
 
     function sendScore(score) {
@@ -98,6 +102,11 @@ function GameMain() {
     function initInput() {
         keyMap = {};
         document.addEventListener('keydown', function (event) {
+            if( gameEntry === true || gameStart === false || gameOver === true){
+                return;
+            }
+
+
             if (keyMap[event.code] === true) return;
 
             // if(event.code === 'ArrowRight' ){
@@ -107,7 +116,8 @@ function GameMain() {
             //     runChar( true);
             // }
             if (event.code === 'KeyA') {
-                sendScore(score);
+                //sendScore(score);
+                //spineManager.die();
             }
             // else if (event.code === 'KeyS'){
             //     attack2Char();
@@ -142,12 +152,12 @@ function GameMain() {
 
         document.addEventListener('keyup', function (event) {
 
-            // if(event.code === 'ArrowRight'){
-            //     stopChar();
-            // }
-            // else if (event.code === 'ArrowLeft'){
-            //     stopChar();
-            // }
+            if( gameOver === true ){
+                initGame();
+            }
+            else if( gameStart === false && gameEntry === true ){
+                startGame();
+            }
 
             keyMap[event.code] = false;
 
@@ -183,26 +193,50 @@ function GameMain() {
         prevTime = Date.now();
     };
 
-    function startGame() {
+    function initGame() {
         spineManager.setDearIdle();
-        //countDown();
         requestAnimationFrame(update);
+
+        spineManager.setPosition(0);
+        HP = 3;
+        gameStart = false;
+        gameEntry = true;
+        gameOver = false;
+
+        obstaclePos.length = 0;
+        farBgPos.length = 0;
+        nearBgPos.length = 0;
+        treePos.length = 0;
+
+        for (var i = 0; i < 6; i++) {
+            obstaclePos.push([i * 512 + Math.random() * 50 - 25 + 1024, -30]);
+            farBgPos.push([i * 1024 - 2048, -60 - 512]);
+            nearBgPos.push([i * 512 - 1024, -60]);
+            treePos.push([i * 512 - 1024, -60]);
+        }
+
+
         FontSystem.setVisible("score", false);
         FontSystem.setVisible("CountDown", false);
     }
 
-    var gameStart = true;
-    var gameEntry = true;
+    function startGame(){
+        gameStart = true;
+        FontSystem.setVisible("Restart", false);
+    }
+
+
     function update() {
 
-        // printDeltaTime();
+
         var now = Date.now() / 1000;
         var delta = now - lastFrameTime;
         lastFrameTime = now;
         delta *= speedFactor;
         movememtDelta = delta * spineManager.getSpeed() * gameStart;
 
-
+        if( gameOver === true )
+            movememtDelta = 0;
 
         if (gameEntry === true) {
             var pos = spineManager.getPosition();
@@ -238,11 +272,12 @@ function GameMain() {
             if (obstaclePos[i][0] > 100 - ScreenSize[0] / 2 && obstaclePos[i][0] < 270 - ScreenSize[0] / 2) {
                 if (spineManager.damage()) {
                     resetObstacle(i);
+                    HP--;
+                    if( HP === 0 ){
+                        gameFinish();
+                    }
                 }
             }
-            // else if ( obstaclePos[i][0] <= 100 - ScreenSize[0] / 2 && obstaclePos[i][0] >= - ScreenSize[0] / 2 - 128){
-
-            // }
             else if (obstaclePos[i][0] < - ScreenSize[0] / 2 - 128) {
                 resetObstacle(i);
                 score += 1;
@@ -251,13 +286,23 @@ function GameMain() {
         }
         FontSystem.setString("score", "Score : " + score);
 
-
-
+        var hptext = "";
+        for( var i = 0; i < HP ; i++ ){
+            hptext += '@';
+        }
+        FontSystem.setString("HP", hptext );
 
 
         render(delta);
         requestAnimationFrame(update);
 
+    }
+
+    function gameFinish(){
+        spineManager.die();
+        gameOver = true;
+        FontSystem.setVisible("Restart", true);
+        sendScore( score );
     }
 
     function countDown() {
@@ -266,10 +311,12 @@ function GameMain() {
         }, 4000);
 
         setTimeout(function () {
+            console.log("timeout start");
             FontSystem.setString("CountDown", "Start");
             spineManager.run();
             gameStart = true;
             FontSystem.setVisible("score", true);
+            FontSystem.setVisible("HP", true );
         }, 3000);
 
         setTimeout(function () {
@@ -279,6 +326,7 @@ function GameMain() {
         setTimeout(function () {
             FontSystem.setString("CountDown", "2");
         }, 1000);
+
         FontSystem.setVisible("CountDown", true);
         FontSystem.setString("CountDown", "3");
         spineManager.setIdle();
