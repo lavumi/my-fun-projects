@@ -5,7 +5,8 @@ var TextureUtil = {
         'prcn_data/ground2.png',
         'prcn_data/tree.png',
         'prcn_data/bg.png',
-        'prcn_data/obstacle.png'
+        'prcn_data/obstacle.png',
+        'prcn_data/optionUI.png'
     ],
 
     _glTexture : {},

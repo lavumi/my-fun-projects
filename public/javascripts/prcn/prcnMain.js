@@ -40,6 +40,7 @@ function GameMain() {
     var gameStart = false;
     var gameEntry = true;
     var gameOver = false;
+    var highScore = false;
 
     //#endregion
 
@@ -366,14 +367,30 @@ function GameMain() {
             SpriteShader.draw();
         }
 
-
+        drawUI();
         FontSystem.draw();
 
 
 
-        spineManager.render(delta, false);
+       // spineManager.render(delta, false);
 
     }
+
+
+
+    function drawUI(){
+
+        SpriteShader.setTexture("optionUI.png");
+        SpriteShader.setAttr([-256,-256]);
+        SpriteShader.draw();
+
+
+        FontSystem.setString("Ranktxt", "1st");
+        FontSystem.setPosition("Ranktxt", [-30,140]);
+
+        FontSystem.setString("MyNAME", "A A A");
+        FontSystem.setPosition("MyNAME", [-95, 20]);
+    };
 
 
     socket.on("update_rank", function (data) {
