@@ -461,6 +461,8 @@ function GameMain() {
     var inputName = "";
     function updateUI(text) {
 
+        if( text === null )
+        return;
         inputName += text;
         if (inputName.length === 1 || inputName.length === 3)
             inputName += " ";
