@@ -60,7 +60,7 @@ function _backup() {
 function _checkRank(_score) {
 
     for (var i = 0; i < _rankingData.length; i++) {
-        if (_rankingData[i].score <= _score)
+        if (_rankingData[i].score < _score)
             return i;
     }
 
