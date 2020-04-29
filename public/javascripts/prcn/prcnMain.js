@@ -11,8 +11,6 @@ function GameMain() {
 
     var bgColor = [0, 0.5, 1, 1];
 
-
-    var spriteShader;
     var spineManager;
 
 
@@ -36,11 +34,22 @@ function GameMain() {
     var distBGSpeed = 100;
     var closeBGSpeed = 400;
 
+    var STATE = {
+        GAME_LOBBY: 0,
+        GAME_ENTRY: 1,
+        GAME_COUNTDOWN: 2,
+        GAME_START: 3,
 
-    var gameStart = false;
-    var gameEntry = true;
-    var gameOver = false;
-    var highScore = false;
+        GAME_OVER: 5,
+        HIGH_SCORE: 6,
+        GAME_RESTART: 7
+    }
+
+    var rankText = ['1st', '2nd', '3rd', '4th', '5th'];
+
+    var rankData;
+
+    var currentState = null;
 
     //#endregion
 
@@ -94,19 +103,22 @@ function GameMain() {
 
         FontSystem.setString("Restart", "Press Any Key To Start");
         FontSystem.setPosition("Restart", [-300, -150]);
+
+        FontSystem.setString("Ranktxt", "");
+        FontSystem.setPosition("Ranktxt", [-30, 140]);
+
+        FontSystem.setString("MyNAME", "");
+        FontSystem.setPosition("MyNAME", [-95, 20]);
     }
 
-    function sendScore(score) {
-        socket.emit("set_score", { name: 'AAA', score: score });
-    }
+
 
     function initInput() {
         keyMap = {};
         document.addEventListener('keydown', function (event) {
-            if( gameEntry === true || gameStart === false || gameOver === true){
-                return;
-            }
 
+            if (currentState !== STATE.GAME_START)
+                return;
 
             if (keyMap[event.code] === true) return;
 
@@ -153,10 +165,19 @@ function GameMain() {
 
         document.addEventListener('keyup', function (event) {
 
-            if( gameOver === true ){
+
+            console.log(getAlpabetFromInput(event.code));
+
+            if (currentState === STATE.HIGH_SCORE) {
+                updateUI(getAlpabetFromInput(event.code));
+                return;
+            }
+
+
+            if (currentState === STATE.GAME_RESTART) {
                 initGame();
             }
-            else if( gameStart === false && gameEntry === true ){
+            else if (currentState === STATE.GAME_LOBBY) {
                 startGame();
             }
 
@@ -165,6 +186,15 @@ function GameMain() {
         }, false);
     }
 
+
+    function getAlpabetFromInput(input) {
+        if (input.indexOf('Key') !== -1) {
+            return input.replace('Key', "");
+        }
+        else {
+            return null;
+        }
+    }
 
     var resetObstacle = function (i) {
         var nextPos = 0;
@@ -201,9 +231,7 @@ function GameMain() {
         spineManager.setPosition(0);
         score = 0;
         HP = 3;
-        gameStart = false;
-        gameEntry = true;
-        gameOver = false;
+        currentState = STATE.GAME_LOBBY;
 
         obstaclePos.length = 0;
         farBgPos.length = 0;
@@ -220,10 +248,13 @@ function GameMain() {
 
         FontSystem.setVisible("score", false);
         FontSystem.setVisible("CountDown", false);
+
+        FontSystem.setVisible("Ranktxt", false);
+        FontSystem.setVisible("MyNAME", false);
     }
 
-    function startGame(){
-        gameStart = true;
+    function startGame() {
+        currentState = STATE.GAME_ENTRY;
         FontSystem.setVisible("Restart", false);
     }
 
@@ -235,25 +266,28 @@ function GameMain() {
         var delta = now - lastFrameTime;
         lastFrameTime = now;
         delta *= speedFactor;
-        movememtDelta = delta * spineManager.getSpeed() * gameStart;
+        movememtDelta = delta * spineManager.getSpeed();
 
-        if( gameOver === true )
+        if (currentState === STATE.GAME_OVER
+            || currentState === STATE.GAME_LOBBY
+            || currentState === STATE.GAME_COUNTDOWN
+            || currentState === STATE.HIGH_SCORE
+        ) {
             movememtDelta = 0;
+        }
 
-        if (gameEntry === true) {
+
+        if (currentState === STATE.GAME_ENTRY) {
             var pos = spineManager.getPosition();
             pos -= movememtDelta * 2 * 400;
             if (pos <= -1420) {
                 pos = -1420;
-                gameEntry = false;
-                gameStart = false;
+                currentState = STATE.GAME_COUNTDOWN;
                 countDown();
 
             }
             spineManager.setPosition(pos);
         }
-
-
 
         for (var i = 0; i < farBgPos.length; i++) {
             farBgPos[i][0] -= movememtDelta * distBGSpeed;
@@ -275,7 +309,7 @@ function GameMain() {
                 if (spineManager.damage()) {
                     resetObstacle(i);
                     HP--;
-                    if( HP === 0 ){
+                    if (HP === 0) {
                         gameFinish();
                     }
                 }
@@ -289,10 +323,10 @@ function GameMain() {
         FontSystem.setString("score", "Score : " + score);
 
         var hptext = "";
-        for( var i = 0; i < HP ; i++ ){
+        for (var i = 0; i < HP; i++) {
             hptext += '@';
         }
-        FontSystem.setString("HP", hptext );
+        FontSystem.setString("HP", hptext);
 
 
         render(delta);
@@ -300,11 +334,11 @@ function GameMain() {
 
     }
 
-    function gameFinish(){
+    function gameFinish() {
         spineManager.die();
-        gameOver = true;
         FontSystem.setVisible("Restart", true);
-        sendScore( score );
+        currentState = STATE.GAME_OVER;
+        sendScore(score);
     }
 
     function countDown() {
@@ -313,12 +347,11 @@ function GameMain() {
         }, 4000);
 
         setTimeout(function () {
-            console.log("timeout start");
             FontSystem.setString("CountDown", "Start");
             spineManager.run();
-            gameStart = true;
+            currentState = STATE.GAME_START;
             FontSystem.setVisible("score", true);
-            FontSystem.setVisible("HP", true );
+            FontSystem.setVisible("HP", true);
         }, 3000);
 
         setTimeout(function () {
@@ -367,39 +400,28 @@ function GameMain() {
             SpriteShader.draw();
         }
 
-        drawUI();
+
+        if (currentState === STATE.HIGH_SCORE) {
+            drawUI();
+        }
+
         FontSystem.draw();
 
 
 
-       // spineManager.render(delta, false);
+        spineManager.render(delta, false);
 
     }
 
-
-
-    function drawUI(){
+    function drawUI() {
 
         SpriteShader.setTexture("optionUI.png");
-        SpriteShader.setAttr([-256,-256]);
+        SpriteShader.setAttr([-256, -256]);
         SpriteShader.draw();
 
-
-        FontSystem.setString("Ranktxt", "1st");
-        FontSystem.setPosition("Ranktxt", [-30,140]);
-
-        FontSystem.setString("MyNAME", "A A A");
-        FontSystem.setPosition("MyNAME", [-95, 20]);
+        FontSystem.setVisible("Ranktxt", true);
+        FontSystem.setVisible("MyNAME", true);
     };
-
-
-    socket.on("update_rank", function (data) {
-        //console.log('update_rank received', data);
-        updateRank(data);
-    });
-
-
-
 
     function resize() {
 
@@ -433,9 +455,47 @@ function GameMain() {
             if (i >= data.length)
                 break;
             FontSystem.setString("Rank" + i, data[i].name + " " + data[i].score);
-
         }
     }
+
+    var inputName = "";
+    function updateUI(text) {
+
+        inputName += text;
+        if (inputName.length === 1 || inputName.length === 3)
+            inputName += " ";
+        else if (inputName.length === 5) {
+            var realName = inputName.replace(/\s/gi, "");  
+            socket.emit("set_score", { name : realName , score : score});
+            FontSystem.setVisible("Ranktxt", false);
+            FontSystem.setVisible("MyNAME", false);
+        }
+
+        FontSystem.setString("MyNAME", inputName);
+    }
+
+
+
+    function sendScore(score) {
+        socket.emit("checkRank", score);
+    }
+
+    socket.on("update_rank", function (data) {
+        updateRank(data);
+        currentState = STATE.GAME_RESTART;
+    });
+
+    socket.on("returnRank", function (data) {
+        if (data === -1) {
+            currentState = STATE.GAME_RESTART;
+        }
+        else {
+            inputName = "";
+            FontSystem.setString("Ranktxt", rankText[data]);
+            FontSystem.setString("MyNAME", inputName);
+            currentState = STATE.HIGH_SCORE;
+        }
+    });
 
     return {
         init: init
