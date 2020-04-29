@@ -218,12 +218,14 @@ var SpineManager = function () {
 
                     animationStateData = new spine.AnimationStateData(skeleton.data);
                     var animationState = new spine.AnimationState(animationStateData);
-                     console.log( animationStateData );
+                    // console.log( animationStateData );
                     //animationState.setAnimation(0, getClass(currentClass) + '_idle', true);
                     animationState.addListener({
-                        /*start: function (track) {
-                            console.log("Animation on track " + track.trackIndex + " started");
+                        /*
+                        start: function (track) {
+                            //console.log("Animation on track " + track.animation.name + " started" + "     " + Date.now());
                         },
+                        
                         interrupt: function (track) {
                             console.log("Animation on track " + track.trackIndex + " interrupted");
                         },
@@ -232,8 +234,9 @@ var SpineManager = function () {
                         },
                         disposed: function (track) {
                             console.log("Animation on track " + track.trackIndex + " disposed");
-                        },*/
+                        },*/    
                         complete: function tick(track) {
+                            //console.log("Animation on track " + track.animation.name + " ended" + "     " + Date.now());
                             if (animationQueue.length) {
                                 var nextAnim = animationQueue.shift();
                                 // console.log( 'start ' + nextAnim );

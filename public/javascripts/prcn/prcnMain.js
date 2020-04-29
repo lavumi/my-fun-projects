@@ -14,6 +14,17 @@ function GameMain() {
     var spineManager;
 
 
+    var diff = [
+        [500,500],
+        [100,200,100,200,500],
+        [100,500],
+        [100,200,100,200,100,500],
+        [300,500,300,500],
+        [250,500]
+
+    ];
+
+    var nextObjPos = [500,500];
     //#endregion
 
 
@@ -46,9 +57,6 @@ function GameMain() {
     }
 
     var rankText = ['1st', '2nd', '3rd', '4th', '5th'];
-
-    var rankData;
-
     var currentState = null;
 
     //#endregion
@@ -164,10 +172,6 @@ function GameMain() {
         }, false);
 
         document.addEventListener('keyup', function (event) {
-
-
-            console.log(getAlpabetFromInput(event.code));
-
             if (currentState === STATE.HIGH_SCORE) {
                 updateUI(getAlpabetFromInput(event.code));
                 return;
@@ -204,7 +208,18 @@ function GameMain() {
                 nextPos = obstaclePos[k][0];
         }
 
-        obstaclePos[i] = [nextPos + (100 + Math.random() * 500), -30]
+
+        var nextLength = 0;
+        if( nextObjPos.length === 1 ){
+            var rnd = Math.floor(Math.random() * 4);
+            nextObjPos = nextObjPos.concat(diff[rnd]);
+            nextLength = nextObjPos.shift();
+        }
+        else{
+            nextLength = nextObjPos.shift();
+        }
+        
+        obstaclePos[i] = [nextPos + nextLength, -30]
 
     }
 
@@ -239,11 +254,16 @@ function GameMain() {
         treePos.length = 0;
 
         for (var i = 0; i < 6; i++) {
-            obstaclePos.push([i * 512 + Math.random() * 50 - 25 + 1024, -30]);
+          //  obstaclePos.push([i * 512 + 1024, -30]);
             farBgPos.push([i * 1024 - 2048, -60 - 512]);
             nearBgPos.push([i * 512 - 1024, -60]);
             treePos.push([i * 512 - 1024, -60]);
         }
+        for (var i = 0; i < 10; i++) {
+            obstaclePos.push([i * 512 + 1024, -30]);
+
+        }
+
 
 
         FontSystem.setVisible("score", false);
