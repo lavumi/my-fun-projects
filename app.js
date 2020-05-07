@@ -8,7 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var pcrunRouter = require('./routes/pcrun');
 var amiboRouter = require('./routes/acamibo');
-
+var wasmRouter = require('./routes/wasm');
 
 
 
@@ -32,6 +32,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/prcn', pcrunRouter);
 app.use('/ac', amiboRouter);
+app.use('/wasmTest', wasmRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
