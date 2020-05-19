@@ -12,9 +12,6 @@ var wasmRouter = require('./routes/wasm');
 
 
 
-
-
-
 var app = express();
 
 
@@ -28,11 +25,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
+function setRouter( routerName ){
+  var newRouter = require('./routes/' + routerName);
+  app.use('/' + routerName , newRouter);
+}
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/prcn', pcrunRouter);
 app.use('/ac', amiboRouter);
 app.use('/wasmTest', wasmRouter);
+
+setRouter('cmbook');
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

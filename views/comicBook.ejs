@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <style>
+    div {
+      width: 400px;
+      height : 600px;
+      border: 2px solid red;
+    }
+    img {
+  max-width: 100%;
+  height: auto;
+}
+  </style>
+</head>
+<body >
+  <div width>
+    <img id="id1">
+  </div>
+
+  <script text="javascript">
+    var _img = document.getElementById('id1');
+    var fileList = JSON.parse('<%-JSON.stringify(fileList)%>');
+    window.addEventListener('click', nextPage, false);
+
+    var currentPage = 0;
+
+    function cascadeLoad(index) {
+      if (index >= fileList.length)
+        return;
+
+      var newImage = new Image();
+      newImage.onload = function () {
+        if (index === currentPage) {
+          _img.src = 'symComic/' + fileList[index];
+        }
+        cascadeLoad(index + 1);
+      }
+
+      var reg = /(.*?)\.(jpg|jpeg|png|gif|bmp)$/;
+      if (fileList[index].match(reg)) {
+        newImage.src = 'symComic/' + fileList[index];
+      }
+      else {
+        fileList.splice(index, 1)
+        cascadeLoad(index);
+      }
+    }
+
+    function nextPage() {
+      currentPage++;
+      _img.src = 'symComic/' + fileList[currentPage];
+      console.log( currentPage ,fileList[currentPage]);
+    }
+    cascadeLoad(0);
+  </script>
+</body>
+
+</html>
