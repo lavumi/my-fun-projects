@@ -5,28 +5,50 @@
   <title><%= title %></title>
   <link rel='stylesheet' href='/stylesheets/style.css' />
   <style>
-    div {
-      width: 400px;
-      height : 600px;
-      border: 2px solid red;
+    body {
+      margin: 0;
+      padding: 5px;
     }
+
+    div {
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      border: 1px solid red;
+    }
+
     img {
-  max-width: 100%;
-  height: auto;
-}
+      max-width: 100%;
+      max-height: 100%;
+    }
   </style>
 </head>
-<body >
-  <div width>
-    <img id="id1">
-  </div>
+
+<body>
+  <center>
+    <div width>
+      <img id="id1">
+      <img id="id2">
+    </div>
+  </center>
+
+
 
   <script text="javascript">
     var _img = document.getElementById('id1');
+    var _img2 = document.getElementById('id2');
     var fileList = JSON.parse('<%-JSON.stringify(fileList)%>');
+    console.log( fileList );
     window.addEventListener('click', nextPage, false);
+    window.addEventListener('keydown', function (e) {
+      if (e.key == 'f') {
+        toggleDoublePage();
+      }
+
+    });
 
     var currentPage = 0;
+    var doublePage = false;
 
     function cascadeLoad(index) {
       if (index >= fileList.length)
@@ -36,6 +58,8 @@
       newImage.onload = function () {
         if (index === currentPage) {
           _img.src = 'symComic/' + fileList[index];
+          if( doublePage === true )
+            _img2.src = 'symComic/' + fileList[index];
         }
         cascadeLoad(index + 1);
       }
@@ -51,9 +75,27 @@
     }
 
     function nextPage() {
-      currentPage++;
-      _img.src = 'symComic/' + fileList[currentPage];
-      console.log( currentPage ,fileList[currentPage]);
+      if (doublePage === false) {
+        currentPage++;
+        _img.src = 'symComic/' + fileList[currentPage];
+      }
+      else {
+        currentPage += 2;
+        _img.src = 'symComic/' + fileList[currentPage];
+        _img2.src = 'symComic/' + fileList[currentPage + 1];
+      }
+    }
+
+    function toggleDoublePage() {
+      doublePage = !doublePage
+      if (doublePage === false) {
+        _img.src = 'symComic/' + fileList[currentPage];
+        _img2.src = '';
+      }
+      else {
+        _img.src = 'symComic/' + fileList[currentPage];
+        _img2.src = 'symComic/' + fileList[currentPage + 1];
+      }
     }
     cascadeLoad(0);
   </script>
