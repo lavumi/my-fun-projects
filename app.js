@@ -5,10 +5,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var pcrunRouter = require('./routes/pcrun');
-var amiboRouter = require('./routes/acamibo');
-var wasmRouter = require('./routes/wasm');
 
 
 
@@ -33,12 +29,12 @@ function setRouter( routerName ){
 }
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/prcn', pcrunRouter);
-app.use('/ac', amiboRouter);
-app.use('/wasmTest', wasmRouter);
 
-setRouter('cmbook');
+
+setRouter('acamibo');
+setRouter('pcrun');
+setRouter('wasmEngine');
+setRouter('comicBook');
 
 
 // catch 404 and forward to error handler
