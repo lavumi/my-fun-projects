@@ -3,24 +3,36 @@
 /**
  * Module dependencies.
  */
-
+var fs = require('fs');
 var app = require('../app');
 var debug = require('debug')('webpage:server');
 var http = require('http');
+var https = require('https');
 
 
+
+// Certificate
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/lavumi.net/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/lavumi.net/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/lavumi.net/chain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '443');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = https.createServer(credentials, app);
 
 
 /**
@@ -96,3 +108,4 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
