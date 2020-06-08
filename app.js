@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-
+var vhost = require('vhost');
 
 
 var app = express();
@@ -31,8 +31,12 @@ function setRouter( routerName ){
 app.use('/', indexRouter);
 
 
+const prcn = require('./routes/pcrun');
+app.use(vhost('wiki.lavumi.net', prcn));
+//setRouter('pcrun');
+
+
 setRouter('acamibo');
-setRouter('pcrun');
 setRouter('wasmEngine');
 setRouter('comicBook');
 
