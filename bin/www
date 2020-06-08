@@ -11,7 +11,8 @@ var https = require('https');
 
 
 
-// Certificate
+
+/******************************** https setting **********************
 const privateKey = fs.readFileSync('/etc/letsencrypt/live/lavumi.net/privkey.pem', 'utf8');
 const certificate = fs.readFileSync('/etc/letsencrypt/live/lavumi.net/cert.pem', 'utf8');
 const ca = fs.readFileSync('/etc/letsencrypt/live/lavumi.net/chain.pem', 'utf8');
@@ -21,18 +22,23 @@ const credentials = {
 	cert: certificate,
 	ca: ca
 };
-/**
- * Get port from environment and store in Express.
- */
-
 var port = normalizePort(process.env.PORT || '443');
 app.set('port', port);
-
-/**
- * Create HTTP server.
- */
-
 var server = https.createServer(credentials, app);
+ *************************************************************/
+
+
+
+///************************  http setting *****************
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+var server = http.createServer(app);
+
+//*********************************************************/
+
+
+
 
 
 /**
