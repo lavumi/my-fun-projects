@@ -36,7 +36,7 @@ setRouter('pcrun');
 
 setRouter('acamibo');
 setRouter('wasmEngine');
-//setRouter('comicBook');
+setRouter('comicBook');
 
 
 // catch 404 and forward to error handler
