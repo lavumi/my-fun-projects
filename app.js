@@ -36,8 +36,9 @@ setRouter('pcrun');
 
 setRouter('acamibo');
 setRouter('wasmEngine');
-setRouter('comicBook');
-
+//setRouter('comicBook');
+var newRouter = require('./routes/comicBook');
+app.use('/helltaker' , newRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

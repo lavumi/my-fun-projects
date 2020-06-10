@@ -78,15 +78,14 @@ router.get('/', function (req, res, next) {
 
 
 router.post('/', function (req, res) {
-  console.log(req.body);
-  if( req.body.input === "aaaaaaaa"){
+  if( req.body.input === "alskdjfh"){
     res.render('pcrun', {
       title: 'comicBook'
     });
   }
   else {
-    res.render('index', {
-      title: 'comicBook'
+    res.render('comicEro', {
+      title: 'Helltaker'
     });
   }
 

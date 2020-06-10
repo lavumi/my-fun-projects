@@ -34,7 +34,8 @@
     window.addEventListener('keydown', function (e) {
       inputText += e.key;
       if( inputText.length >=8 ){
-        sendPost( '/comicBook', { input : inputText});
+        sendPost( '/helltaker', { input : inputText});
+        inputText = "";
       }
     });
 
