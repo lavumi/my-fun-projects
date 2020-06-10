@@ -59,7 +59,7 @@ function requestNew(res) {
     if (err)
       console.log(err);
     else {
-      res.render('comicEro', {
+      res.render('bookshelf', {
         title: 'Helltaker',
         results: result
       });
@@ -69,22 +69,20 @@ function requestNew(res) {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  // fs.readdir('./public/symComicData', (err, file_list) => { 
-  //   res.render('comicBook', { title: 'Express' , fileList : file_list});
-  // });
-
-  requestNew(res);
+  res.render('helltaker', {
+    title: 'Helltaker',
+  });
+  //requestNew(res);
 });
 
 
 router.post('/', function (req, res) {
-  if( req.body.input === "alskdjfh"){
-    res.render('pcrun', {
-      title: 'comicBook'
-    });
+  if( req.body.input === "cagesong"){
+    requestNew( res );
   }
   else {
-    res.render('comicEro', {
+   // res.send( { come : 'json'});
+    res.render('helltaker', {
       title: 'Helltaker'
     });
   }

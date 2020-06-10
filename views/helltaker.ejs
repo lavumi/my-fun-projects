@@ -127,7 +127,9 @@
 
 
       }
-    }
+
+      var myaudio = new Audio('bgm/helltaker.mp3');
+      }
     var index = 0;
     var newImage = new Image();
     newImage.onload = function () {
@@ -141,9 +143,10 @@
     newImage.src = imgArray[index]
 
   </script>
-  <footer style="zoom: 0.2; position: fixed; left: 0; bottom: 0; width: 100%;  text-align: center;">
-    <audio controls autoplay style="float:inline-end">
-      <source src="bgm/helltaker.mp3">
+  <footer style="zoom: 1; position: fixed; left: 0; bottom: 0; width: 100%;  text-align: center;">
+    <audio autoplay style="float:inline-end">
+      <source src="bgm/helltaker.mp3" type="audio/mpeg" />
+    Your browser does not support the audio element.
     </audio>
   </footer>
 </body>

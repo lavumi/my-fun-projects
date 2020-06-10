@@ -43,10 +43,12 @@
     var screen1123 = document.getElementById('screen1');
     screen1123.style.height = (window.innerHeight - 15 )+ 'px';
 
+
+    var folderDir = "symComicData/730177/"
     var _img = document.getElementById('id1');
     var _img2 = document.getElementById('id2');
-    var fileList = JSON.parse('<%-JSON.stringify(fileList)%>');
-    console.log( fileList );
+    var pageListData = (JSON.parse('<%-JSON.stringify(_fileList)%>'));
+    console.log( pageListData );
     window.addEventListener('click', nextPage, false);
     window.addEventListener('keydown', function (e) {
       console.log(e.key);
@@ -66,25 +68,27 @@
     var doublePage = false;
 
     function cascadeLoad(index) {
-      if (index >= fileList.length)
+      console.log("cascadeLoad" , index);
+      if (index >= pageListData.length)
         return;
 
+      console.log("cascadeLoad" ,  pageListData[index]);
       var newImage = new Image();
       newImage.onload = function () {
         if (index === currentPage) {
-          _img.src = 'symComic/' + fileList[index];
+          _img.src = folderDir + pageListData[index];
           if( doublePage === true )
-            _img2.src = 'symComic/' + fileList[index];
+            _img2.src = folderDir + pageListData[index];
         }
         cascadeLoad(index + 1);
       }
 
-      var reg = /(.*?)\.(jpg|jpeg|png|gif|bmp)$/;
-      if (fileList[index].match(reg)) {
-        newImage.src = 'symComic/' + fileList[index];
+      var reg = /(.*?)\.(jpg|jpeg|png|gif|bmp|webp)$/;
+      if (pageListData[index].match(reg)) {
+        newImage.src = folderDir + pageListData[index];
       }
       else {
-        fileList.splice(index, 1)
+        pageListData.splice(index, 1)
         cascadeLoad(index);
       }
     }
@@ -92,12 +96,12 @@
     function nextPage() {
       if (doublePage === false) {
         currentPage++;
-        _img.src = 'symComic/' + fileList[currentPage];
+        _img.src = folderDir + pageListData[currentPage];
       }
       else {
         currentPage += 2;
-        _img.src = 'symComic/' + fileList[currentPage];
-        _img2.src = 'symComic/' + fileList[currentPage + 1];
+        _img.src =  folderDir + pageListData[currentPage];
+        _img2.src = folderDir + pageListData[currentPage + 1];
       }
     }
 
@@ -109,7 +113,7 @@
           return;
         }
 
-        _img.src = 'symComic/' + fileList[currentPage];
+        _img.src = folderDir + pageListData[currentPage];
       }
       else {
         currentPage -= 2;
@@ -117,8 +121,8 @@
           currentPage = 0;
           return;
         }
-        _img.src = 'symComic/' + fileList[currentPage];
-        _img2.src = 'symComic/' + fileList[currentPage + 1];
+        _img.src =  folderDir + pageListData[currentPage];
+        _img2.src = folderDir + pageListData[currentPage + 1];
       }
     }
 
@@ -126,12 +130,12 @@
       
       doublePage = !doublePage
       if (doublePage === false) {
-        _img.src = 'symComic/' + fileList[currentPage];
+        _img.src = folderDir + pageListData[currentPage];
         _img2.src = '';
       }
       else {
-        _img.src = 'symComic/' + fileList[currentPage];
-        _img2.src = 'symComic/' + fileList[currentPage + 1];
+        _img.src =  folderDir + pageListData[currentPage];
+        _img2.src = folderDir + pageListData[currentPage + 1];
       }
     }
     cascadeLoad(0);
