@@ -6,8 +6,39 @@
   <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 
-<body style="background-color:black;   overflow-y: hidden;">
+<body style="background-color:#4F3234;   overflow-y: hidden; padding: 0px;">
+  <div id="main" style="text-align: center;"></div>
   <script text="javascript">
+
+
+
+    function sendPost(action, params) {
+      var form = document.createElement('form');
+      form.setAttribute('method', 'post');
+      form.setAttribute('action', action);
+
+      for (var key in params) {
+        var hiddenField = document.createElement('input');
+        hiddenField.setAttribute('type', 'hidden');
+        hiddenField.setAttribute('name', key);
+        hiddenField.setAttribute('value', params[key]);
+        form.appendChild(hiddenField);
+      }
+      document.body.appendChild(form  );
+      form.submit();
+
+    }
+
+
+    var inputText = "";
+    window.addEventListener('keydown', function (e) {
+      inputText += e.key;
+      if( inputText.length >=8 ){
+        sendPost( '/comicBook', { input : inputText});
+      }
+    });
+
+
     var imgArray = [
       'pics/helltaker01.webp',
       'pics/helltaker02.webp',
@@ -25,81 +56,71 @@
 
     function initImage() {
       for (var i = 0; i < 5; i++) {
-        var div = document.createElement("div");
+        var div = document.getElementById("main");
         div.style.width = "100%";
-        document.body.appendChild(div);
 
         // imgArray.forEach(element => {
 
         // });
 
+        var size = "9.9%"
         var j = 0;
         var img = document.createElement("img");
         img.src = imgArray[j];
-        img.style.width = "9%";
+        img.style.width = size;
+        div.appendChild(img);
+        j++;
+        var img = document.createElement("img");
+        img.src = imgArray[j];
+        img.style.width = size;
+        div.appendChild(img);
+        j++;
+        var img = document.createElement("img");
+        img.src = imgArray[j];
+        img.style.width = size;
+        div.appendChild(img);
+        j++;
+        var img = document.createElement("img");
+        img.src = imgArray[j];
+        img.style.width = size;
+        div.appendChild(img);
+        j++;
+        var img = document.createElement("img");
+        img.src = imgArray[j];
+        img.style.width = size;
+        div.appendChild(img);
+        j++;
+        var img = document.createElement("img");
+        img.src = imgArray[j];
+        img.style.width = size;
+        div.appendChild(img);
+        j++;
+        var img = document.createElement("img");
+        img.src = imgArray[j];
+        img.style.width = size;
+        div.appendChild(img);
+        j++;
+        var img = document.createElement("img");
+        img.src = imgArray[j];
+        img.style.width = size;
+        div.appendChild(img);
+        j++;
+        var img = document.createElement("img");
+        img.src = imgArray[j];
+        img.style.width = size;
+        div.appendChild(img);
+        j++;
+        var img = document.createElement("img");
+        img.src = imgArray[j];
+        img.style.width = size;
+        img.style.position = "absolute"
         div.appendChild(img);
         j++;
 
         var img = document.createElement("img");
         img.src = imgArray[j];
-        img.style.width = "9%";
-        div.appendChild(img);
-        j++;
-
-        var img = document.createElement("img");
-        img.src = imgArray[j];
-        img.style.width = "9%";
-        div.appendChild(img);
-        j++;
-
-        var img = document.createElement("img");
-        img.src = imgArray[j];
-        img.style.width = "9%";
-        div.appendChild(img);
-        j++;
-
-        var img = document.createElement("img");
-        img.src = imgArray[j];
-        img.style.width = "9%";
-        div.appendChild(img);
-        j++;
-
-        var img = document.createElement("img");
-        img.src = imgArray[j];
-        img.style.width = "9%";
-        div.appendChild(img);
-        j++;
-
-        var img = document.createElement("img");
-        img.src = imgArray[j];
-        img.style.width = "9%";
-        div.appendChild(img);
-        j++;
-
-        var img = document.createElement("img");
-        img.src = imgArray[j];
-        img.style.width = "9%";
-        div.appendChild(img);
-        j++;
-
-
-
-        var img = document.createElement("img");
-        img.src = imgArray[j];
-        img.style.width = "9%";
-        div.appendChild(img);
-        j++;
-
-        var img = document.createElement("img");
-        img.src = imgArray[j];
-        img.style.width = "9%";
-        div.appendChild(img);
-        j++;
-
-        var img = document.createElement("img");
-        img.src = imgArray[j];
-        img.style.width = "9%";
-        img.style.transform = "translateX(-150%)";
+        img.style.width = size;
+        img.style.transform = "translateX(-50%)";
         div.appendChild(img);
         j++;
 
@@ -119,17 +140,11 @@
     newImage.src = imgArray[index]
 
   </script>
-  <audio controls autoplay>
-    <source src="bgm/helltaker.mp3">
-  </audio>
-  <!-- <script text="javascript">
-    var fileList = JSON.parse('<%-JSON.stringify(results)%>');
-    console.log( fileList );
-    </script>
-    <% results.forEach( function(val){ %>
-        <input type="button" name = '<%= val._index %>' value = '<%= val.title %>' >
-        <br>
-    <% }) %> -->
+  <footer style="zoom: 0.2; position: fixed; left: 0; bottom: 0; width: 100%;  text-align: center;">
+    <audio controls autoplay style="float:inline-end">
+      <source src="bgm/helltaker.mp3">
+    </audio>
+  </footer>
 </body>
 
 </html>

@@ -56,7 +56,6 @@ function requestNew(res) {
 
   connection.query(querystring, function (err, result, fileds) {
     var returnValue = JSON.parse(JSON.stringify(result))
-    console.log( returnValue);
     if (err)
       console.log(err);
     else {
@@ -75,7 +74,23 @@ router.get('/', function (req, res, next) {
   // });
 
   requestNew(res);
-//  requestByTag(res, true, "blowjob");
 });
+
+
+router.post('/', function (req, res) {
+  console.log(req.body);
+  if( req.body.input === "aaaaaaaa"){
+    res.render('pcrun', {
+      title: 'comicBook'
+    });
+  }
+  else {
+    res.render('index', {
+      title: 'comicBook'
+    });
+  }
+
+});
+
 
 module.exports = router;
