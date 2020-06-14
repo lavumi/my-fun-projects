@@ -7,7 +7,10 @@
 </head>
 
 <body>
-    <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    <div style="float:left; margin-right: 30px;">
+        <canvas id="canvas" oncontextmenu="event.preventDefault()" style  = "padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block; align-self: auto;"></canvas>
+    </div>
+
     <script type='text/javascript'>
         var canv = document.getElementById('canvas');
         var Module = {
@@ -39,10 +42,10 @@
 
 
 
-    TODO Works
-    1. SceneGraph 기반으로 자식 구조 설계
-    2. Full screen, window 시스템 
-    3. Render pipeline 조정 ( wasm은 webgl 기반인거 같은데 어디까지 될까... )
+    TODO Works<br>
+    1. SceneGraph 기반으로 자식 구조 설계<br>
+    2. Full screen, window 시스템 <br>
+    3. Render pipeline 조정 ( wasm은 webgl 기반인거 같은데 어디까지 될까... )<br>
 </body>
 
 </html>
