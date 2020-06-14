@@ -14,6 +14,7 @@ var connection = mysql.createConnection({
 })
 
 
+var baseFolder = './public/symComicData/'
 
 function requestByTag(res, female, tag) {
   querystring = "SELECT _index FROM tag WHERE _desc = '" + tag + "'"
@@ -37,10 +38,12 @@ function requestByTag(res, female, tag) {
 
       querystring += " true = true"
 
-      console.log( querystring );
+      console.log(querystring);
       connection.query(querystring, function (err, result, fileds) {
-        returnValue = JSON.parse(JSON.stringify(result))
-        console.log( returnValue );
+        res.render('bookshelf', {
+          title: 'Helltaker',
+          results: result
+        });
       });
     });
   });
@@ -52,10 +55,11 @@ function requestByAuthor(author) {
 
 
 function requestNew(res) {
-  querystring = 'SELECT * FROM comicData ORDER BY _index DESC LIMIT 0'
+  querystring = 'SELECT * FROM comicData ORDER BY _index DESC LIMIT 10'
 
   connection.query(querystring, function (err, result, fileds) {
     var returnValue = JSON.parse(JSON.stringify(result))
+    console.log(returnValue);
     if (err)
       console.log(err);
     else {
@@ -69,16 +73,33 @@ function requestNew(res) {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('helltaker', {
-    title: 'Helltaker',
-  });
-  //requestNew(res);
+  if (req.query._index !== undefined) {
+    fs.readdir(baseFolder + req.query._index + '/', (err, file_list) => {
+      if (err) {
+        res.render('error');
+      }
+      else {
+        res.render('comicBook', {
+          title: 'Helltaker',
+          _index: req.query._index,
+          _fileList: file_list
+        });
+      }
+    });
+  }
+  else {
+    //requestNew(res);
+    res.render('helltaker', {
+      title: 'Helltaker',
+    });
+  }
 });
 
 
 router.post('/', function (req, res) {
-  if( req.body.input === "cagesong"){
+  if( req.body.input === "cagesong1"){
     requestNew( res );
+    //requestByTag(res , 1 , 'ahegao');
   }
   else {
    // res.send( { come : 'json'});
@@ -88,6 +109,9 @@ router.post('/', function (req, res) {
   }
 
 });
+
+
+
 
 
 module.exports = router;

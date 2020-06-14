@@ -1,4 +1,4 @@
-var reverseProxy = new require('./redbird')({
+var reverseProxy = new require('./reverseProxy')({
     port: 80,
     ssl: {
         port: 443,

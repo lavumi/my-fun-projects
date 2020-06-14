@@ -13,8 +13,8 @@
 
     div {
       text-align: center;
-      max-width:100%; 
-       background-color:#123123;
+      max-width: 100%;
+      background-color: #123123;
       border: 1px solid red;
       height: inherit;
     }
@@ -29,55 +29,49 @@
 
 <body>
 
-    <div id='screen1'>
-      <img id="id1">
-      <img id="id2">
-    </div>
-
-
-
-
-
+  <div id='screen1'>
+    <img id="id1">
+    <img id="id2">
+  </div>
   <script text="javascript">
-
     var screen1123 = document.getElementById('screen1');
-    screen1123.style.height = (window.innerHeight - 15 )+ 'px';
-
-
-    var folderDir = "symComicData/730177/"
+    screen1123.style.height = (window.innerHeight - 15) + 'px';
+    var comicID = (JSON.parse('<%-JSON.stringify(_index)%>'));;
+    var folderDir = "symComicData/" + comicID + '/';
     var _img = document.getElementById('id1');
     var _img2 = document.getElementById('id2');
     var pageListData = (JSON.parse('<%-JSON.stringify(_fileList)%>'));
-    console.log( pageListData );
+    console.log(pageListData);
     window.addEventListener('click', nextPage, false);
     window.addEventListener('keydown', function (e) {
       console.log(e.key);
-      if (e.key == 'f') {
+      if (e.key == 'd') {
         toggleDoublePage();
       }
-      if (e.key == 'ArrowRight'){
+      if (e.key == 'f') {
+        toggleFullScreen();
+      }
+      if (e.key == 'ArrowRight') {
         nextPage();
       }
-      if (e.key == 'ArrowLeft'){
+      if (e.key == 'ArrowLeft') {
         prevPage();
       }
 
     });
-      
+
     var currentPage = 0;
     var doublePage = false;
 
     function cascadeLoad(index) {
-      console.log("cascadeLoad" , index);
       if (index >= pageListData.length)
         return;
 
-      console.log("cascadeLoad" ,  pageListData[index]);
       var newImage = new Image();
       newImage.onload = function () {
         if (index === currentPage) {
           _img.src = folderDir + pageListData[index];
-          if( doublePage === true )
+          if (doublePage === true)
             _img2.src = folderDir + pageListData[index];
         }
         cascadeLoad(index + 1);
@@ -94,21 +88,31 @@
     }
 
     function nextPage() {
+
       if (doublePage === false) {
+        if (currentPage >= pageListData.length - 1) {
+          return;
+        }
         currentPage++;
         _img.src = folderDir + pageListData[currentPage];
       }
       else {
+        if (currentPage > pageListData.length - 3) {
+          return;
+        }
         currentPage += 2;
-        _img.src =  folderDir + pageListData[currentPage];
-        _img2.src = folderDir + pageListData[currentPage + 1];
+        if (!!pageListData[currentPage + 1] === true)
+          _img.src = folderDir + pageListData[currentPage + 1];
+        else
+          _img.src = "";
+        _img2.src = folderDir + pageListData[currentPage];
       }
     }
 
     function prevPage() {
       if (doublePage === false) {
         currentPage--;
-        if( currentPage < 0){
+        if (currentPage < 0) {
           currentPage = 0;
           return;
         }
@@ -117,27 +121,51 @@
       }
       else {
         currentPage -= 2;
-        if( currentPage < 0){
+        if (currentPage < 0) {
           currentPage = 0;
           return;
         }
-        _img.src =  folderDir + pageListData[currentPage];
-        _img2.src = folderDir + pageListData[currentPage + 1];
+        if (!!pageListData[currentPage + 1] === true)
+          _img.src = folderDir + pageListData[currentPage + 1];
+        else
+          _img.src = "";
+        _img2.src = folderDir + pageListData[currentPage];
       }
     }
 
     function toggleDoublePage() {
-      
+
       doublePage = !doublePage
       if (doublePage === false) {
         _img.src = folderDir + pageListData[currentPage];
         _img2.src = '';
       }
       else {
-        _img.src =  folderDir + pageListData[currentPage];
-        _img2.src = folderDir + pageListData[currentPage + 1];
+        if (!!pageListData[currentPage + 1] === true)
+          _img.src = folderDir + pageListData[currentPage + 1];
+        else
+          _img.src = "";
+        _img2.src = folderDir + pageListData[currentPage];
       }
     }
+
+    function toggleFullScreen() {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        document.getElementById('screen1').requestFullscreen();
+      }
+    }
+
+    // document.getElementById('screen1').addEventListener('fullscreenchange', (event) => {
+    //   if (document.fullscreenElement) {
+    //     console.log(`entered fullscreen mode.`);
+    //   } else {
+    //     console.log('Leaving full-screen mode.');
+    //   }
+    // });
+
+
     cascadeLoad(0);
   </script>
 </body>
