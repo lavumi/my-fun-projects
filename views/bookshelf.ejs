@@ -32,18 +32,38 @@
       border: 1px solid #444444;
       text-align: center;
     }
+
+    #tagBox {
+      float: left;
+      text-align: left;
+    }
   </style>
 </head>
 
 <body>
-  <table id = "outerColumn">
+  <div id="tagBox">
+    <form id='tableForm' action="/helltaker" method="post">
+      <fieldset>
+        <legend>TAG</legend>
+        <input list="tags" name="tag" id="tag">
+        <datalist id="tags">
+          <% tagResult.forEach( function(val){ %>
+          <option><%=val._desc %></option>
+          <% }) %>
+        </datalist>
+        <input type="submit" value="Submit" />
+      </fieldset>
+  </div>
+
+  <table id="outerColumn">
     <tr>
       <% var i = 0 %>
       <% results.forEach( function(val){ %>
       <% if ( i++ > 4 ) { %>
-        </tr><tr>
+    </tr>
+    <tr>
       <% i = 0; } %>
-      <td >
+      <td>
         <div id="innerThumb">
           <a href="/helltaker?_index=<%=val._index%>">
             <img id="thumbImg" src="symComicData/<%=val._index%>/000.webp">
@@ -58,8 +78,6 @@
       <% }) %>
     </tr>
   </table>
-  <script>
-  </script>
 </body>
 
 </html>

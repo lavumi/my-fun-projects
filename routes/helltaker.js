@@ -14,19 +14,19 @@ var connection = mysql.createConnection({
 })
 
 
+var tagList;
+connection.query("SELECT _desc FROM tag ORDER BY _desc" , function(err, tagResult){
+  tagList = tagResult;
+})
+
 var baseFolder = './public/symComicData/'
 
-function requestByTag(res, female, tag) {
+function requestByTag(res, tag) {
   querystring = "SELECT _index FROM tag WHERE _desc = '" + tag + "'"
   connection.query(querystring, function (err, result, fileds) {
     var returnValue = JSON.parse(JSON.stringify(result))[0]._index
     querystring = "SELECT comicIdx FROM tagBridge WHERE tagIdx = '" + returnValue + "'";
-    if (female === true) {
-      querystring += " and female = 1"
-    }
-    else {
-      querystring += " and female = 0"
-    }
+
 
     connection.query(querystring, function (err, result, fileds) {
       returnValue = JSON.parse(JSON.stringify(result))
@@ -36,17 +36,23 @@ function requestByTag(res, female, tag) {
         querystring += " OR"
       });
 
-      querystring += " true = true"
-
-      console.log(querystring);
+      querystring += " false = true"
       connection.query(querystring, function (err, result, fileds) {
         res.render('bookshelf', {
           title: 'Helltaker',
-          results: result
+          results: result,
+          tagResult : tagList
         });
       });
     });
   });
+}
+
+function getTagList( cb ){
+  querystring = "SELECT _desc FROM tag";
+  connection.query(querystring , function(err, result){
+    cb(result);
+  })
 }
 
 function requestByAuthor(author) {
@@ -56,18 +62,14 @@ function requestByAuthor(author) {
 
 function requestNew(res) {
   querystring = 'SELECT * FROM comicData ORDER BY _index DESC LIMIT 10'
-
-  connection.query(querystring, function (err, result, fileds) {
-    var returnValue = JSON.parse(JSON.stringify(result))
-    console.log(returnValue);
-    if (err)
-      console.log(err);
-    else {
-      res.render('bookshelf', {
-        title: 'Helltaker',
-        results: result
-      });
-    }
+  var newList;
+  connection.query(querystring, function (err, newResult, fileds) {
+    newList = newResult;
+    res.render('bookshelf', {
+      title: 'Helltaker',
+      results: newList,
+      tagResult : tagList
+    });
   })
 }
 
@@ -97,9 +99,14 @@ router.get('/', function (req, res, next) {
 
 
 router.post('/', function (req, res) {
-  if( req.body.input === "cagesong1"){
+  console.log( JSON.stringify(req.body));
+
+  if( !!req.body.tag === true ){
+
+    requestByTag(res,req.body.tag );
+  }
+  else if( req.body.input === "cagesong"){
     requestNew( res );
-    //requestByTag(res , 1 , 'ahegao');
   }
   else {
    // res.send( { come : 'json'});

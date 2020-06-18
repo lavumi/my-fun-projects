@@ -1,1 +1,1 @@
-sudo pm2 start ReverseProxy/app.js
+sudo pm2 start 0
