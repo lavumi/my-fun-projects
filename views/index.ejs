@@ -34,11 +34,16 @@
 			</div>
 			<nav>
 				<ul>
-					<li><a href="#pcrun">PC RUN</a></li>
+					<li><a id="pcrunHref">PC RUN</a></li>
 					<li><a href="/wasmEngine">WASM</a></li>
 					<li><a href="http://wiki.lavumi.net/">Wiki</a></li>
 					<li><a href="#helltaker" onclick="moveCountDown();" >Helltaker</a></li>
 					<script type="text/javascript">
+						var href = document.getElementById("pcrunHref");
+						href.onclick = function() {
+							document.getElementById('pcrunIframe').setAttribute('src', '/pcrun');
+							window.location.href=' #pcrun';
+						};
 						function moveCountDown(){
 							var countDownText = document.getElementById("countdownText");
 							setTimeout( function(){
@@ -62,7 +67,7 @@
 						}
 					</script>
 					<li><a href="#about">About</a></li>
-					<li><a href="#contact">Contact</a></li>
+					<!-- <li><a href="#contact">Contact</a></li> -->
 				</ul>
 			</nav>
 		</header>
@@ -73,7 +78,7 @@
 			<!-- Intro -->
 			<article id="pcrun" style="height: 85vh;">
 				<h2 class="major">PRICONE FAN GAME</h2>
-				<iframe src="/pcrun" style="-webkit-transform: scale(0.9) translate(-50px , -50px);display:block; width: 85vw; height:80vh">
+				<iframe id="pcrunIframe" src="/" style="-webkit-transform: scale(0.9) translate(-50px , -50px);display:block; width: 85vw; height:80vh">
 					<p>이 문서는 &lt;iframe&gt;태그를 지원하는 웹 브라우저가 필요합니다.</p>
 				</iframe>
 			</article>
