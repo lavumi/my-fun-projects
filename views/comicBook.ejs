@@ -24,14 +24,25 @@
       height: 100%;
       margin: -2px;
     }
+    
   </style>
+
+
 </head>
 
 <body>
-
+  <style>
+    .no-drag {
+      -ms-user-select: none; 
+      -moz-user-select: -moz-none; 
+      -webkit-user-select: none; 
+      -khtml-user-select: none; 
+      user-select:none;
+      } 
+      </style>
   <div id='screen1'>
-    <img id="id1">
-    <img id="id2">
+    <img class = "no-drag" id="id1">
+    <img class = "no-drag" id="id2">
   </div>
   <script text="javascript">
     var screen1123 = document.getElementById('screen1');
