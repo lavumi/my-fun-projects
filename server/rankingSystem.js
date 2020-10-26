@@ -8,7 +8,8 @@ var rankingDataFormat = {
     score: null,
 };
 
-var _rankingData = JSON.parse(fs.readFileSync(file, 'utf8'));
+// console.log("__dirname : " , __dirname);
+var _rankingData = JSON.parse(fs.readFileSync(__dirname + "/" + file, 'utf8'));
 var _updateQueue = [];
 
 function _updateRanking(_name, _score) {
