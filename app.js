@@ -32,6 +32,7 @@ app.use('/', indexRouter);
 setRouter('pcrun');
 setRouter('acamibo');
 setRouter('wasmEngine');
+setRouter('media');
 //setRouter('comicBook');
 var newRouter = require('./routes/helltaker');
 app.use('/helltaker' , newRouter);

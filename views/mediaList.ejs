@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<title><%= title %></title>
+<body>
+
+<h1>My <%= title %> </h1>
+
+<form action="/reload" method="post">
+    <input type="submit" value="Reload Data">
+</form>
+
+<table border="1" style="width:25%; float:left;">
+<th>Running Man</th>
+<% _fileList['RunningMan'].forEach( function(val){ %>
+<%      if( val.indexOf('.mp4') !== -1 ){ %>
+<tr></tr><td><a href="?ext=mp4&title=<%= val %>"><%= val %></a></td></tr>
+<% } else if ( val.indexOf('avi') !== -1 || val.indexOf('.AVI') !== -1){ %>
+<tr><td><a href="?ext=avi&title=<%= val %>"><%= val %></a></td></tr>
+<%}}) %>
+</table>
+
+
+<table border="1" style="width:25%;float:left">
+    <th>InfinityChallange</th>
+    <% _fileList['InfinityChallange'].forEach( function(val){ %>
+    <%      if( val.indexOf('.mp4') !== -1 ){ %>
+    <tr></tr><td><a href="?ext=mp4&title=<%= val %>"><%= val %></a></td></tr>
+    <% } else if ( val.indexOf('avi') !== -1 || val.indexOf('.AVI') !== -1){ %>
+    <tr><td><a href="?ext=avi&title=<%= val %>"><%= val %></a></td></tr>
+    <%}}) %>
+</table>
+
+<table border="1" style="width:25%;float:left">
+    <th>Etc</th>
+    <% _fileList['Etc'].forEach( function(val){ %>
+    <%      if( val.indexOf('.mp4') !== -1 ){ %>
+    <tr></tr><td><a href="?ext=mp4&title=<%= val %>"><%= val %></a></td></tr>
+    <% } else if ( val.indexOf('avi') !== -1 || val.indexOf('.AVI') !== -1){ %>
+    <tr><td><a href="?ext=avi&title=<%= val %>"><%= val %></a></td></tr>
+    <%}}) %>
+</table>
+
+<table border="1" style="width:25%;float:left">
+    <th>downloads</th>
+    <% _fileList['downloads'].forEach( function(val){ %>
+    <%      if( val.indexOf('.mp4') !== -1 ){ %>
+    <tr></tr><td><a href="?ext=mp4&title=<%= val %>"><%= val %></a></td></tr>
+    <% } else if ( val.indexOf('avi') !== -1 || val.indexOf('.AVI') !== -1){ %>
+    <tr><td><a href="?ext=avi&title=<%= val %>"><%= val %></a></td></tr>
+    <%}}) %>
+</table>
+</body>
+</html>
