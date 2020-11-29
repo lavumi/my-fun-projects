@@ -45,19 +45,20 @@ var readdir = function (dir, callback) {
 var g_fileList = {};
 
 function loadData(){
-    readdir(__dirname + '/Media/RunningMan', (err, file_list) => {
+    readdir(__dirname + '/../public/symMedia/RunningMan', (err, file_list) => {
+        console.log( file_list );
         g_fileList['RunningMan']= file_list;
     });
     
-    readdir(__dirname + '/Media/InfinityChallange', (err, file_list) => {
+    readdir(__dirname + '/../public/symMedia/InfinityChallange', (err, file_list) => {
         g_fileList['InfinityChallange'] = file_list;
     });
     
-    readdir(__dirname + '/Media/Etc', (err, file_list) => {
+    readdir(__dirname + '/../public/symMedia/Etc', (err, file_list) => {
         g_fileList['Etc'] = file_list;
     });
     
-    readdir(__dirname + '/Media/downloads', (err, file_list) => {
+    readdir(__dirname + '/../public/symMedia/downloads', (err, file_list) => {
         g_fileList['downloads'] = file_list;
     });
 }
