@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Cocos Creator | Tetdoku</title>
+
+  <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="full-screen" content="yes"/>
+  <meta name="screen-orientation" content="portrait"/>
+  <meta name="x5-fullscreen" content="true"/>
+  <meta name="360-fullscreen" content="true"/>
+  
+  <meta name="renderer" content="webkit"/>
+  <meta name="force-rendering" content="webkit"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+  <link rel="stylesheet" type="text/css" href="tetdoku/style-desktop.81ede.css"/>
+  <link rel="icon" href="tetdoku/favicon.8de18.ico"/>
+</head>
+<body>
+<h1 class="header">Tetdoku</h1>
+
+<div id="GameDiv" style="width:360px; height: 740px;">
+  <canvas id="GameCanvas" width="360" height="740"></canvas>
+  <div id="splash">
+    <div class="progress-bar stripes">
+      <span style="width: 0%"></span>
+    </div>
+  </div>
+</div>
+
+<script src="tetdoku/src/settings.159a4.js" charset="utf-8"></script>
+<script src="tetdoku/main.314a3.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+(function () {
+    // open web debugger console
+    if (typeof VConsole !== 'undefined') {
+        window.vConsole = new VConsole();
+    }
+
+    var debug = window._CCSettings.debug;
+    var splash = document.getElementById('splash');
+    splash.style.display = 'block';
+
+    function loadScript (moduleName, cb) {
+      function scriptLoaded () {
+          document.body.removeChild(domScript);
+          domScript.removeEventListener('load', scriptLoaded, false);
+          cb && cb();
+      };
+      var domScript = document.createElement('script');
+      domScript.async = true;
+      domScript.src = moduleName;
+      domScript.addEventListener('load', scriptLoaded, false);
+      document.body.appendChild(domScript);
+    }
+
+    loadScript(debug ? 'tetdoku/cocos2d-js.js' : 'tetdoku/cocos2d-js-min.3018d.js', function () {
+      if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
+        loadScript(debug ? 'tetdoku/physics.js' : 'tetdoku/physics-min.b5fcb.js', window.boot);
+      }
+      else {
+        window.boot();
+      }
+    });
+})();
+</script>
+
+</body>
+</html>

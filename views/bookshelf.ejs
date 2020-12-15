@@ -59,10 +59,10 @@
     <tr>
       <% var i = 0 %>
       <% results.forEach( function(val){ %>
-      <% if ( i++ > 4 ) { %>
+      <% if ( i > 6 ) { %>
     </tr>
     <tr>
-      <% i = 0; } %>
+      <% i = 0; } i++;%>
       <td>
         <div id="innerThumb">
           <a href="/helltaker?_index=<%=val._index%>">

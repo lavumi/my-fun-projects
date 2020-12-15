@@ -1,7 +1,14 @@
+//todo list
+//1. 제목 변경 기능 꼭 넣어야겠다
+//2. 페이지 삭제 기능
+//3. 다른 포트로 넘기자
+
+
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var mysql = require('mysql');
+var path = require('path');
 
 
 
@@ -19,7 +26,7 @@ connection.query("SELECT _desc FROM tag ORDER BY _desc" , function(err, tagResul
   tagList = tagResult;
 })
 
-var baseFolder = './public/symComicData/'
+var baseFolder = '../public/symComicData/'
 
 function requestByTag(res, tag) {
   querystring = "SELECT _index FROM tag WHERE _desc = '" + tag + "'"
@@ -61,7 +68,7 @@ function requestByAuthor(author) {
 
 
 function requestNew(res) {
-  querystring = 'SELECT * FROM comicData ORDER BY _index DESC LIMIT 10'
+  querystring = 'SELECT * FROM comicData ORDER BY _index DESC LIMIT 30'
   var newList;
   connection.query(querystring, function (err, newResult, fileds) {
     newList = newResult;
@@ -76,7 +83,10 @@ function requestNew(res) {
 /* GET home page. */
 router.get('/', function (req, res, next) {
   if (req.query._index !== undefined) {
-    fs.readdir(baseFolder + req.query._index + '/', (err, file_list) => {
+    console.log("get comicbook querry : ", __dirname, baseFolder , req.query._index );
+
+    fs.readdir(path.join(__dirname,baseFolder , req.query._index ), (err, file_list) => {
+      console.log(err, file_list);
       if (err) {
         res.render('error');
       }

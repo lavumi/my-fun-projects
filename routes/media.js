@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-// const express = require('express');
-// const app = express();
 const fs = require('fs');
 const path = require('path');
 
 
+
+const mediaPath = path.join(__dirname , "../public");
 var readdir = function (dir, callback) {
     var results = [];
     fs.readdir(dir, function (err, list) {
@@ -16,7 +16,7 @@ var readdir = function (dir, callback) {
             var file = list[i++];
             if (!file) return callback(null, results);
             if (file[0] === '.') {
-                console.log(file + " skipped");
+                // console.log(file + " skipped");
                 next();
             }
             else {
@@ -25,14 +25,14 @@ var readdir = function (dir, callback) {
                     if (stat && stat.isDirectory()) {
                         readdir(file, function (err, res) {
                             if (!res) {
-                                console.log(file, res);
+                                // console.log(file, res);
                             }
                             results = results.concat(res);
 
                             next();
                         });
                     } else {
-                        results.push(file.replace(__dirname, ''));
+                        results.push(file.replace(mediaPath, ''));
                         next();
                     }
                 });
@@ -45,20 +45,20 @@ var readdir = function (dir, callback) {
 var g_fileList = {};
 
 function loadData(){
-    readdir(__dirname + '/../public/symMedia/RunningMan', (err, file_list) => {
-        console.log( file_list );
+    readdir(path.join(mediaPath , 'symMedia/RunningMan'), (err, file_list) => {
+        // console.log( file_list );
         g_fileList['RunningMan']= file_list;
     });
     
-    readdir(__dirname + '/../public/symMedia/InfinityChallange', (err, file_list) => {
+    readdir(path.join(mediaPath , 'symMedia/InfinityChallange'), (err, file_list) => {
         g_fileList['InfinityChallange'] = file_list;
     });
     
-    readdir(__dirname + '/../public/symMedia/Etc', (err, file_list) => {
+    readdir(path.join(mediaPath , 'symMedia/Etc'), (err, file_list) => {
         g_fileList['Etc'] = file_list;
     });
     
-    readdir(__dirname + '/../public/symMedia/downloads', (err, file_list) => {
+    readdir(path.join(mediaPath , 'symMedia/downloads'), (err, file_list) => {
         g_fileList['downloads'] = file_list;
     });
 }
