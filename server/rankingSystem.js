@@ -52,7 +52,7 @@ function _getRank() {
 }
 
 function _backup() {
-    fs.writeFileSync('ranking', JSON.stringify(_rankingData), 'utf8');
+    fs.writeFileSync(__dirname + "/" + file, JSON.stringify(_rankingData), 'utf8');
     //console.log( "RankingData Backup : " + JSON.stringify(_rankingData) );
     setTimeout(_backup, backupDelay);
 }

@@ -12,32 +12,32 @@
 
 
 
-    function sendPost(action, params) {
-      var form = document.createElement('form');
-      form.setAttribute('method', 'post');
-      form.setAttribute('action', action);
+    // function sendPost(action, params) {
+    //   var form = document.createElement('form');
+    //   form.setAttribute('method', 'post');
+    //   form.setAttribute('action', action);
 
-      for (var key in params) {
-        var hiddenField = document.createElement('input');
-        hiddenField.setAttribute('type', 'hidden');
-        hiddenField.setAttribute('name', key);
-        hiddenField.setAttribute('value', params[key]);
-        form.appendChild(hiddenField);
-      }
-      document.body.appendChild(form  );
-      form.submit();
+    //   for (var key in params) {
+    //     var hiddenField = document.createElement('input');
+    //     hiddenField.setAttribute('type', 'hidden');
+    //     hiddenField.setAttribute('name', key);
+    //     hiddenField.setAttribute('value', params[key]);
+    //     form.appendChild(hiddenField);
+    //   }
+    //   document.body.appendChild(form  );
+    //   form.submit();
 
-    }
+    // }
 
 
-    var inputText = "";
-    window.addEventListener('keydown', function (e) {
-      inputText += e.key;
-      if( inputText.length >=8 ){
-        sendPost( '/helltaker', { input : inputText});
-        inputText = "";
-      }
-    });
+    // var inputText = "";
+    // window.addEventListener('keydown', function (e) {
+    //   inputText += e.key;
+    //   if( inputText.length >=8 ){
+    //     sendPost( '/helltaker', { input : inputText});
+    //     inputText = "";
+    //   }
+    // });
 
 
     var imgArray = [

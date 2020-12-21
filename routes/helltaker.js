@@ -82,29 +82,28 @@ function requestNew(res) {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  if (req.query._index !== undefined) {
-    console.log("get comicbook querry : ", __dirname, baseFolder , req.query._index );
+  // if (req.query._index !== undefined) {
+    // console.log("get comicbook querry : ", __dirname, baseFolder , req.query._index );
 
-    fs.readdir(path.join(__dirname,baseFolder , req.query._index ), (err, file_list) => {
-      console.log(err, file_list);
-      if (err) {
-        res.render('error');
-      }
-      else {
-        res.render('comicBook', {
-          title: 'Helltaker',
-          _index: req.query._index,
-          _fileList: file_list
-        });
-      }
-    });
-  }
-  else {
-    //requestNew(res);
+  //   fs.readdir(path.join(__dirname,baseFolder , req.query._index ), (err, file_list) => {
+  //     console.log(err, file_list);
+  //     if (err) {
+  //       res.render('error');
+  //     }
+  //     else {
+  //       res.render('comicBook', {
+  //         title: 'Helltaker',
+  //         _index: req.query._index,
+  //         _fileList: file_list
+  //       });
+  //     }
+  //   });
+  // }
+  // else {
     res.render('helltaker', {
       title: 'Helltaker',
     });
-  }
+  // }
 });
 
 

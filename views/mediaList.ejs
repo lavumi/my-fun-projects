@@ -3,51 +3,193 @@
 <title><%= title %></title>
 <body>
 
-<h1>My <%= title %> </h1>
+<style>
+    /* Style the tab */
+body {
+  background-color: #000000;
+}
 
-<form action="/reload" method="post">
-    <input type="submit" value="Reload Data">
+.tab {
+  overflow: hidden;
+  background-color: #111111;
+  width : 90%;
+  margin : 0 auto;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  color : #ffffff;
+  text-align: center;
+  width : 15%;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #F7971D;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #E7870D;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 14px 16px;
+  border: 1px solid #333333;
+  border-top: none;
+  width : 90%;
+  margin : 0 auto;
+  animation: fadeEffect 1s; /* Fading effect takes 1 second */
+  /* position: absolute; */
+  border: 2px solid #F7971D;
+}
+
+table{
+    width : 100%;
+    border-collapse:collapse;
+    table-layout: fixed;
+}
+td, th {
+    border-inline : 1px solid #F7971D; 
+    padding : 5px 15px
+  }
+
+a:link {
+  color: yellow;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: pink;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: red;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:active {
+  color: yellow;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+
+/* Go from zero to full opacity */
+@keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+</style>
+
+<img src = "images/my-icon.png" width="300" style="display: block; margin:0px auto;">
+
+<form name = "reload" action="/media" method="post">
+    <input type="hidden" value="Reload Data">
 </form>
+<div class="tab">
+    <!-- <button class="tablinks" onclick="openTab(event, 'Download')" id="defaultOpen">Downloads</button> -->
+	<button class="tablinks" onclick="openTab(event, 'RunningMan')"id="defaultOpen">RunningMan</button>
+	<button class="tablinks" onclick="openTab(event, 'InfinityChallange')">InfinityChallange</button>
+    <button class="tablinks" onclick="openTab(event, 'Etc')">Etc</button>
+    <button class="tablinks" onclick="document.reload.submit()" style="float:right">RELOAD</button>
+</div>
 
-<table border="1" style="width:25%; float:left;">
-<th>Running Man</th>
-<% _fileList['RunningMan'].forEach( function(val){ %>
-<%      if( val.indexOf('.mp4') !== -1 ){ %>
-<tr></tr><td><a href="?ext=mp4&title=<%= val %>"><%= val %></a></td></tr>
-<% } else if ( val.indexOf('avi') !== -1 || val.indexOf('.AVI') !== -1){ %>
-<tr><td><a href="?ext=avi&title=<%= val %>"><%= val %></a></td></tr>
-<%}}) %>
-</table>
+<div id="RunningMan" class="tabcontent">
+<table >
+    <tr>
+        <% var i = 0; %>
+        <% _fileList['RunningMan'].forEach( function(val){ %>
+        <% if ( i > 2 ) { %>
+    </tr>
+    <tr>
+        <% i = 0; } i++;%>
+            <td>
+                <% if( val.indexOf('.mp4') !== -1 ){ %>
+                <a href="?ext=mp4&title=<%= val %>"><%= val.replace('/symMedia/RunningMan/', "") %></a>
+                <% } %>
+            </td>
+        <%}) %>
+    </tr>
+</table> 
+</div>
+
+<div id="InfinityChallange" class="tabcontent">
+<table >
+    <tr>
+        <% var i = 0; %>
+        <% _fileList['InfinityChallange'].forEach( function(val){ %>
+        <% if ( i > 2 ) { %>
+    </tr>
+    <tr>
+        <% i = 0; } i++;%>
+            <td>
+                <%      if( val.indexOf('.mp4') !== -1 ){ %>
+                <a href="?ext=mp4&title=<%= val %>"><%= val.replace('/symMedia/InfinityChallange/', "") %></a><br>
+                <% } else if ( val.indexOf('avi') !== -1 || val.indexOf('.AVI') !== -1){ %>
+                <a href="?ext=avi&title=<%= val %>"><%= val.replace('/symMedia/InfinityChallange/', "") %></a><br>
+                <%} %>
+            </td>
+        <%}) %>
+    </tr>
+</table> 
+</div>
+
+<div id="Etc" class="tabcontent">
+<table >
+    <tr>
+        <% var i = 0; %>
+        <% _fileList['Etc'].forEach( function(val){ %>
+        <% if ( i > 2 ) { %>
+    </tr>
+    <tr>
+        <% i = 0; } i++;%>
+            <td>
+                <%      if( val.indexOf('.mp4') !== -1 ){ %>
+                <a href="?ext=mp4&title=<%= val %>"><%= val.replace('/symMedia/Etc/', "") %></a><br>
+                <% } else if ( val.indexOf('avi') !== -1 || val.indexOf('.AVI') !== -1){ %>
+                <a href="?ext=avi&title=<%= val %>"><%= val.replace('/symMedia/Etc/', "") %></a><br>
+                <%} %>
+            </td>
+        <%}) %>
+    </tr>
+</table> 
+</div>
+  
 
 
-<table border="1" style="width:25%;float:left">
-    <th>InfinityChallange</th>
-    <% _fileList['InfinityChallange'].forEach( function(val){ %>
-    <%      if( val.indexOf('.mp4') !== -1 ){ %>
-    <tr></tr><td><a href="?ext=mp4&title=<%= val %>"><%= val %></a></td></tr>
-    <% } else if ( val.indexOf('avi') !== -1 || val.indexOf('.AVI') !== -1){ %>
-    <tr><td><a href="?ext=avi&title=<%= val %>"><%= val %></a></td></tr>
-    <%}}) %>
-</table>
 
-<table border="1" style="width:25%;float:left">
-    <th>Etc</th>
-    <% _fileList['Etc'].forEach( function(val){ %>
-    <%      if( val.indexOf('.mp4') !== -1 ){ %>
-    <tr></tr><td><a href="?ext=mp4&title=<%= val %>"><%= val %></a></td></tr>
-    <% } else if ( val.indexOf('avi') !== -1 || val.indexOf('.AVI') !== -1){ %>
-    <tr><td><a href="?ext=avi&title=<%= val %>"><%= val %></a></td></tr>
-    <%}}) %>
-</table>
+  <script text="javascript">
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
 
-<table border="1" style="width:25%;float:left">
-    <th>downloads</th>
-    <% _fileList['downloads'].forEach( function(val){ %>
-    <%      if( val.indexOf('.mp4') !== -1 ){ %>
-    <tr></tr><td><a href="?ext=mp4&title=<%= val %>"><%= val %></a></td></tr>
-    <% } else if ( val.indexOf('avi') !== -1 || val.indexOf('.AVI') !== -1){ %>
-    <tr><td><a href="?ext=avi&title=<%= val %>"><%= val %></a></td></tr>
-    <%}}) %>
-</table>
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+
+    }
+    document.getElementById("defaultOpen").click();
+</script>
 </body>
 </html>
