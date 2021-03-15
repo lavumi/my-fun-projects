@@ -34,16 +34,17 @@
 			</div>
 			<nav>
 				<ul>
-					<li><a id="pcrunHref">PC RUN</a></li>
+					<!-- <li><a id="pcrunHref">PC RUN</a></li> -->
+					<li><a href="/pcrun">RunGame</a></li>
 					<li><a href="/wasmEngine">WASM</a></li>
 					<li><a href="http://wiki.lavumi.net/">Wiki</a></li>
 					<li><a href="#helltaker" onclick="moveCountDown();" >Helltaker</a></li>
 					<script type="text/javascript">
-						var href = document.getElementById("pcrunHref");
-						href.onclick = function() {
-							document.getElementById('pcrunIframe').setAttribute('src', '/pcrun');
-							window.location.href=' #pcrun';
-						};
+						// var href = document.getElementById("pcrunHref");
+						// href.onclick = function() {
+						// 	document.getElementById('pcrunIframe').setAttribute('src', '/pcrun');
+						// 	window.location.href=' #pcrun';
+						// };
 						function moveCountDown(){
 							var countDownText = document.getElementById("countdownText");
 							setTimeout( function(){

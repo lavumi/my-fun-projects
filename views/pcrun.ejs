@@ -11,12 +11,23 @@
 
 
     canvas {
+        width : 100%;
+        height : 100%;
         position: absolute;
     }
+    html, body {
+        width : 100%;
+        height : 100%;
+        margin : 0;
+    }
+    
 </style>
 
 <body>
-<canvas id="canvas" width="1920" height="1080"></canvas>
+
+<canvas id="canvas" width="1920" height="1080" ></canvas>
+
+
 <script src="/socket.io/socket.io.js"></script>
 <script src="javascripts/render/spine-webgl.min.js"></script>
 <script src="javascripts/render/shader.js"></script>
@@ -26,8 +37,10 @@
 <script src="javascripts/prcn/prcnMain.js"></script>
 
 <script>
-
+    
 </script>
+
 </body>
+
 
 </html>

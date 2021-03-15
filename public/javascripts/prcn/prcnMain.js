@@ -529,4 +529,7 @@ function GameMain() {
 var main = new GameMain();
 main.init();
 
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
 
