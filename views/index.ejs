@@ -45,26 +45,17 @@
 						// 	document.getElementById('pcrunIframe').setAttribute('src', '/pcrun');
 						// 	window.location.href=' #pcrun';
 						// };
+						let countdown = 3;
 						function moveCountDown(){
 							var countDownText = document.getElementById("countdownText");
-							setTimeout( function(){
-								countDownText.innerHTML = 4;
-							}, 1000);
-							setTimeout( function(){
-								countDownText.innerHTML = 3;
-							}, 2000);
-							setTimeout( function(){
-								countDownText.innerHTML = 2;
-							}, 3000);
-							setTimeout( function(){
-								countDownText.innerHTML = 1;
-							}, 4000);
-							setTimeout( function(){
-								countDownText.innerHTML = 0;
-							}, 5000);
+							for( let i = 0 ; i <= countdown ; i ++ ){
+								setTimeout( function(){
+									countDownText.innerHTML = countdown - i;
+								},  i * 1000 );
+							}
 							setTimeout( function(){
 								location.href = "/helltaker";
-							}, 5100);
+							}, countdown * 1000 + 100);
 						}
 					</script>
 					<li><a href="#about">About</a></li>
