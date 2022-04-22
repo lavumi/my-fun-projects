@@ -3,43 +3,13 @@
 
 <head>
   <title><%= title %></title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/style.css' />  
+  <!-- <link rel="stylesheet" href="assets/css/main.css" /> -->
 </head>
 
 <body style="background-color:#4F3234;   overflow-y: hidden; padding: 0px;">
   <div id="main" style="text-align: center;"></div>
   <script text="javascript">
-
-
-
-    // function sendPost(action, params) {
-    //   var form = document.createElement('form');
-    //   form.setAttribute('method', 'post');
-    //   form.setAttribute('action', action);
-
-    //   for (var key in params) {
-    //     var hiddenField = document.createElement('input');
-    //     hiddenField.setAttribute('type', 'hidden');
-    //     hiddenField.setAttribute('name', key);
-    //     hiddenField.setAttribute('value', params[key]);
-    //     form.appendChild(hiddenField);
-    //   }
-    //   document.body.appendChild(form  );
-    //   form.submit();
-
-    // }
-
-
-    // var inputText = "";
-    // window.addEventListener('keydown', function (e) {
-    //   inputText += e.key;
-    //   if( inputText.length >=8 ){
-    //     sendPost( '/helltaker', { input : inputText});
-    //     inputText = "";
-    //   }
-    // });
-
-
     var imgArray = [
       'pics/helltaker01.webp',
       'pics/helltaker02.webp',
@@ -59,11 +29,6 @@
       for (var i = 0; i < 5; i++) {
         var div = document.getElementById("main");
         div.style.width = "100%";
-
-        // imgArray.forEach(element => {
-
-        // });
-
         var size = "9.9%"
         var j = 0;
         var img = document.createElement("img");
