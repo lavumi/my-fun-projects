@@ -11,6 +11,7 @@
         <canvas id="canvas" oncontextmenu="event.preventDefault()" style  = "padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block; align-self: auto;"></canvas>
     </div>
 
+    
     <script type='text/javascript'>
         var canv = document.getElementById('canvas');
         var Module = {
@@ -19,9 +20,12 @@
     </script>
     <script src="wasm/index.js"></script>
     <script type='text/javascript'>
-        console.log(__clickLeft);
-        canv.addEventListener('click', __clickLeft, false);
-        canv.addEventListener('touchend', __clickLeft, false);
+        console.log(__mouseLeftDown);
+        console.log(__mouseLeftUp);
+        canv.addEventListener('mousedown', __mouseLeftDown, false);
+        canv.addEventListener('mouseup', __mouseLeftUp, false);
+
+        canv.addEventListener('touchend', __mouseLeftUp, false);
         window.addEventListener('keydown', function (e) {
             if( e.key == 'f'){
                 canv.webkitRequestFullScreen();
