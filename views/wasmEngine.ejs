@@ -8,7 +8,9 @@
 
 <body>
     <div style="float:left; margin-right: 30px;">
-        <canvas id="canvas" oncontextmenu="event.preventDefault()" style  = "padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block; align-self: auto;"></canvas>
+        <canvas id="canvas" oncontextmenu="event.preventDefault()" 
+        style  = "padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block; align-self: auto;">
+    </canvas>
     </div>
 
     
@@ -17,11 +19,19 @@
         var Module = {
             canvas: canv
         };
+        Module['locateFile'] = function(path, prefix) {
+            if (path.endsWith(".data")) return "wasm/" + path;
+
+        return prefix + path;
+        }
     </script>
-    <script src="wasm/index.js"></script>
+    <script src="wasm/index.js">
+
+
+    </script>
     <script type='text/javascript'>
-        console.log(__mouseLeftDown);
-        console.log(__mouseLeftUp);
+        // console.log(__mouseLeftDown);
+        // console.log(__mouseLeftUp);
         canv.addEventListener('mousedown', __mouseLeftDown, false);
         canv.addEventListener('mouseup', __mouseLeftUp, false);
 
