@@ -27,13 +27,14 @@
 
         canv.addEventListener('touchend', __mouseLeftUp, false);
         window.addEventListener('keydown', function (e) {
-            if( e.key == 'f'){
-                canv.webkitRequestFullScreen();
-            }
+
            __keyboardDown( e.keyCode );
         });
 
         window.addEventListener('keyup', function (e) {
+            if( e.key == 'f'){
+                return canv.webkitRequestFullScreen();
+            }
            __keyboardUp(e.keyCode );
         });
 
