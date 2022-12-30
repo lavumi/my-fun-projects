@@ -56,13 +56,9 @@ body {
 
 .itemBox1 {
 	border-radius: 15px;
-	border: 2px solid white;
+	border: 0px solid white;
 }
 
-.itemBox2 {
-	border-radius: 15px;
-	border: 2px solid white;
-}
 
 mark {
 	background-color: transparent;
@@ -235,8 +231,8 @@ input, select, textarea {
 		transform: translate3d(0,0,0);
 	/* Set your background with this */
 
-		background: #348cb2 url("images/bg.jpg") bottom left;
-		background-repeat: repeat-x;
+		background: #348cb2 url("images/bg.png") bottom left;
+		background-repeat: repeat;
 		height: 100%;
 		left: 0;
 		opacity: 1;
@@ -577,6 +573,7 @@ input, select, textarea {
 
 		#header nav {
 			margin: 1.5em 0 0 0;
+			position: center;
 		}
 
 			#header nav li {
@@ -593,12 +590,13 @@ input, select, textarea {
 				-ms-transform: translate3d(0,0,0);
 				transform: translate3d(0,0,0);
 				display: inline-block;
-				height: 5.35em;
+				height: 4.35em;
 				line-height: 3.885em;
 				opacity: 0;
 				position: relative;
-				top: 0;
-				width: 10.35em;
+				top: 0.2em;
+				width: 7.35em;
+				font-size: 1.1em;
 			}
 
 				#header nav li:nth-child(1) {
@@ -696,27 +694,13 @@ input, select, textarea {
 				}
 
 				#header nav a:hover {
-					font-size: 1.1em;
+					font-weight: 800;
 				}
 
-					#header nav a:hover:before {
-						background-color: rgba(255, 255, 255, 0.175);
-						color: #fff;
-					}
-
-				#header nav a:active {
-					font-size: 0.95em;
-					background: none;
-				}
-
-					#header nav a:active:before {
-						background-color: rgba(255, 255, 255, 0.35);
-						color: #fff;
-					}
-
-				#header nav a span {
-					display: none;
-				}
+				/*	#header nav a:hover:before {*/
+				/*		background-color: rgba(255, 255, 255, 0.175);*/
+				/*		color: #fff;*/
+				/*	}*/
 
 /* Footer */
 
