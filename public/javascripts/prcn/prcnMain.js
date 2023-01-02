@@ -9,7 +9,7 @@ function GameMain() {
     //#region 렌더링 변수
     var lastFrameTime = Date.now() / 1000;
 
-    var bgColor = [0, 0.5, 1, 1];
+    var bgColor = [1, 1, 1, 1];
 
     var spineManager;
 
@@ -388,7 +388,7 @@ function GameMain() {
 
     function render(delta) {
 
-        gl.clearColor(bgColor[0], bgColor[1], bgColor[2], 1);
+        gl.clearColor(bgColor[0], bgColor[1], bgColor[2], 0.2);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         resize();
