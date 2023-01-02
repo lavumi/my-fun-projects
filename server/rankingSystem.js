@@ -9,7 +9,18 @@ var rankingDataFormat = {
 };
 
 // console.log("__dirname : " , __dirname);
-var _rankingData = JSON.parse(fs.readFileSync(__dirname + "/" + file, 'utf8'));
+
+let rankingInfo;
+
+try {
+    rankingInfo=fs.readFileSync(__dirname + "/" + file, 'utf8');
+}
+catch ( e ) {
+    rankingInfo = `[]`;
+}
+
+
+var _rankingData = JSON.parse(rankingInfo);
 var _updateQueue = [];
 
 function _updateRanking(_name, _score) {
@@ -21,7 +32,7 @@ function _updateRanking(_name, _score) {
         _rankingData.pop();
 
     }
-};
+}
 
 function _queueUpdte(name, score) {
     if (typeof score !== 'number')
