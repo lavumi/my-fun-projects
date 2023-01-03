@@ -1,7 +1,7 @@
-const imgGrid = [];
-const gridWidth = 21;
-const gridHeight = 3;
-const imgTiles =[
+const IMG_GRID = [];
+const GRID_WIDTH = 40;
+const GRID_HEIGHT = 3;
+const TILE_IMG =[
     'hidden',
     "images/Grass.png",
     "images/GrassHillLeft.png",
@@ -10,19 +10,44 @@ const imgTiles =[
     "images/GrassHillRight2.png",
     "images/Dirt.png"
 ];
-for (let index = 0; index < document.getElementsByClassName("container")[0].children.length; index++) {
-    const element = document.getElementsByClassName("container")[0].children[index];
-    let x = index % 21;
-    let y = 2 - Math.floor(index / 21);
-    imgGrid[x * 3 + y] = (element.childNodes[0]);
+
+
+
+let parent = document.getElementsByClassName("container")[0];
+
+parent.style.setProperty('grid-template-columns', 'repeat(' + GRID_WIDTH + ', 6vh)');
+parent.style.setProperty('grid-template-rows', 'repeat(' + GRID_HEIGHT + ', 6vh)');
+
+for( let i = 0 ; i < GRID_HEIGHT * GRID_WIDTH ; i ++ ){
+    let div = document.createElement("div");
+    div.className = "item";
+    let img = document.createElement("img");
+    div.appendChild(img);
+    parent.appendChild(div);
+
+
+    let x = i % GRID_WIDTH;
+    let y = 2 - Math.floor(i / GRID_WIDTH);
+    IMG_GRID[x * 3 + y] = img;
 }
+
+
+// for (let index = 0; index < document.getElementsByClassName("container")[0].children.length; index++) {
+//     const element = document.getElementsByClassName("container")[0].children[index];
+//     let x = index % gridWidth;
+//     let y = 2 - Math.floor(index / gridWidth);
+//     imgGrid[x * 3 + y] = (element.childNodes[0]);
+// }
+
+
+
 
 
 
 
 let mapGrid = [];
-for( let x = 0 ; x < gridWidth ; x ++ ){
-    for(let y = 0 ; y < gridHeight ; y ++  ){
+for( let x = 0 ; x < GRID_WIDTH ; x ++ ){
+    for(let y = 0 ; y < GRID_HEIGHT ; y ++  ){
         if (y === 0 )
         mapGrid.push(1);
         else
@@ -38,16 +63,16 @@ mapGrid[6*3+0] = 5;
 mapGrid[6*3+1] = 4;
 
 let drawMap = function(){
-    for(let y = 0 ; y < gridHeight ; y ++  ){
-        for( let x = 0 ; x < gridWidth ; x ++ ){
+    for(let y = 0 ; y < GRID_HEIGHT ; y ++  ){
+        for( let x = 0 ; x < GRID_WIDTH ; x ++ ){
             let idx = mapGrid[x*3 + y];
-            let imgSrc = imgTiles[idx];
+            let imgSrc = TILE_IMG[idx];
             if ( imgSrc === "hidden" ){
-                imgGrid[x * 3 + y].style.visibility = "hidden";
+                IMG_GRID[x * 3 + y].style.visibility = "hidden";
             }
             else{
-                imgGrid[x * 3 + y].style.visibility = "visible";
-                imgGrid[x * 3 + y].src = imgSrc;
+                IMG_GRID[x * 3 + y].style.visibility = "visible";
+                IMG_GRID[x * 3 + y].src = imgSrc;
             }
         }
     }
@@ -86,7 +111,7 @@ let makeRndStep = ()=>{
 
 
 let moveNext = ()=>{
-    for(let i = 0 ; i < gridHeight ; i ++ ){
+    for(let i = 0 ; i < GRID_HEIGHT ; i ++ ){
         let item = mapGrid.shift();
         // mapGrid.push(item);
     }

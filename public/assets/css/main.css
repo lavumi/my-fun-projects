@@ -697,17 +697,18 @@ input, select, textarea {
 				#header nav a:hover {
 					font-weight: 800;
 				}
+#Platformed {
+	margin: auto;
+	justify-content : center;
+	width: 100%;
+	height: 100%;
+}
 
 .container {
 	display: grid;
-	/* background-color: aqua; */
-	grid-template-columns:  repeat(21 ,  8vw);
-	grid-template-rows: repeat(3 ,  8vw);
-	padding: 0;
-	border: 0;
 	position: fixed;
 	bottom: 0;
-	animation: slide 0.5s linear infinite;
+	animation: slide 1s linear infinite;
 }
 
 @keyframes slide {
@@ -715,7 +716,7 @@ input, select, textarea {
 		transform: translate3d(0, 0, 0);
 	}
 	100% {
-		transform: translate3d(-8vw, 0, 0); /* The image width */
+		transform: translate3d(-6vh, 0, 0); /* The image width */
 	}
 }
 
