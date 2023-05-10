@@ -1,3 +1,48 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Lavumi Web Site</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<!--    <link rel="stylesheet" href="assets/css/main.css" />-->
+    <style>
+        #wrapper {
+            display: flex;
+            height: 100%;
+        }
+        #content {
+            margin: auto;
+        }
+        body {
+            background-color: #348cb2;
+            color: #fff;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 15pt;
+            font-weight: 300 !important;
+            letter-spacing: -0.025em;
+            line-height: 1.75em;
+            height: 100%;
+            left: 0;
+            position: fixed;
+            text-align: center;
+            top: 0;
+            width: 100%;
+        }
+        p {
+            font-size: 1.25em;
+            margin: 0.75em 0 0.25em 0;
+            opacity: 0.75;
+        }
+    </style>
+</head>
+
+<body>
+<div id="wrapper">
+    <div id="content">
+        <p> &nbsp;&bull;&nbsp; Something's wrong&nbsp;here... &bull;&nbsp; </p>
+        We can't find the page you're looking for
+    </div>
+</div>
+
+</body>
+</html>
