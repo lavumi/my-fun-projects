@@ -1,0 +1,20 @@
+{
+  "name": "wgpu_wasm",
+  "description": "lavumi rust and wgpu practice project",
+  "version": "0.1.0",
+  "license": "",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:lavumi/wgpu_wasm_engine.git"
+  },
+  "files": [
+    "wgpu_wasm_bg.wasm",
+    "wgpu_wasm.js",
+    "wgpu_wasm.d.ts"
+  ],
+  "module": "wgpu_wasm.js",
+  "types": "wgpu_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
