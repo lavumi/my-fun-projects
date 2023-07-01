@@ -33,7 +33,7 @@ app.use('/', indexRouter);
 
 setRouter('pcrun');
 setRouter('acamibo');
-setRouter('wasmEngine');
+setRouter('wasm');
 // setRouter('media');
 setRouter('kaori');
 //setRouter('comicBook');
