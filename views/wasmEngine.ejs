@@ -35,8 +35,10 @@
     import init from "./rust_wasm_pkg/wgpu_wasm.js";
     init().then(wasm => {
         console.log(wasm);
-        wasm.run();
         console.log("WASM Loaded");
+        let canvas = document.getElementById("wasm-canvas");
+        canvas.style.width = "70%";
+        canvas.style.height = "auto";
     });
 </script>
 </body>
