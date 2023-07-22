@@ -1,44 +1,44 @@
-var SpineManager = function () {
+let SpineManager = function () {
 
-    var shader;
-    var batcher;
-    var mvp = new spine.webgl.Matrix4();
-    var skeletonRenderer;
-    var debugRenderer;
-    var debugShader;
-    var shapes;
+    let shader;
+    let batcher;
+    let mvp = new spine.webgl.Matrix4();
+    let skeletonRenderer;
+    let debugRenderer;
+    let debugShader;
+    let shapes;
     window.skeleton = {};
-    var activeSkeleton = "";
+    let activeSkeleton = "";
 
-    var movement = 1;
+    let movement = 1;
 
 
     //spineData
-    var animationQueue = [];
+    let animationQueue = [];
 
 
 
-    var additionAnimations = ['DEAR', 'NO_WEAPON', 'POSING', 'RACE', 'RUN_JUMP', 'SMILE'];
+    let additionAnimations = ['DEAR', 'NO_WEAPON', 'POSING', 'RACE', 'RUN_JUMP', 'SMILE'];
 
-    var loading = false;
-    var loadingSkeleton;
-    var generalBattleSkeletonData = {};
-    var generalAdditionAnimations = {};
-    var currentTexture;
-    var currentClassAnimData = {
+    let loading = false;
+    let loadingSkeleton;
+    let generalBattleSkeletonData = {};
+    let generalAdditionAnimations = {};
+    let currentTexture;
+    let currentClassAnimData = {
         type: 0,
         data: {}
     };
-    var currentCharaAnimData = {
+    let currentCharaAnimData = {
         id: 0,
         data: {}
     };
-    var currentClass = '1';
+    let currentClass = '1';
 
 
 
 
-    var loadingFinishCallback = null;
+    let loadingFinishCallback = null;
 
     function getClass(i) {
         return (i < 10 ? '0' : '') + i;
@@ -46,7 +46,7 @@ var SpineManager = function () {
 
 
     function sliceCyspAnimation(buf) {
-        var view = new DataView(buf), count = view.getInt32(12, true);
+        let view = new DataView(buf), count = view.getInt32(12, true);
         return {
             count: count,
             data: buf.slice((count + 1) * 32)
@@ -66,17 +66,17 @@ var SpineManager = function () {
         debugRenderer.drawPaths = true;
         debugShader = spine.webgl.Shader.newColored(gl);
         shapes = new spine.webgl.ShapeRenderer(gl);
-    };
+    }
 
 
     function loadData(url, cb, loadType, progress) {
         // console.log(url);
-        var xhr = new XMLHttpRequest;
+        let xhr = new XMLHttpRequest;
         xhr.open('GET', url, true);
         if (loadType) xhr.responseType = loadType;
         if (progress) xhr.onprogress = progress;
         xhr.onload = function () {
-            if (xhr.status == 200)
+            if (xhr.status === 200)
                 cb(true, xhr.response);
             else
                 cb(false);
@@ -93,13 +93,13 @@ var SpineManager = function () {
         loadingFinishCallback = finishCallback;
         if (loading) return;
         loading = true;
-        if (activeSkeleton == unit_id && currentClass == classList.value) return;
+        if (activeSkeleton === unit_id && currentClass === classList.value) return;
         currentClass = class_id;
-        var baseUnitId = unit_id | 0;
-        baseUnitId -= baseUnitId % 100 - 1;
+        // let baseUnitId = unit_id | 0;
+        // baseUnitId -= baseUnitId % 100 - 1;
         loadingSkeleton = { id: unit_id | 0, baseId: '000000' };
         //	if (loadingSkeleton.info.hasSpecialBase) loadingSkeleton.baseId = baseUnitId, currentClass = baseUnitId;
-        var baseId = loadingSkeleton.baseId;
+        let baseId = loadingSkeleton.baseId;
 
         if (!generalBattleSkeletonData[baseId])
             loadData('prcn_data/' + baseId + '_CHARA_BASE.cysp', function (success, data) {
@@ -110,8 +110,8 @@ var SpineManager = function () {
         else loadAdditionAnimation();
     }
     function loadAdditionAnimation() {
-        var doneCount = 0, abort = false;
-        var baseId = loadingSkeleton.baseId;
+        let doneCount = 0, abort = false;
+        let baseId = loadingSkeleton.baseId;
         generalAdditionAnimations[baseId] = generalAdditionAnimations[baseId] || {};
         additionAnimations.forEach(function (i) {
             if (generalAdditionAnimations[baseId][i]) return doneCount++;
@@ -120,13 +120,13 @@ var SpineManager = function () {
 
                 if (abort) return;
                 generalAdditionAnimations[baseId][i] = sliceCyspAnimation(data);
-                if (++doneCount == additionAnimations.length) loadClassAnimation();
+                if (++doneCount === additionAnimations.length) loadClassAnimation();
             }, 'arraybuffer');
         });
-        if (doneCount == additionAnimations.length) return loadClassAnimation();
+        if (doneCount === additionAnimations.length) return loadClassAnimation();
     }
     function loadClassAnimation() {
-        if (currentClassAnimData.type == currentClass)
+        if (currentClassAnimData.type === currentClass)
             loadCharaSkillAnimation();
         else
             loadData('prcn_data/' + getClass(currentClass) + '_COMMON_BATTLE.cysp', function (success, data) {
@@ -139,9 +139,9 @@ var SpineManager = function () {
             }, 'arraybuffer');
     }
     function loadCharaSkillAnimation() {
-        var baseUnitId = loadingSkeleton.id;
+        let baseUnitId = loadingSkeleton.id;
         baseUnitId -= baseUnitId % 100 - 1;
-        if (currentCharaAnimData.id == baseUnitId)
+        if (currentCharaAnimData.id === baseUnitId)
             loadTexture();
         else
             loadData('prcn_data/' + baseUnitId + '_BATTLE.cysp', function (success, data) {
@@ -158,45 +158,45 @@ var SpineManager = function () {
             if (!success) return loading = false;//
             loadData('prcn_data/' + loadingSkeleton.id + '.png', function (success, blob) {
                 if (!success) return loading = false;
-                var img = new Image();
+                let img = new Image();
                 img.onload = function () {
 
-                    var created = !!window.skeleton.skeleton;
+                    let created = !!window.skeleton.skeleton;
                     if (created) {
                         window.skeleton.state.clearTracks();
                         window.skeleton.state.clearListeners();
                         gl.deleteTexture(currentTexture.texture)
                     }
 
-                    var imgTexture = new spine.webgl.GLTexture(gl, img);
+                    let imgTexture = new spine.webgl.GLTexture(gl, img);
                     URL.revokeObjectURL(img.src);
-                    atlas = new spine.TextureAtlas(atlasText, function (path) {
+                    let atlas = new spine.TextureAtlas(atlasText, function () {
                         return imgTexture;
                     });
                     currentTexture = imgTexture;
-                    atlasLoader = new spine.AtlasAttachmentLoader(atlas);
+                    let atlasLoader = new spine.AtlasAttachmentLoader(atlas);
 
-                    var baseId = loadingSkeleton.baseId;
-                    var additionAnimations = Object.values(generalAdditionAnimations[baseId]);
+                    let baseId = loadingSkeleton.baseId;
+                    let additionAnimations = Object.values(generalAdditionAnimations[baseId]);
 
-                    var animationCount = 0;
-                    var classAnimCount = currentClassAnimData.data.count;
+                    let animationCount = 0;
+                    let classAnimCount = currentClassAnimData.data.count;
                     animationCount += classAnimCount;
-                    var unitAnimCount = currentCharaAnimData.data.count;
+                    let unitAnimCount = currentCharaAnimData.data.count;
                     animationCount += unitAnimCount;
                     additionAnimations.forEach(function (i) {
                         animationCount += i.count;
                     })
 
                     //assume always no more than 128 animations
-                    var newBuffSize = generalBattleSkeletonData[baseId].byteLength - 64 + 1 +
+                    let newBuffSize = generalBattleSkeletonData[baseId].byteLength - 64 + 1 +
                         currentClassAnimData.data.data.byteLength +
                         currentCharaAnimData.data.data.byteLength;
                     additionAnimations.forEach(function (i) {
                         newBuffSize += i.data.byteLength;
                     })
-                    var newBuff = new Uint8Array(newBuffSize);
-                    var offset = 0;
+                    let newBuff = new Uint8Array(newBuffSize);
+                    let offset = 0;
                     newBuff.set(new Uint8Array(generalBattleSkeletonData[baseId].slice(64)), 0);
                     offset += generalBattleSkeletonData[baseId].byteLength - 64;
                     newBuff[offset] = animationCount;
@@ -210,14 +210,14 @@ var SpineManager = function () {
                         offset += i.data.byteLength;
                     })
 
-                    var skeletonBinary = new spine.SkeletonBinary(atlasLoader);
-                    var skeletonData = skeletonBinary.readSkeletonData(newBuff.buffer);
-                    var skeleton = new spine.Skeleton(skeletonData);
+                    let skeletonBinary = new spine.SkeletonBinary(atlasLoader);
+                    let skeletonData = skeletonBinary.readSkeletonData(newBuff.buffer);
+                    let skeleton = new spine.Skeleton(skeletonData);
                     skeleton.setSkinByName('default');
-                    var bounds = calculateBounds(skeleton);
+                    let bounds = calculateBounds(skeleton);
 
                     animationStateData = new spine.AnimationStateData(skeleton.data);
-                    var animationState = new spine.AnimationState(animationStateData);
+                    let animationState = new spine.AnimationState(animationStateData);
                     // console.log( animationStateData );
                     //animationState.setAnimation(0, getClass(currentClass) + '_idle', true);
                     animationState.addListener({
@@ -225,7 +225,7 @@ var SpineManager = function () {
                         start: function (track) {
                             //console.log("Animation on track " + track.animation.name + " started" + "     " + Date.now());
                         },
-                        
+
                         interrupt: function (track) {
                             console.log("Animation on track " + track.trackIndex + " interrupted");
                         },
@@ -234,16 +234,16 @@ var SpineManager = function () {
                         },
                         disposed: function (track) {
                             console.log("Animation on track " + track.trackIndex + " disposed");
-                        },*/    
-                        complete: function tick(track) {
+                        },*/
+                        complete: function tick() {
                             //console.log("Animation on track " + track.animation.name + " ended" + "     " + Date.now());
                             if (animationQueue.length) {
-                                var nextAnim = animationQueue.shift();
+                                let nextAnim = animationQueue.shift();
                                 // console.log( 'start ' + nextAnim );
-                                if (nextAnim == 'stop') return;
-                                if (nextAnim == 'hold') return setTimeout(tick, 1e3);
+                                if (nextAnim === 'stop') return;
+                                if (nextAnim === 'hold') return setTimeout(tick, 1e3);
                                 nextAnim = setAnimName(nextAnim);
-                                if( nextAnim === '02_run'){
+                                if( nextAnim === getClass(currentClass) + '_run'){
                                     movement = 1;
                                 }
                                 animationState.setAnimation(0, nextAnim, !animationQueue.length);
@@ -270,36 +270,36 @@ var SpineManager = function () {
                 }
                 img.src = URL.createObjectURL(blob);
             }, 'blob', function (e) {
-                var perc = e.loaded / e.total * 40 + 60;
+                // let perc = e.loaded / e.total * 40 + 60;
             });
         })
     }
     function calculateBounds(skeleton) {
         skeleton.setToSetupPose();
         skeleton.updateWorldTransform();
-        var offset = new spine.Vector2();
-        var size = new spine.Vector2();
+        let offset = new spine.Vector2();
+        let size = new spine.Vector2();
         skeleton.getBounds(offset, size, []);
         offset.y = 0
         return { offset: offset, size: size };
     }
     function setAnimName(animName) {
-        var returnName;
-        if (animName.substr(0, 6) == '000000') returnName = animName;
-        else if (animName.substr(0, 1) != '1') returnName = getClass(currentClassAnimData.type) + '_' + animName;
+        let returnName;
+        if (animName.substr(0, 6) === '000000') returnName = animName;
+        else if (animName.substr(0, 1) !== '1') returnName = getClass(currentClassAnimData.type) + '_' + animName;
         else returnName = animName;
         return returnName
     }
 
-    var charPos = 0;
+    let charPos = 0;
 
 
     function spineRender(delta, showDebug) {
         window.skeleton.skeleton.x = charPos;
         // Apply the animation state based on the delta time.
-        var state = window.skeleton.state;
-        var skeleton = window.skeleton.skeleton;
-        var premultipliedAlpha = window.skeleton.premultipliedAlpha;
+        let state = window.skeleton.state;
+        let skeleton = window.skeleton.skeleton;
+        let premultipliedAlpha = window.skeleton.premultipliedAlpha;
         state.update(delta);
         state.apply(skeleton);
         movementSkeleton(skeleton, movement);
@@ -340,10 +340,10 @@ var SpineManager = function () {
 
     function resize( scale ){
 
-        var centerX = 0;
-        var centerY = 0;
-        var width = canvas.width / scale * 2 ;
-        var height = canvas.height / scale * 2;
+        let centerX = 0;
+        let centerY = 0;
+        let width = canvas.width / scale * 2 ;
+        let height = canvas.height / scale * 2;
 
         mvp.ortho2d(centerX - width / 2, centerY - height / 2, width, height);
     }
@@ -359,7 +359,9 @@ var SpineManager = function () {
     }
 
     function setDearIdle(){
-        window.skeleton.state.setAnimation(0, '000000_dear_idol', true);
+        // window.skeleton.state.setAnimation(0, '000000_dear_idol', true);
+        // window.skeleton.state.setAnimation(0, '000000_dear_idol', true);
+        window.skeleton.state.setAnimation(0, getClass(currentClass) + '_idle', true);
         movement = 0.5;
     }
 
@@ -369,34 +371,34 @@ var SpineManager = function () {
         else
             movement = 1;
 
-        var run = {
-            animName : 'run',
-            isLoop : true,
-            timeScale : 1
-        };
+        // let run = {
+        //     animName : 'run',
+        //     isLoop : true,
+        //     timeScale : 1
+        // };
         window.skeleton.state.setAnimation(0, getClass(currentClass) + '_run', true);
        // runAnimation([run]);
     }
     function stopChar(){
         movement = 0;
-    
-        var idle = {
-            animName : 'idle',
+
+        let idle = {
+            animName : 'standby',
             isLoop : true,
             timeScale : 1
         };
         runAnimation([idle]);
     }
-    
+
     function attackChar (){
         movement = 0;
-    
-        var idle = {
+
+        let idle = {
             animName : 'idle',
             isLoop : true,
             timeScale : 1
         };
-        var attack_skipQuest = {
+        let attack_skipQuest = {
             animName : 'attack_skipQuest',
             isLoop : false,
             timeScale : 1
@@ -404,30 +406,30 @@ var SpineManager = function () {
 
         runAnimation([attack_skipQuest, idle]);
     }
-    
+
     function attack2Char (){
         movement = 0;
-        var idle = {
+        let idle = {
             animName : 'idle',
             isLoop : true,
             timeScale : 1
         };
-        var attack = {
+        let attack = {
             animName : 'attack',
             isLoop : false,
             timeScale : 2
         };
         runAnimation([attack, idle]);
     }
-    
+
     function damageedChar (){
 
-        var idle = {
+        let idle = {
             animName : 'run',
             isLoop : true,
             timeScale : 1
         };
-        var damage = {
+        let damage = {
             animName : 'damage',
             isLoop : false,
             timeScale : 1
@@ -439,31 +441,31 @@ var SpineManager = function () {
         else {
             return false;
         }
-    
+
     }
-    
+
     function jumpChar (){
-        var idle = {
+        let idle = {
             animName : 'run',
             isLoop : true,
             timeScale : 1
         };
-        var damage = {
+        let damage = {
             animName : '000000_run_highJump',
             isLoop : false,
             timeScale : 0.5
         };
         runAnimation([damage, idle]);
     }
-    
+
     function dieChar(){
         movement = 0;
-        var stop = {
+        let stop = {
             animName : 'stop',
             isLoop : false,
             timeScale : 1
         };
-        var die = {
+        let die = {
             animName : 'die',
             isLoop : false,
             timeScale : 1
@@ -471,39 +473,39 @@ var SpineManager = function () {
         animationQueue.length = 0;
         runAnimation([die, stop]);
     }
-    
+
     function useSkill(index){
-        var characterSkillDataID = Math.floor(characterID / 100) * 100 + 1;
-    
-        var skill = {
+        let characterSkillDataID = Math.floor(characterID / 100) * 100 + 1;
+
+        let skill = {
             animName : characterSkillDataID + '_skill' + index,
             isLoop : false,
             timeScale : 1.5
         };
-        var idle = {
+        let idle = {
             animName : 'idle',
             isLoop : true,
             timeScale : 1
         };
-    
+
         runAnimation([skill, idle] );
     }
 
-    
+
 
     function runAnimation( animArray){
 
         if( animationQueue.length !== 0)
             return false ;
 
-        var firstActionObj =  animArray.shift();
-        var firstAction = firstActionObj.animName;
+        let firstActionObj =  animArray.shift();
+        let firstAction = firstActionObj.animName;
 
         firstAction = setAnimName(firstAction);
 
+        // console.log(window.skeleton.state)
 
-
-        var AnimEntry = window.skeleton.state.setAnimation(0, firstAction, firstActionObj.isLoop);
+        let AnimEntry = window.skeleton.state.setAnimation(0, firstAction, firstActionObj.isLoop);
         AnimEntry.timeScale = firstActionObj.timeScale;
 
         animArray.forEach( function(i){

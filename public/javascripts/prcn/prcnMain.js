@@ -1,50 +1,49 @@
-var canvas;
-var gl;
-var ScreenSize = [1920, 1080];
+// let canvas;
+// let gl;
+let ScreenSize = [1920, 1080];
 
 
 function GameMain() {
 
-    var socket = io();
+    let socket = io();
     //#region 렌더링 변수
-    var lastFrameTime = Date.now() / 1000;
+    let lastFrameTime = Date.now() / 1000;
 
-    var bgColor = [1, 1, 1, 1];
+    let bgColor = [1, 1, 1, 1];
 
-    var spineManager;
+    let spineManager;
 
 
-    var diff = [
-        [500,500],
-        [100,250,100,250,500],
-        [100,500],
-        [300,500,300,500],
-        [250,500]
+    let diff = [
+        [500, 500],
+        [100, 250, 100, 250, 500],
+        [100, 500],
+        [300, 500, 300, 500],
+        [250, 500]
 
     ];
 
-    var nextObjPos = [500,500];
+    let nextObjPos = [500, 500];
     //#endregion
 
-
     //#region inGame val
-    var characterID = 122331;
-    var classID = 2;
+    let characterID = 122331;
+    let classID = 43;
 
 
-    var speedFactor = 1;
-    var obstaclePos = [];
-    var farBgPos = [];
-    var nearBgPos = [];
-    var treePos = [];
+    let speedFactor = 1;
+    let obstaclePos = [];
+    let farBgPos = [];
+    let nearBgPos = [];
+    let treePos = [];
 
-    var score = 0;
-    var HP = 3;
+    let score = 0;
+    let HP = 3;
 
-    var distBGSpeed = 100;
-    var closeBGSpeed = 400;
+    let distBGSpeed = 100;
+    let closeBGSpeed = 400;
 
-    var STATE = {
+    let STATE = {
         GAME_LOBBY: 0,
         GAME_ENTRY: 1,
         GAME_COUNTDOWN: 2,
@@ -55,14 +54,14 @@ function GameMain() {
         GAME_RESTART: 7
     }
 
-    var rankText = ['1st', '2nd', '3rd', '4th', '5th'];
-    var currentState = null;
+    let rankText = ['1st', '2nd', '3rd', '4th', '5th'];
+    let currentState = null;
 
     //#endregion
 
     function init() {
         canvas = document.getElementById("canvas");
-        var config = { alpha: false };
+        let config = {alpha: false};
         gl = canvas.getContext("webgl", config) || canvas.getContext("experimental-webgl", config);
         if (!gl) {
             alert('WebGL is unavailable.');
@@ -83,10 +82,6 @@ function GameMain() {
 
             });
         })
-
-
-
-
 
 
         FontSystem.setString("score", "Score : " + score);
@@ -119,9 +114,8 @@ function GameMain() {
     }
 
 
-
     function initInput() {
-        keyMap = {};
+        let keyMap = {};
         document.addEventListener('keydown', function (event) {
 
             if (currentState !== STATE.GAME_START)
@@ -172,15 +166,14 @@ function GameMain() {
 
         document.addEventListener('keyup', function (event) {
             if (currentState === STATE.HIGH_SCORE) {
-                updateUI(getAlpabetFromInput(event.code));
+                updateUI(getAlphabetFromInput(event.code));
                 return;
             }
 
 
             if (currentState === STATE.GAME_RESTART) {
                 initGame();
-            }
-            else if (currentState === STATE.GAME_LOBBY) {
+            } else if (currentState === STATE.GAME_LOBBY) {
                 startGame();
             }
 
@@ -190,53 +183,35 @@ function GameMain() {
     }
 
 
-    function getAlpabetFromInput(input) {
+    function getAlphabetFromInput(input) {
         if (input.indexOf('Key') !== -1) {
             return input.replace('Key', "");
-        }
-        else {
+        } else {
             return null;
         }
     }
 
-    var resetObstacle = function (i) {
-        var nextPos = 0;
+    let resetObstacle = function (i) {
+        let nextPos = 0;
 
-        for (var k = 0; k < obstaclePos.length; k++) {
+        for (let k = 0; k < obstaclePos.length; k++) {
             if (nextPos < obstaclePos[k][0])
                 nextPos = obstaclePos[k][0];
         }
 
 
-        var nextLength = 0;
-        if( nextObjPos.length === 1 ){
-            var rnd = Math.floor(Math.random() * 4);
+        let nextLength;
+        if (nextObjPos.length === 1) {
+            let rnd = Math.floor(Math.random() * 4);
             nextObjPos = nextObjPos.concat(diff[rnd]);
             nextLength = nextObjPos.shift();
-        }
-        else{
+        } else {
             nextLength = nextObjPos.shift();
         }
 
         obstaclePos[i] = [nextPos + nextLength, -30]
 
     }
-
-
-    var prevTime = 0;
-    function printDeltaTime() {
-        if ((Date.now() - prevTime) > 33) {
-            var currentdate = new Date();
-            var datetime = "Last Sync: "
-                + currentdate.getHours() + ":"
-                + currentdate.getMinutes() + ":"
-                + currentdate.getSeconds();
-
-            console.log(" 1 " + (Date.now() - prevTime) + " ++++ " + datetime);
-
-        }
-        prevTime = Date.now();
-    };
 
     function initGame() {
         spineManager.setDearIdle();
@@ -252,17 +227,16 @@ function GameMain() {
         nearBgPos.length = 0;
         treePos.length = 0;
 
-        for (var i = 0; i < 6; i++) {
-          //  obstaclePos.push([i * 512 + 1024, -30]);
+        for (let i = 0; i < 6; i++) {
+            //  obstaclePos.push([i * 512 + 1024, -30]);
             farBgPos.push([i * 1024 - 2048, -60 - 512]);
             nearBgPos.push([i * 512 - 1024, -60]);
             treePos.push([i * 512 - 1024, -60]);
         }
-        for (var i = 0; i < 10; i++) {
+        for (let i = 0; i < 10; i++) {
             obstaclePos.push([i * 512 + 1024, -30]);
 
         }
-
 
 
         FontSystem.setVisible("score", false);
@@ -281,24 +255,24 @@ function GameMain() {
     function update() {
 
 
-        var now = Date.now() / 1000;
-        var delta = now - lastFrameTime;
+        let now = Date.now() / 1000;
+        let delta = now - lastFrameTime;
         lastFrameTime = now;
         delta *= speedFactor;
-        movememtDelta = delta * spineManager.getSpeed();
+        let movement_delta = delta * spineManager.getSpeed();
 
         if (currentState === STATE.GAME_OVER
             || currentState === STATE.GAME_LOBBY
             || currentState === STATE.GAME_COUNTDOWN
             || currentState === STATE.HIGH_SCORE
         ) {
-            movememtDelta = 0;
+            movement_delta = 0;
         }
 
 
         if (currentState === STATE.GAME_ENTRY) {
-            var pos = spineManager.getPosition();
-            pos -= movememtDelta * 2 * 400;
+            let pos = spineManager.getPosition();
+            pos -= movement_delta * 2 * 400;
             if (pos <= -1420) {
                 pos = -1420;
                 currentState = STATE.GAME_COUNTDOWN;
@@ -308,22 +282,22 @@ function GameMain() {
             spineManager.setPosition(pos);
         }
 
-        for (var i = 0; i < farBgPos.length; i++) {
-            farBgPos[i][0] -= movememtDelta * distBGSpeed;
-            if (farBgPos[i][0] < - ScreenSize[0] / 2 - 1024)
+        for (let i = 0; i < farBgPos.length; i++) {
+            farBgPos[i][0] -= movement_delta * distBGSpeed;
+            if (farBgPos[i][0] < -ScreenSize[0] / 2 - 1024)
                 farBgPos[i][0] += 512 * farBgPos.length;
         }
 
-        for (var i = 0; i < nearBgPos.length; i++) {
-            nearBgPos[i][0] -= movememtDelta * closeBGSpeed;
-            if (nearBgPos[i][0] < - ScreenSize[0] / 2 - 512) {
+        for (let i = 0; i < nearBgPos.length; i++) {
+            nearBgPos[i][0] -= movement_delta * closeBGSpeed;
+            if (nearBgPos[i][0] < -ScreenSize[0] / 2 - 512) {
                 nearBgPos[i][0] += 512 * nearBgPos.length;
             }
         }
 
 
-        for (var i = 0; i < obstaclePos.length; i++) {
-            obstaclePos[i][0] -= movememtDelta * closeBGSpeed;
+        for (let i = 0; i < obstaclePos.length; i++) {
+            obstaclePos[i][0] -= movement_delta * closeBGSpeed;
             if (obstaclePos[i][0] > 100 - ScreenSize[0] / 2 && obstaclePos[i][0] < 270 - ScreenSize[0] / 2) {
                 if (spineManager.damage()) {
                     resetObstacle(i);
@@ -332,8 +306,7 @@ function GameMain() {
                         gameFinish();
                     }
                 }
-            }
-            else if (obstaclePos[i][0] < - ScreenSize[0] / 2 - 128) {
+            } else if (obstaclePos[i][0] < -ScreenSize[0] / 2 - 128) {
                 resetObstacle(i);
                 score += 1;
 
@@ -341,8 +314,8 @@ function GameMain() {
         }
         FontSystem.setString("score", "Score : " + score);
 
-        var hptext = "";
-        for (var i = 0; i < HP; i++) {
+        let hptext = "";
+        for (let i = 0; i < HP; i++) {
             hptext += '@';
         }
         FontSystem.setString("HP", hptext);
@@ -396,25 +369,25 @@ function GameMain() {
 
         SpriteShader.bind();
         SpriteShader.setTexture("bg.png");
-        for (var i = 0; i < 4; i++) {
+        for (let i = 0; i < 4; i++) {
             SpriteShader.setAttr(farBgPos[i]);
             SpriteShader.draw();
         }
 
         SpriteShader.setTexture("ground2.png");
-        for (var i = 0; i < 6; i++) {
+        for (let i = 0; i < 6; i++) {
             SpriteShader.setAttr(nearBgPos[i], 0.5);
             SpriteShader.draw();
         }
 
         SpriteShader.setTexture("tree.png");
-        for (var i = 0; i < 6; i++) {
+        for (let i = 0; i < 6; i++) {
             SpriteShader.setAttr(nearBgPos[i]);
             SpriteShader.draw();
         }
 
         SpriteShader.setTexture("obstacle.png");
-        for (var i = 0; i < obstaclePos.length; i++) {
+        for (let i = 0; i < obstaclePos.length; i++) {
             SpriteShader.setAttr(obstaclePos[i]);
             SpriteShader.draw();
         }
@@ -425,7 +398,6 @@ function GameMain() {
         }
 
         FontSystem.draw();
-
 
 
         spineManager.render(delta, false);
@@ -440,16 +412,16 @@ function GameMain() {
 
         FontSystem.setVisible("Ranktxt", true);
         FontSystem.setVisible("MyNAME", true);
-    };
+    }
 
     function resize() {
 
-        var w = ScreenSize[0];
-        var h = ScreenSize[1];
+        let w = ScreenSize[0];
+        let h = ScreenSize[1];
 
-        var scaleX = window.innerWidth * devicePixelRatio / w;
-        var scaleY = window.innerHeight * devicePixelRatio / h;
-        var scale = Math.min(scaleX, scaleY);
+        let scaleX = window.innerWidth * devicePixelRatio / w;
+        let scaleY = window.innerHeight * devicePixelRatio / h;
+        let scale = Math.min(scaleX, scaleY);
         if (scale > 1)
             scale = 1;
 
@@ -470,31 +442,31 @@ function GameMain() {
 
     function updateRank(data) {
 
-        for (var i = 0; i < 5; i++) {
+        for (let i = 0; i < 5; i++) {
             if (i >= data.length)
                 break;
             FontSystem.setString("Rank" + i, data[i].name + " " + data[i].score);
         }
     }
 
-    var inputName = "";
+    let inputName = "";
+
     function updateUI(text) {
 
-        if( text === null )
-        return;
+        if (text === null)
+            return;
         inputName += text;
         if (inputName.length === 1 || inputName.length === 3)
             inputName += " ";
         else if (inputName.length === 5) {
-            var realName = inputName.replace(/\s/gi, "");
-            socket.emit("set_score", { name : realName , score : score});
+            let realName = inputName.replace(/\s/gi, "");
+            socket.emit("set_score", {name: realName, score: score});
             FontSystem.setVisible("Ranktxt", false);
             FontSystem.setVisible("MyNAME", false);
         }
 
         FontSystem.setString("MyNAME", inputName);
     }
-
 
 
     function sendScore(score) {
@@ -509,8 +481,7 @@ function GameMain() {
     socket.on("returnRank", function (data) {
         if (data === -1) {
             currentState = STATE.GAME_RESTART;
-        }
-        else {
+        } else {
             inputName = "";
             FontSystem.setString("Ranktxt", rankText[data]);
             FontSystem.setString("MyNAME", inputName);
@@ -525,8 +496,7 @@ function GameMain() {
 }
 
 
-
-var main = new GameMain();
+let main = new GameMain();
 main.init();
 
 canvas.width = window.innerWidth;
