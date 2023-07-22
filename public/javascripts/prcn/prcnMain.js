@@ -28,7 +28,7 @@ function GameMain() {
 
 
     //#region inGame val
-    var characterID = 109631;
+    var characterID = 122331;
     var classID = 2;
 
 
@@ -217,7 +217,7 @@ function GameMain() {
         else{
             nextLength = nextObjPos.shift();
         }
-        
+
         obstaclePos[i] = [nextPos + nextLength, -30]
 
     }
@@ -486,7 +486,7 @@ function GameMain() {
         if (inputName.length === 1 || inputName.length === 3)
             inputName += " ";
         else if (inputName.length === 5) {
-            var realName = inputName.replace(/\s/gi, "");  
+            var realName = inputName.replace(/\s/gi, "");
             socket.emit("set_score", { name : realName , score : score});
             FontSystem.setVisible("Ranktxt", false);
             FontSystem.setVisible("MyNAME", false);
