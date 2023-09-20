@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wasm build by Rust</title>
+    <style>
+        @font-face {
+            font-family: 'Helltaker';
+            src: url('assets/font/ThereBart.ttf');
+        }
+        body {
+            background: linear-gradient(
+                    45deg,
+                    white 0%,
+                    white 49%,
+                    black 49%,
+                    black 51%,
+                    white 51%,
+                    white 100%
+            ) repeat;
+            background-size: 20px 20px;
+            align-items: center;
+        }
+        canvas {
+            background-color: white;
+            width: 1024px;
+            height: 768px;
+            padding: 0;
+            margin: auto;
+            display: block;
+        }
+
+        #load-text {
+            margin: auto;
+            display: block;
+            text-align: center;
+            font-size: 7rem;
+            font-family: Helltaker;
+        }
+    </style>
+</head>
+
+<body id="wgpu-wasm">
+<p id="load-text"><br>Loading</p>
+<script type="module">
+    import init from "./rust_wasm_pkg/wgpu_wasm.js";
+    init().then(wasm => {
+        console.log(wasm);
+        console.log("WASM Loaded");
+        let canvas = document.getElementById("wasm-canvas");
+        canvas.style.width = "70%";
+        canvas.style.height = "auto";
+
+        let loadingtext = document.getElementById("load-text");
+        loadingtext.remove();
+    });
+</script>
+</body>
+
+</html>

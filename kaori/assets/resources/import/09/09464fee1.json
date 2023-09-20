@@ -1,0 +1,1 @@
+[{"__type__":"cc.AnimationClip","_name":"monsterDamage","_duration":0.1,"sample":10,"curveData":{"comps":{"cc.Sprite":{"spriteFrame":[{"frame":0,"value":{"__uuid__":"71qZHiiNFB4L2UX3ppMSBN"}}]}}}},{"__type__":"cc.SpriteFrame","content":{"name":"monster_damaged","texture":"f8Xly12TdHmajhwR5uhw31","rect":[0,0,128,128],"offset":[0,0],"originalSize":[128,128],"capInsets":[0,0,0,0]}}]
