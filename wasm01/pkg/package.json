@@ -1,0 +1,20 @@
+{
+  "name": "flappy_nn",
+  "description": "lavumi rust and wgpu practice project",
+  "version": "0.1.0",
+  "license": "",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:lavumi/flappy_nn.git"
+  },
+  "files": [
+    "flappy_nn_bg.wasm",
+    "flappy_nn.js",
+    "flappy_nn.d.ts"
+  ],
+  "module": "flappy_nn.js",
+  "types": "flappy_nn.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
