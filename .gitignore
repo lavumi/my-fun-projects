@@ -109,3 +109,5 @@ dist
 sym*
 ranking
 public/tetdoku*
+
+.idea
