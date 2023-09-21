@@ -1,7 +1,9 @@
-var canvas = document.getElementById("canvas");
-var gl =  canvas.getContext("webgl", { alpha: false }) || canvas.getContext("experimental-webgl", { alpha: false });
 
-var shaders = {
+
+let canvas = document.getElementById("canvas");
+let gl =  canvas.getContext("webgl", { alpha: false }) || canvas.getContext("experimental-webgl", { alpha: false });
+
+let shaders = {
     simpleShader: {
         vertexShader: 'shader/simple.vert',
         fragmentShader: 'shader/simple.frag',
@@ -55,7 +57,7 @@ var shaders = {
             "varying mediump vec2 TexCoords;" +
             "void main() {" +
             "    mediump vec4 sampled = texture2D(texture, TexCoords);" +
-            "    gl_FragColor = vec4(0, 0, 0, sampled.a);"+
+            "    gl_FragColor = vec4(1, 1, 1, sampled.a);"+
             "}" ,
         attrInfo : ['aVertexPosition', 'uv'],
         uniInfo : ['uVPMatrix','uWorldMatrix', 'texture', 'color']
@@ -63,11 +65,11 @@ var shaders = {
 };
 
 //쉐이더 컴파일
-var ShaderUtil = {
+let ShaderUtil = {
     shaderInfo : {},
     initShaders: function( shaderName ){
-        var buildShader = function(gl, type, source) {
-            var shader = gl.createShader(type);
+        let buildShader = function(gl, type, source) {
+            let shader = gl.createShader(type);
             gl.shaderSource(shader, source);
             gl.compileShader(shader);
 
@@ -77,9 +79,9 @@ var ShaderUtil = {
             }
             return shader;
         };
-        var createShader =  function( shaderObj,  cb){
-            var shaderProgram = gl.createProgram();
-            var vertexShader, fragShader;
+        let createShader =  function( shaderObj,  cb){
+            let shaderProgram = gl.createProgram();
+            let vertexShader, fragShader;
 
             vertexShader = buildShader( gl,gl.VERTEX_SHADER, shaderObj.vtxShaderSrc );
             gl.attachShader(shaderProgram, vertexShader);
@@ -97,14 +99,14 @@ var ShaderUtil = {
             }
 
 
-            var singleShaderInfo = {
+            let singleShaderInfo = {
                 program: shaderProgram,
                 attribLocations: { },
                 uniformLocations: {  },
             };
 
 
-            var i ,locationName;
+            let i ,locationName;
             for( i = 0;i < shaderObj['attrInfo'].length; i++){
                 locationName = shaderObj['attrInfo'][i];
                 singleShaderInfo.attribLocations[ locationName ] = gl.getAttribLocation(shaderProgram, locationName);
@@ -124,7 +126,7 @@ var ShaderUtil = {
 
 
 
-        var self = this;
+        let self = this;
         createShader( shaders[shaderName],  function( result ){
             self.shaderInfo[ shaderName ] = result;
         });

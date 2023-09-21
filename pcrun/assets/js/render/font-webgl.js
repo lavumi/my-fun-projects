@@ -1,9 +1,9 @@
-{    var FontSystem = (function () {
+let FontSystem = (function () {
 
-    LabelData = {
+    let LabelData = {
         HP: {
             text: "This is SampleText",
-            location : [-950, 470],
+            location :  [-440, -768/2],
             renderData: {
                 buffer: {
                     position: null,
@@ -12,11 +12,11 @@
                 },
                 vertexCount: 0,
                 dirty : true,
-                visible : false
+                visible : true
             }
         },
 
-        LavumiLabel: {
+        Signature: {
             text: "Lavumi ZYANG ~@",
             location : [400, -470],
             renderData: {
@@ -35,23 +35,21 @@
 
 
 
-    var currentString = "";
-
     //#region  공통 데이터 세팅
 
-    var shaderData = {
+    let shaderData = {
         program: null,//shaderProgram,
         attribLocations: {},
         uniformLocations: {},
     };
 
-    var myFontData = {};
-    var fontAtlas = null;
+    let myFontData = {};
+    let fontAtlas = null;
     function loadFont() {
         function loadDoc() {
-            var req = new XMLHttpRequest();
+            let req = new XMLHttpRequest();
             req.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
+                if (this.readyState === 4 && this.status === 200) {
                     parse(this);
                 }
             };
@@ -60,15 +58,14 @@
         }
 
         function parse(xml) {
-            var i;
-            var xmlDoc = xml.responseXML;
-            var chars = xmlDoc.getElementsByTagName("Char");
-            for (var i = 0; i < chars.length; i++) {
+            let xmlDoc = xml.responseXML;
+            let chars = xmlDoc.getElementsByTagName("Char");
+            for (let i = 0; i < chars.length; i++) {
 
-                var char = chars[i].getAttribute('code');
-                var width = chars[i].getAttribute('width');
-                var offset = chars[i].getAttribute('offset').split(' ');
-                var rect = chars[i].getAttribute('rect').split(' ');
+                let char = chars[i].getAttribute('code');
+                let width = chars[i].getAttribute('width');
+                let offset = chars[i].getAttribute('offset').split(' ');
+                let rect = chars[i].getAttribute('rect').split(' ');
 
                 myFontData[char] = {
                     width: width,
@@ -82,12 +79,12 @@
         }
 
         loadDoc();
-    };
+    }
 
-    var loadfinished = false;
+    let loadFinished = false;
     function _loadFontAtlas(atlas) {
-        var texture = gl.createTexture();
-        var image = new Image();
+        let texture = gl.createTexture();
+        let image = new Image();
 
         image.onload = function () {
             gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -98,8 +95,7 @@
             gl.bindTexture(gl.TEXTURE_2D, null);
             fontAtlas = texture;
             _loadShader();
-        // _makeBuffer('sampleText');
-            loadfinished = true;
+            loadFinished = true;
         };
 
         image.onerror = function (e) {
@@ -111,15 +107,13 @@
 
     function _loadShader() {
         shaderData = ShaderUtil.initShaders('fontShader').fontShader;
-    };
+    }
 
-    function _setFont(fontName) {
+    function _setFont() {
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, fontAtlas);
         gl.uniform1i(shaderData.uniformLocations['texture'], 0);
-    };
-
-
+    }
 
     //#endregion
 
@@ -127,43 +121,54 @@
 
     ////#region 개별 데이터 세팅
     function _makeBuffer( labelName ) {
-        var dirty = LabelData[ labelName ].renderData.dirty;
+        let dirty = LabelData[ labelName ].renderData.dirty;
         if ( dirty === false )
             return;
 
-        var buffer = LabelData[ labelName].renderData.buffer;
+        let buffer = LabelData[ labelName].renderData.buffer;
 
-        var positions = [];
-        var uv = [];
-        var indices = [];
+        let positions = [];
+        let uv = [];
+        let indices = [];
 
-        var string = LabelData[ labelName].text;
+        let string = LabelData[ labelName].text;
 
         //console.log( string + " make buffer!!");
-        var fontStartPos = [0, 0];
+        let fontStartPos = [0, 0];
 
-        var vertexCount = LabelData[ labelName].renderData.vertexCount = 0;
-        for (var i = 0; i < string.length; i++) {
+        let vertexCount = LabelData[ labelName].renderData.vertexCount = 0;
+
+        let expectedStringLength = 0;
+        for( let i = 0; i < string.length; i++ ) {
+
+            if (string[i] === " ") {
+                expectedStringLength += 30 / 512;
+                continue;
+            }
+            let fontData = myFontData[string[i]];
+            expectedStringLength += parseInt(fontData.width) / 512;
+        }
+        for (let i = 0; i < string.length; i++) {
 
             if (string[i] === " ") {
                 fontStartPos[0] += 30 / 512;
                 continue;
             }
-            var fontData = myFontData[string[i]];
+            let fontData = myFontData[string[i]];
 
-            var X = fontData.rect[0] / 512;
-            var Y = fontData.rect[1] / 512;
-            var offsetX = fontData.offset[0] / 512;
-            var offsetY = fontData.offset[1] / 512
-            var width = fontData.rect[2] / 512;
-            var height = fontData.rect[3] / 512;
+            let X = fontData.rect[0] / 512;
+            let Y = fontData.rect[1] / 512;
+            let offsetX = fontData.offset[0] / 512;
+            let offsetY = fontData.offset[1] / 512
+            let width = fontData.rect[2] / 512;
+            let height = fontData.rect[3] / 512;
 
-            var minX = offsetX + fontStartPos[0];
-            var minY = offsetY + fontStartPos[1];
-            var minZ = 0;
-            var maxX = offsetX + fontStartPos[0] + width;
-            var maxY = offsetY + fontStartPos[1] + height;
-            var maxZ = 0;
+            let minX = offsetX + fontStartPos[0] - expectedStringLength/ 2;
+            let minY = offsetY + fontStartPos[1];
+            let minZ = 0;
+            let maxX = offsetX + fontStartPos[0] + width- expectedStringLength / 2;
+            let maxY = offsetY + fontStartPos[1] + height;
+            let maxZ = 0;
 
 
             fontStartPos[0] += fontData.width / 512;
@@ -213,6 +218,7 @@
             vertexCount += 6;
 
         }
+
         LabelData[ labelName].renderData.vertexCount = vertexCount;
 
 
@@ -238,11 +244,11 @@
         buffer.indices = indexBuffer;
 
         LabelData[ labelName ].renderData.dirty = false;
-    };
+    }
 
     function _bind( labelName ) {
 
-        var buffer = LabelData[ labelName].renderData.buffer;
+        let buffer = LabelData[ labelName].renderData.buffer;
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer.position);
         gl.vertexAttribPointer(
             shaderData.attribLocations['aVertexPosition'],
@@ -282,17 +288,17 @@
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indices);
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    };
+    }
 
     function _setLocation(labelName) {
 
-        var x = LabelData[ labelName].location[0];
-        var y = LabelData[ labelName].location[1];
+        let x = LabelData[ labelName].location[0];
+        let y = LabelData[ labelName].location[1];
 
-        var width = 512 / ScreenSize[0];
-        var height = 512 / ScreenSize[1];
+        let width = 512 / ScreenSize[0];
+        let height = 512 / ScreenSize[1];
 
-        var position = {
+        let position = {
             x: x / ScreenSize[0],
             y: y / ScreenSize[1],
         };
@@ -304,21 +310,21 @@
                 0, height, 0, 0,
                 0, 0, 1, 0,
                 position.x, position.y, 0, 1]);
-    };
+    }
 
     function _draw() {
-        
+
         gl.useProgram(shaderData.program);
         _setFont();
         Object.keys(LabelData).map(function(key){
-           if(LabelData[key].renderData.visible === true){
+            if(LabelData[key].renderData.visible === true){
                 _makeBuffer(key);
                 _bind(key);
                 _setLocation(key);
                 gl.drawElements(gl.TRIANGLES, LabelData[ key].renderData.vertexCount, gl.UNSIGNED_SHORT, 0);
-           }
+            }
         });
-    };
+    }
 
 
     function _setString( labelName, string){
@@ -363,13 +369,9 @@
 
     return {
         loadFont: loadFont,
-        
         setVisible : _setVisible,
         setString: _setString,
         setPosition : _setPosition,
         draw: _draw,
     }
-    })();
-
-
-}
+})();

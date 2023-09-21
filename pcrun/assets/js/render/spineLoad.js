@@ -1,4 +1,6 @@
 let SpineManager = function () {
+    const RESOURCE_DIR = "assets/spine/";
+
 
     let shader;
     let batcher;
@@ -102,7 +104,7 @@ let SpineManager = function () {
         let baseId = loadingSkeleton.baseId;
 
         if (!generalBattleSkeletonData[baseId])
-            loadData('assets/prcn_data/' + baseId + '_CHARA_BASE.cysp', function (success, data) {
+            loadData(RESOURCE_DIR + baseId + '_CHARA_BASE.cysp', function (success, data) {
                 if (!success || data === null) return loading = false;
                 generalBattleSkeletonData[baseId] = data;
                 loadAdditionAnimation();
@@ -115,7 +117,7 @@ let SpineManager = function () {
         generalAdditionAnimations[baseId] = generalAdditionAnimations[baseId] || {};
         additionAnimations.forEach(function (i) {
             if (generalAdditionAnimations[baseId][i]) return doneCount++;
-            loadData('assets/prcn_data/' + baseId + '_' + i + '.cysp', function (success, data) {
+            loadData(RESOURCE_DIR + baseId + '_' + i + '.cysp', function (success, data) {
                 if (!success || data == null) return abort = true;
 
                 if (abort) return;
@@ -129,7 +131,7 @@ let SpineManager = function () {
         if (currentClassAnimData.type === currentClass)
             loadCharaSkillAnimation();
         else
-            loadData('assets/prcn_data/' + getClass(currentClass) + '_COMMON_BATTLE.cysp', function (success, data) {
+            loadData(RESOURCE_DIR + getClass(currentClass) + '_COMMON_BATTLE.cysp', function (success, data) {
                 if (!success || data === null) return loading = false;
                 currentClassAnimData = {
                     type: currentClass,
@@ -144,7 +146,7 @@ let SpineManager = function () {
         if (currentCharaAnimData.id === baseUnitId)
             loadTexture();
         else
-            loadData('assets/prcn_data/' + baseUnitId + '_BATTLE.cysp', function (success, data) {
+            loadData(RESOURCE_DIR + baseUnitId + '_BATTLE.cysp', function (success, data) {
                 if (!success || data === null) return loading = false;
                 currentCharaAnimData = {
                     id: baseUnitId,
@@ -154,9 +156,9 @@ let SpineManager = function () {
             }, 'arraybuffer');
     }
     function loadTexture() {
-        loadData('assets/prcn_data/' + loadingSkeleton.id + '.atlas', function (success, atlasText) {
+        loadData(RESOURCE_DIR + loadingSkeleton.id + '.atlas', function (success, atlasText) {
             if (!success) return loading = false;//
-            loadData('assets/prcn_data/' + loadingSkeleton.id + '.png', function (success, blob) {
+            loadData(RESOURCE_DIR + loadingSkeleton.id + '.png', function (success, blob) {
                 if (!success) return loading = false;
                 let img = new Image();
                 img.onload = function () {
@@ -296,6 +298,7 @@ let SpineManager = function () {
 
     function spineRender(delta, showDebug) {
         window.skeleton.skeleton.x = charPos;
+        window.skeleton.skeleton.y = -550;
         // Apply the animation state based on the delta time.
         let state = window.skeleton.state;
         let skeleton = window.skeleton.skeleton;

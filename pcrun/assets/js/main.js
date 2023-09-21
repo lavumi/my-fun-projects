@@ -1,6 +1,6 @@
 // let canvas;
 // let gl;
-let ScreenSize = [1920, 1080];
+let ScreenSize = [1024 , 768];
 
 
 function GameMain() {
@@ -9,7 +9,7 @@ function GameMain() {
     //#region 렌더링 변수
     let lastFrameTime = Date.now() / 1000;
 
-    let bgColor = [1, 1, 1, 1];
+    let bgColor = [0, 0, 0, 1];
 
     let spineManager;
 
@@ -33,14 +33,23 @@ function GameMain() {
 
     let speedFactor = 1;
     let obstaclePos = [];
-    let farBgPos = [];
-    let nearBgPos = [];
-    let treePos = [];
+
+    let bgPositions = [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+    ];
+    let baseBgSize = [ 1024/256,700/256];
 
     let score = 0;
     let HP = 3;
 
-    let distBGSpeed = 100;
+    let scrollSpeed = 50;
     let closeBGSpeed = 400;
 
     let STATE = {
@@ -85,7 +94,7 @@ function GameMain() {
 
 
         FontSystem.setString("score", "Score : " + score);
-        FontSystem.setPosition("score", [0, 470]);
+        FontSystem.setPosition("score", [300, -768/2]);
 
 
         FontSystem.setString("Rank0", "");
@@ -100,11 +109,10 @@ function GameMain() {
         FontSystem.setPosition("Rank4", [-950, -470]);
 
         FontSystem.setString("CountDown", "3");
-        FontSystem.setPosition("CountDown", [-100, 30]);
-
+        FontSystem.setPosition("CountDown", [0, 30]);
 
         FontSystem.setString("Restart", "Press Any Key To Start");
-        FontSystem.setPosition("Restart", [-300, -150]);
+        FontSystem.setPosition("Restart", [0, 0]);
 
         FontSystem.setString("Ranktxt", "");
         FontSystem.setPosition("Ranktxt", [-30, 140]);
@@ -129,10 +137,10 @@ function GameMain() {
             // else if (event.code === 'ArrowLeft'){
             //     runChar( true);
             // }
-            if (event.code === 'KeyA') {
+            //if (event.code === 'KeyA') {
                 //sendScore(score);
                 //spineManager.die();
-            }
+            //}
             // else if (event.code === 'KeyS'){
             //     attack2Char();
             // }
@@ -209,7 +217,7 @@ function GameMain() {
             nextLength = nextObjPos.shift();
         }
 
-        obstaclePos[i] = [nextPos + nextLength, -30]
+        obstaclePos[i][0] = nextPos + nextLength;
 
     }
 
@@ -223,23 +231,19 @@ function GameMain() {
         currentState = STATE.GAME_LOBBY;
 
         obstaclePos.length = 0;
-        farBgPos.length = 0;
-        nearBgPos.length = 0;
-        treePos.length = 0;
-
-        for (let i = 0; i < 6; i++) {
-            //  obstaclePos.push([i * 512 + 1024, -30]);
-            farBgPos.push([i * 1024 - 2048, -60 - 512]);
-            nearBgPos.push([i * 512 - 1024, -60]);
-            treePos.push([i * 512 - 1024, -60]);
+        bgPositions = [[], [], [], [], [], [], [], []];
+        for (let i = 0; i < 3; i++) {
+            for( let j = 0; j < bgPositions.length; j++ ) {
+                bgPositions[j].push([i * 1024 - 512 , -768/2 + 69]);
+            }
         }
         for (let i = 0; i < 10; i++) {
-            obstaclePos.push([i * 512 + 1024, -30]);
+            obstaclePos.push([i * 512 + 1024, -768/2 + 70]);
 
         }
 
 
-        FontSystem.setVisible("score", false);
+        FontSystem.setVisible("score", true);
         FontSystem.setVisible("CountDown", false);
 
         FontSystem.setVisible("Ranktxt", false);
@@ -250,7 +254,6 @@ function GameMain() {
         currentState = STATE.GAME_ENTRY;
         FontSystem.setVisible("Restart", false);
     }
-
 
     function update() {
 
@@ -272,26 +275,20 @@ function GameMain() {
 
         if (currentState === STATE.GAME_ENTRY) {
             let pos = spineManager.getPosition();
-            pos -= movement_delta * 2 * 400;
-            if (pos <= -1420) {
-                pos = -1420;
+            pos -= movement_delta * 800;
+            if (pos <= 0 - ScreenSize[0] / 2) {
+                pos = 0 - ScreenSize[0] / 2;
                 currentState = STATE.GAME_COUNTDOWN;
                 countDown();
-
             }
             spineManager.setPosition(pos);
         }
 
-        for (let i = 0; i < farBgPos.length; i++) {
-            farBgPos[i][0] -= movement_delta * distBGSpeed;
-            if (farBgPos[i][0] < -ScreenSize[0] / 2 - 1024)
-                farBgPos[i][0] += 512 * farBgPos.length;
-        }
-
-        for (let i = 0; i < nearBgPos.length; i++) {
-            nearBgPos[i][0] -= movement_delta * closeBGSpeed;
-            if (nearBgPos[i][0] < -ScreenSize[0] / 2 - 512) {
-                nearBgPos[i][0] += 512 * nearBgPos.length;
+        for( let i = 0; i < bgPositions.length; i++ ) {
+            for( let j = 0; j < bgPositions[i].length; j++ ) {
+                bgPositions[i][j][0] -= movement_delta * i * scrollSpeed;
+                if (bgPositions[i][j][0] < -ScreenSize[0] /2 * 3 )
+                    bgPositions[i][j][0] += ScreenSize[0] * 2;
             }
         }
 
@@ -366,25 +363,19 @@ function GameMain() {
 
         resize();
 
-
         SpriteShader.bind();
-        SpriteShader.setTexture("bg.png");
-        for (let i = 0; i < 4; i++) {
-            SpriteShader.setAttr(farBgPos[i]);
-            SpriteShader.draw();
+        SpriteShader.setTexture("0.png")
+        SpriteShader.setAttr([-512, -768/2 + 69],baseBgSize);
+        SpriteShader.draw();
+
+        for( let k = 0; k < 8; k++ ) {
+            SpriteShader.setTexture((k+1) + ".png")
+            for( let i = 0; i < 3; i++ ) {
+                SpriteShader.setAttr(bgPositions[k][i] ,baseBgSize);
+                SpriteShader.draw();
+            }
         }
 
-        SpriteShader.setTexture("ground2.png");
-        for (let i = 0; i < 6; i++) {
-            SpriteShader.setAttr(nearBgPos[i], 0.5);
-            SpriteShader.draw();
-        }
-
-        SpriteShader.setTexture("tree.png");
-        for (let i = 0; i < 6; i++) {
-            SpriteShader.setAttr(nearBgPos[i]);
-            SpriteShader.draw();
-        }
 
         SpriteShader.setTexture("obstacle.png");
         for (let i = 0; i < obstaclePos.length; i++) {
@@ -468,9 +459,9 @@ function GameMain() {
         FontSystem.setString("MyNAME", inputName);
     }
 
-
     function sendScore(score) {
         // socket.emit("checkRank", score);
+        currentState = STATE.GAME_RESTART;
     }
 
     // socket.on("update_rank", function (data) {
