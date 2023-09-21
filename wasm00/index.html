@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>wasm build by Rust</title>
+    <title>Rust game making</title>
     <style>
         @font-face {
             font-family: 'Helltaker';
@@ -48,11 +48,9 @@
 <script type="module">
     import init from "./rust_wasm_pkg/wgpu_wasm.js";
     init().then(wasm => {
-        console.log(wasm);
-        console.log("WASM Loaded");
         let canvas = document.getElementById("wasm-canvas");
-        canvas.style.width = "70%";
-        canvas.style.height = "auto";
+        // canvas.style.width = "70%";
+        // canvas.style.height = "auto";
 
         let loadingtext = document.getElementById("load-text");
         loadingtext.remove();

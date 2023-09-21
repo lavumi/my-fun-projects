@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lavumi ZZANG</title>
+    <title>FlappyBird NN</title>
     <style>
         body {
             background: linear-gradient(
@@ -33,13 +33,7 @@
     import init from "./pkg/flappy_nn.js";
 
     init().then(wasm => {
-        // wasm.run();
-        console.log("WASM Loaded");
         let canvas = document.getElementById("wasm-canvas");
-        canvas.style.width = "auto";
-        canvas.style.height = "70%";
-
-
         window.addEventListener('keyup', function (e) {
             if (e.key === 'f') {
                 console.log("get keyboard input");
