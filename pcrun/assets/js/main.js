@@ -514,5 +514,5 @@ main.init();
 
 
 //for mobile
-document.getElementById("mobile-button").addEventListener("mousedown", main.inputMobileDown );
-document.getElementById("mobile-button").addEventListener("mousedown", main.inputMobileUp );
+document.getElementById("mobile-button").addEventListener("touchstart", main.inputMobileDown );
+document.getElementById("mobile-button").addEventListener("touchend", main.inputMobileUp );
