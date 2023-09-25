@@ -37,20 +37,11 @@ body h5 {
 .card .card-content {
 	text-align: left;
 	padding: 10px;
-	height:5.5rem;
-}
-.card .card-title {
-	font-weight: 600;
-}
-
-.card .card-action {
-	/* text-align: left; */
-	padding: 10px;
-	color: #1a237e;
+	height:7rem;
 }
 
 .card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
-	margin: 0px   ;
+	margin: 0;
 }
 
 .card-action a:hover {
@@ -60,7 +51,7 @@ body h5 {
 .code-spec {
 	position: absolute;
 	right: 0.2rem;
-	top: -1.8rem;
+	bottom: 0.2rem;
 }
 
 .code-badge{
