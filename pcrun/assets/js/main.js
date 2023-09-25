@@ -467,20 +467,19 @@ function GameMain() {
         keyMap[event.code] = false;
 
     }
-    function _inputMobile(){
-        if (currentState === STATE.GAME_START ){
-            _handleKeyDownEvent({
-                code : 'Space',
-                preventDefault : ()=>{}
-            });
-            keyMap['Space'] = false;
-        }
-        else {
-            _handleKeyUpEvent({
-                code : 'Space',
-                preventDefault : ()=>{}
-            });
-        }
+
+    function _mDown(){
+        _handleKeyDownEvent({
+            code : 'Space',
+            preventDefault : ()=>{}
+        });
+        keyMap['Space'] = false;
+    }
+    function _mUp(){
+        _handleKeyUpEvent({
+            code : 'Space',
+            preventDefault : ()=>{}
+        });
     }
 
     // socket.on("update_rank", function (data) {
@@ -501,7 +500,8 @@ function GameMain() {
 
     return {
         init: init,
-        inputMobile : _inputMobile
+        inputMobileDown : _mDown,
+        inputMobileUp : _mUp
     }
     //endregion
 }
@@ -510,9 +510,9 @@ function GameMain() {
 let main = new GameMain();
 main.init();
 
-// canvas.width = window.innerWidth;
-// canvas.height = window.innerHeight;
 
 
 
-
+//for mobile
+document.getElementById("mobile-button").addEventListener("mousedown", main.inputMobileDown );
+document.getElementById("mobile-button").addEventListener("mousedown", main.inputMobileUp );
