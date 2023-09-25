@@ -133,3 +133,8 @@ let ShaderUtil = {
         return self.shaderInfo;
     },
 };
+
+
+// uglifyjs render.js/file1.js js/file2.js \
+//          -o foo.min.js -c -m \
+//          --source-map "root='http://foo.com/src',url='foo.min.js.map'"

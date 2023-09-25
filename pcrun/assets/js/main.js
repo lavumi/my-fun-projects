@@ -67,7 +67,7 @@ function GameMain() {
     let currentState = null;
 
     //#endregion
-
+    let keyMap = {};
     function init() {
         canvas = document.getElementById("canvas");
         let config = {alpha: false};
@@ -97,16 +97,16 @@ function GameMain() {
         FontSystem.setPosition("score", [300, -768/2]);
 
 
-        FontSystem.setString("Rank0", "");
-        FontSystem.setString("Rank1", "");
-        FontSystem.setString("Rank2", "");
-        FontSystem.setString("Rank3", "");
-        FontSystem.setString("Rank4", "");
-        FontSystem.setPosition("Rank0", [-950, -230]);
-        FontSystem.setPosition("Rank1", [-950, -290]);
-        FontSystem.setPosition("Rank2", [-950, -350]);
-        FontSystem.setPosition("Rank3", [-950, -410]);
-        FontSystem.setPosition("Rank4", [-950, -470]);
+        // FontSystem.setString("Rank0", "");
+        // FontSystem.setString("Rank1", "");
+        // FontSystem.setString("Rank2", "");
+        // FontSystem.setString("Rank3", "");
+        // FontSystem.setString("Rank4", "");
+        // FontSystem.setPosition("Rank0", [-950, -230]);
+        // FontSystem.setPosition("Rank1", [-950, -290]);
+        // FontSystem.setPosition("Rank2", [-950, -350]);
+        // FontSystem.setPosition("Rank3", [-950, -410]);
+        // FontSystem.setPosition("Rank4", [-950, -470]);
 
         FontSystem.setString("CountDown", "3");
         FontSystem.setPosition("CountDown", [0, 30]);
@@ -123,71 +123,10 @@ function GameMain() {
 
 
     function initInput() {
-        let keyMap = {};
-        document.addEventListener('keydown', function (event) {
 
-            if (currentState !== STATE.GAME_START)
-                return;
+        document.addEventListener('keydown', _handleKeyDownEvent, false);
 
-            if (keyMap[event.code] === true) return;
-
-            // if(event.code === 'ArrowRight' ){
-            //     runChar( false);
-            // }
-            // else if (event.code === 'ArrowLeft'){
-            //     runChar( true);
-            // }
-            //if (event.code === 'KeyA') {
-                //sendScore(score);
-                //spineManager.die();
-            //}
-            // else if (event.code === 'KeyS'){
-            //     attack2Char();
-            // }
-
-            // else if (event.code === 'KeyQ'){
-            //     dieChar( );
-            // }
-            // else if (event.code === 'KeyW'){
-            //     damageedChar();
-            // }
-
-            // else if (event.code === 'KeyZ'){
-            //     useSkill( 0);
-            // }
-            // else if (event.code === 'KeyX'){
-            //     useSkill( 1);
-            // }
-            // else if (event.code === 'KeyC'){
-            //     useSkill( 2);
-            // }
-
-
-            if (event.code === 'Space') {
-                event.preventDefault();
-                spineManager.jump();
-            }
-
-            keyMap[event.code] = true;
-
-        }, false);
-
-        document.addEventListener('keyup', function (event) {
-            if (currentState === STATE.HIGH_SCORE) {
-                updateUI(getAlphabetFromInput(event.code));
-                return;
-            }
-
-
-            if (currentState === STATE.GAME_RESTART) {
-                initGame();
-            } else if (currentState === STATE.GAME_LOBBY) {
-                startGame();
-            }
-
-            keyMap[event.code] = false;
-
-        }, false);
+        document.addEventListener('keyup',_handleKeyUpEvent , false);
     }
 
 
@@ -464,6 +403,86 @@ function GameMain() {
         currentState = STATE.GAME_RESTART;
     }
 
+
+    function _handleKeyDownEvent(event){
+
+        if (currentState !== STATE.GAME_START)
+            return;
+
+        if (keyMap[event.code] === true) return;
+
+        // if(event.code === 'ArrowRight' ){
+        //     runChar( false);
+        // }
+        // else if (event.code === 'ArrowLeft'){
+        //     runChar( true);
+        // }
+        //if (event.code === 'KeyA') {
+        //sendScore(score);
+        //spineManager.die();
+        //}
+        // else if (event.code === 'KeyS'){
+        //     attack2Char();
+        // }
+
+        // else if (event.code === 'KeyQ'){
+        //     dieChar( );
+        // }
+        // else if (event.code === 'KeyW'){
+        //     damageedChar();
+        // }
+
+        // else if (event.code === 'KeyZ'){
+        //     useSkill( 0);
+        // }
+        // else if (event.code === 'KeyX'){
+        //     useSkill( 1);
+        // }
+        // else if (event.code === 'KeyC'){
+        //     useSkill( 2);
+        // }
+
+
+        if (event.code === 'Space') {
+            event.preventDefault();
+            spineManager.jump();
+        }
+
+        keyMap[event.code] = true;
+    }
+
+    function _handleKeyUpEvent(event) {
+        if (currentState === STATE.HIGH_SCORE) {
+            updateUI(getAlphabetFromInput(event.code));
+            return;
+        }
+
+
+        if (currentState === STATE.GAME_RESTART) {
+            initGame();
+        } else if (currentState === STATE.GAME_LOBBY) {
+            startGame();
+        }
+
+        keyMap[event.code] = false;
+
+    }
+    function _inputMobile(){
+        if (currentState === STATE.GAME_START ){
+            _handleKeyDownEvent({
+                code : 'Space',
+                preventDefault : ()=>{}
+            });
+            keyMap['Space'] = false;
+        }
+        else {
+            _handleKeyUpEvent({
+                code : 'Space',
+                preventDefault : ()=>{}
+            });
+        }
+    }
+
     // socket.on("update_rank", function (data) {
     //     updateRank(data);
     //     currentState = STATE.GAME_RESTART;
@@ -481,7 +500,8 @@ function GameMain() {
     // });
 
     return {
-        init: init
+        init: init,
+        inputMobile : _inputMobile
     }
     //endregion
 }
@@ -490,7 +510,9 @@ function GameMain() {
 let main = new GameMain();
 main.init();
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// canvas.width = window.innerWidth;
+// canvas.height = window.innerHeight;
+
+
 
 
