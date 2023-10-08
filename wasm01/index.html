@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlappyBird NN</title>
+    <title>Lavumi ZZANG</title>
     <style>
         body {
             background: linear-gradient(
@@ -18,6 +18,9 @@
                     white 100%
             ) repeat;
             background-size: 20px 20px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
         }
         canvas {
             background-color: white;
@@ -25,26 +28,35 @@
             margin: auto;
             display: block;
         }
+        .canvas-container {
+            display: flex;
+            width: fit-content;
+            align-items: center;
+        }
     </style>
 </head>
 
-<body id="wgpu-wasm">
+<body >
+
+    <div class="canvas-container">
+        <canvas id="neuralNetworkCanvas"></canvas>
+        <div id="wgpu-wasm"></div>
+    </div>
+
 <script type="module">
     import init from "./pkg/flappy_nn.js";
-
-    init().then(wasm => {
+    init().then(() => {
         let canvas = document.getElementById("wasm-canvas");
+        canvas.style.height = "40rem";
+        canvas.style.width = "auto";
         window.addEventListener('keyup', function (e) {
             if (e.key === 'f') {
-                console.log("get keyboard input");
-                // canvas.webkitRequestFullScreen();
                 canvas.mozRequestFullScreen();
             }
         });
     });
-
-
 </script>
+
 </body>
 
 </html>
