@@ -106,8 +106,5 @@ dist
 
 
 .DS_Store
-sym*
-ranking
-public/tetdoku*
 
 .idea
