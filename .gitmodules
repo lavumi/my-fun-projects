@@ -1,0 +1,3 @@
+[submodule "pcfg"]
+	path = pcfg
+	url = git@github.com:lavumi/priconne_fan_game.git
