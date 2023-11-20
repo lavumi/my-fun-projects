@@ -1,3 +1,6 @@
 [submodule "pcfg"]
 	path = pcfg
 	url = git@github.com:lavumi/priconne_fan_game.git
+[submodule "torus"]
+	path = torus
+	url = git@github.com:lavumi/ascii_torus.git
