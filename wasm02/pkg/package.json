@@ -1,0 +1,21 @@
+{
+  "name": "physics_demo",
+  "type": "module",
+  "description": "2D Physics demo with bouncing balls",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lavumi/pixie"
+  },
+  "files": [
+    "physics_demo_bg.wasm",
+    "physics_demo.js",
+    "physics_demo.d.ts"
+  ],
+  "main": "physics_demo.js",
+  "types": "physics_demo.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
